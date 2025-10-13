@@ -1,0 +1,40 @@
+{
+  "id": "/",
+  "name": "bitoment",
+  "short_name": "bitoment",
+  "description": "Bitoment Progressive Web App",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "en-US",
+  "theme_color": "#00e4cc",
+  "background_color": "#ffffff",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "bitoment_maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "bitoment_rounded.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "bitoment_rounded.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "bitoment_rounded.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
