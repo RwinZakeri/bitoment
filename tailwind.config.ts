@@ -22,6 +22,22 @@ const config: Config = {
           400: "var(--primary-green-400)",
           500: "var(--primary-green-500)",
         },
+        gray: {
+          50: "var(--gray-50)",
+          70: "var(--gray-70)",
+          300: "var(--gray-300)",
+          500: "var(--gray-500)",
+          600: "var(--gray-600)",
+          800: "var(--gray-800)",
+          900: "var(--gray-900)",
+        },
+        black: {
+          500: "var(--primary-black-500)",
+          900: "var(--primary-black-900)",
+        },
+        blue: {
+          500: "var(--blue-500)",
+        },
       },
     },
   },
