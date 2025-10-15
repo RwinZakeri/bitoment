@@ -1,18 +1,12 @@
+import { RadioProps as GlobalRadioProps } from "@/types";
 import React from "react";
 
-interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface RadioProps extends GlobalRadioProps {
   label?: string;
   className?: string;
-  variant?: "default" | "turquoise";
 }
 
-const Radio: React.FC<RadioProps> = ({
-  label,
-  className,
-  variant = "turquoise",
-  id,
-  ...props
-}) => {
+const Radio: React.FC<RadioProps> = ({ id, ...props }) => {
   return (
     <div className="flex items-center gap-3">
       <div className="relative">

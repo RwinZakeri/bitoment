@@ -17,7 +17,7 @@ export const titleAndDesc = ({
       </div>
 
       {!isLast && (
-        <div className="w-full h-[1px] mt-3 mb-6 bg-black-600/15"></div>
+        <div className="w-full h-[1px] mt-3 mb-6 bg-gray-500/15"></div>
       )}
     </div>
   );
@@ -32,8 +32,8 @@ const DeviceCard = ({
 }: DeviceCardProps) => {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-black-600/65">{label}</p>
-      <div className="py-6 rounded-[10px] border-solid border-[1px] border-light-black bg-white px-4">
+      <p className="text-gray-500/65">{label}</p>
+      <div className="py-6 rounded-[10px] border-solid border-[1px] border-black/10 bg-white px-4">
         {titleAndDesc({
           title,
           deviceName,

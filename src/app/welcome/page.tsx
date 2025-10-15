@@ -6,7 +6,7 @@ import ProfileAddIcon from "@/public/icons/ProfileAddIcon";
 
 const WelcomePage = () => {
   return (
-    <div className="w-full p-4 relative h-screen bg-green-500 flex items-center justify-center">
+    <div className="w-full p-4 relative h-screen bg-cyan-400 flex items-center justify-center">
       <div className="z-0 absolute w-full h-full bg-[url('/images/welcome_background.png')] bg-cover bg-bottom-left opacity-100"></div>
       <div className="w-full z-10 relative ">
         <h1 className="text-white text-2xl font-semibold text-center">
@@ -22,9 +22,9 @@ const WelcomePage = () => {
           </Button>
 
           <div className="flex items-center justify-center gap-2">
-            <span className="w-10 h-[1px] bg-light-white"></span>
-            <span className="text-light-white font-medium text-xs">OR</span>
-            <span className="w-10 h-[1px] bg-light-white"></span>
+            <span className="w-10 h-[1px] bg-white/50"></span>
+            <span className="text-white/50 font-medium text-xs">OR</span>
+            <span className="w-10 h-[1px] bg-white/50"></span>
           </div>
 
           <Button

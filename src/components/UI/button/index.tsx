@@ -23,8 +23,8 @@ const Button = ({
     if (variant === "text") {
       return cn(
         baseStyles,
-        "bg-transparent text-green-600 hover:text-green-700 hover:bg-green-50 focus:ring-green-500",
-        stroke && "border border-green-600 hover:border-green-700"
+        "bg-transparent text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 focus:ring-cyan-400",
+        stroke && "border border-cyan-500 hover:border-cyan-600"
       );
     }
 
@@ -32,22 +32,22 @@ const Button = ({
       return cn(
         baseStyles,
         "bg-transparent border-[1px] border-white text-white",
-        stroke && "border-green-600"
+        stroke && "border-cyan-500"
       );
     }
 
     if (variant === "outline-dark") {
       return cn(
         baseStyles,
-        "bg-transparent border-[1px] border-black-50 text-black-500",
-        stroke && "border-green-600"
+        "bg-transparent border-[1px] border-black/25 text-black/70",
+        stroke && "border-cyan-500"
       );
     }
 
     return cn(
       baseStyles,
-      "bg-green-400 text-black-500",
-      stroke && "border-2 border-green-600 hover:border-green-700"
+      "bg-cyan-300 text-black/70",
+      stroke && "border-2 border-cyan-500 hover:border-cyan-600"
     );
   };
 

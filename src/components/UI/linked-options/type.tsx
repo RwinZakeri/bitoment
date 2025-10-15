@@ -1,24 +1,18 @@
-export interface optionsType {
-  title: string;
-  value: string | number;
-}
-export interface LinkedOptionsPropsType {
-  label: string;
-  options: optionsType[];
-  onLinkedOption: (value: string | number) => void;
-}
+import {
+  BaseOption,
+  CURRENCY_OPTIONS,
+  LANGUAGE_OPTIONS,
+  LinkedOptionsProps,
+  SETTING_LINKED_OPTIONS,
+  THEME_OPTIONS,
+} from "@/types";
 
-export const settingLinkedOptions: optionsType[] = [
-  {
-    title: "Language",
-    value: 1,
-  },
-  {
-    title: "Theme",
-    value: 2,
-  },
-  {
-    title: "Base Currency",
-    value: 3,
-  },
-];
+// Re-export types for backward compatibility
+export type optionsType = BaseOption;
+export type LinkedOptionsPropsType = LinkedOptionsProps;
+
+// Re-export constants for backward compatibility
+export const settingLinkedOptions = SETTING_LINKED_OPTIONS;
+export const Language = LANGUAGE_OPTIONS;
+export const Theme = THEME_OPTIONS;
+export const Currency = CURRENCY_OPTIONS;

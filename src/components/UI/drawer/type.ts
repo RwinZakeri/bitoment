@@ -1,6 +1,4 @@
-import { ReactNode } from "react";
+import { DrawerProps } from "@/types";
 
-export interface DrawerPropsType {
-  title: string;
-  children: ReactNode;
-}
+// Re-export the interface from global types for backward compatibility
+export type DrawerPropsType = DrawerProps;
