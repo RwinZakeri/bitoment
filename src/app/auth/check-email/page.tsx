@@ -11,8 +11,8 @@ const CheckEmailPage = () => {
         src={EmailSvg}
         alt="check email"
         className="block mx-auto"
-        width={300}
-        height={300}
+        width={240}
+        height={240}
       />
       <TilteAndDescription
       className="mt-6"
@@ -30,7 +30,7 @@ to your email."
           Skip, I’ll confirm later
         </p>
 
-        <p className="text-gray-500 text-center text-sm font-normal">
+        <p className="text-gray-500  text-sm font-normal">
           Did not receive the email? Check your Spam folder or {" "}
           <Link
             href={"/forgot-password"}

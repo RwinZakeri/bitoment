@@ -25,7 +25,7 @@ const ProfilePage = () => {
 
       <div className="flex flex-col mt-11 gap-2">
         {profileItems.map((item: profileItemsType) => (
-          <LinkedCard key={item.id} title={item.text} icon={item.icon} />
+          <LinkedCard key={item.id} link={item.address} title={item.text} icon={item.icon} />
         ))}
       </div>
     </PageLayout>

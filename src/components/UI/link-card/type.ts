@@ -2,5 +2,7 @@ import { ReactNode } from "react";
 
 export interface LinkedCardType {
   title: string;
-  icon: ReactNode;
+  icon?: ReactNode;
+  link: string;
+  label?: string;
 }

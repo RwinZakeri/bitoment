@@ -14,13 +14,17 @@ const SignUpPage = () => {
     <PageLayout>
       <CardAndTitle
         className="mt-20"
-        title="Create
-your account"
+        title={
+          <div className="flex flex-col ">
+            <span>Create</span>
+            <span>your account</span>
+          </div>
+        }
         description="cryptocurrency wallet mobile apps available for
 managing and storing your digital assets."
       />
 
-      <div className="flex flex-col gap-4 mt-6">
+      <div className="flex flex-col gap-6 mt-6">
         <Input
           type="text"
           label="Full Name"
@@ -47,7 +51,7 @@ managing and storing your digital assets."
         />
       </div>
       <div className="mt-8 flex flex-col gap-4">
-        <Button variant="filled" size="md" className="w-full">
+        <Button variant="filled" size="lg" className="w-full">
           Sign up
         </Button>
         <Button

@@ -9,11 +9,15 @@ import Link from "next/link";
 
 const SignInPage = () => {
   return (
-    <PageLayout>
+    <PageLayout backHidden>
       <TilteAndDescription
         className="mt-52"
-        title="Sign in
-your account"
+        title={
+          <div className="flex flex-col">
+            <span>Sign in</span>
+            <span>your account</span>
+          </div>
+        }
         description="cryptocurrency wallet mobile apps available for
 managing and storing your digital assets."
       />
@@ -58,7 +62,7 @@ managing and storing your digital assets."
 
         <p className="text-gray-500 text-center text-sm font-normal">
           Don&apos;t have an account ?{" "}
-          <Link href={"/sign-up"} className="text-blue-500 font-semibold">
+          <Link href={"/auth/sign-up"} className="cursor-pointer text-blue-500 font-semibold">
             Sign Up
           </Link>
         </p>

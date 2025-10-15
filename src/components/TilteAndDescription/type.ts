@@ -1,6 +1,7 @@
-export interface TilteAndDescriptionProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  title?: string;
-  description?: string;
+import { ReactNode } from "react";
+
+export interface TilteAndDescriptionProps {
+  title?: string | ReactNode;
+  description: string;
   className?: string;
 }

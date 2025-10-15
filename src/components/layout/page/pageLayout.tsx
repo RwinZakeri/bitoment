@@ -16,8 +16,8 @@ const PageLayout = ({
 }) => {
   const { goBack, isBack } = useNavigationBack();
   return (
-    <div className={`${cn(className, "w-full px-8 pt-3")}`}>
-      <div className="relative w-full h-full">
+    <div className={`${cn(className, "w-full h-full px-8 pt-3 pb-4")}`}>
+      <div className="relative w-full ">
         {!backHidden && (
           <div
             className="absolute cursor-pointer left-0 top-0"

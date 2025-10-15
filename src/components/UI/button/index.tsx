@@ -12,13 +12,13 @@ const Button = ({
 }: ButtonProps) => {
   const getSizeStyles = () => {
     if (size === "lg") {
-      return "h-12 px-4 text-base";
+      return "h-12.5 px-4 text-base";
     }
     return "h-10 px-3 text-sm";
   };
 
   const getVariantStyles = () => {
-    const baseStyles = `${getSizeStyles()} font-normal rounded-lg flex items-center justify-center`;
+    const baseStyles = `${getSizeStyles()} cursor-pointer font-normal rounded-lg flex items-center justify-center`;
 
     if (variant === "text") {
       return cn(
@@ -39,7 +39,7 @@ const Button = ({
     if (variant === "outline-dark") {
       return cn(
         baseStyles,
-        "bg-transparent border-[1px] border-black-500 text-black-500",
+        "bg-transparent border-[1px] border-black-50 text-black-500",
         stroke && "border-green-600"
       );
     }

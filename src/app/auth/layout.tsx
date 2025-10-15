@@ -3,5 +3,5 @@ export default function BlogLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <section className="bg-white">{children}</section>;
+  return <section className="bg-white h-screen">{children}</section>;
 }

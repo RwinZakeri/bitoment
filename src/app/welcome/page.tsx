@@ -15,7 +15,7 @@ const WelcomePage = () => {
         <div className="h-1.5 w-8 bg-white opacity-[36%] mx-auto mt-12 mb-20"></div>
         <div className="flex flex-col gap-6">
           <Button variant="filled" className="w-full">
-            Sign with Google
+            Login
           </Button>
           <Button icon={<GoogleIcon />} variant="outline" className="w-full">
             Sign with Google
@@ -23,7 +23,7 @@ const WelcomePage = () => {
 
           <div className="flex items-center justify-center gap-2">
             <span className="w-10 h-[1px] bg-light-white"></span>
-            <span className="text-light-white text-xs">OR</span>
+            <span className="text-light-white font-medium text-xs">OR</span>
             <span className="w-10 h-[1px] bg-light-white"></span>
           </div>
 

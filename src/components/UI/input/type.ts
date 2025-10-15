@@ -5,7 +5,4 @@ export interface InputProps {
   props?: React.InputHTMLAttributes<HTMLInputElement>;
   type?: string;
   icon?: React.ReactNode;
-  showPasswordToggle?: boolean;
-  onTogglePassword?: () => void;
-  isPasswordVisible?: boolean;
 }

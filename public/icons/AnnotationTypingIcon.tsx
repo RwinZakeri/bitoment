@@ -1,6 +1,6 @@
 import React from "react";
 
-interface EmailIconProps {
+interface AnnotationTypingIconProps {
   width?: number;
   height?: number;
   className?: string;
@@ -9,11 +9,11 @@ interface EmailIconProps {
   strokeOpacity?: number;
 }
 
-const EmailIcon: React.FC<EmailIconProps> = ({
+const AnnotationTypingIcon: React.FC<AnnotationTypingIconProps> = ({
   width = 24,
   height = 24,
   className = "",
-  strokeColor = "#616161",
+  strokeColor = "#222124",
   strokeWidth = 1,
   strokeOpacity = 1,
 }) => {
@@ -27,7 +27,7 @@ const EmailIcon: React.FC<EmailIconProps> = ({
       className={className}
     >
       <path
-        d="M4.6875 6.75L11.3596 11.5403C11.7449 11.8168 12.2551 11.8168 12.6404 11.5403L19.3125 6.75M5.25 19H18.75C19.9926 19 21 17.9553 21 16.6667V7.33333C21 6.04467 19.9926 5 18.75 5H5.25C4.00736 5 3 6.04467 3 7.33333V16.6667C3 17.9553 4.00736 19 5.25 19Z"
+        d="M7.20002 9.69026V9.60002M12 9.69026V9.60002M16.8 9.69026V9.60002M14.6087 16.5913L12 21.6L9.60002 16.5913H4.80002C3.47454 16.5913 2.40002 15.5168 2.40002 14.1913V4.80003C2.40002 3.47454 3.47454 2.40002 4.80002 2.40002H19.2C20.5255 2.40002 21.6 3.47454 21.6 4.80002V14.1913C21.6 15.5168 20.5255 16.5913 19.2 16.5913H14.6087Z"
         stroke={strokeColor}
         style={{ stroke: strokeColor, strokeOpacity }}
         strokeWidth={strokeWidth}
@@ -38,4 +38,4 @@ const EmailIcon: React.FC<EmailIconProps> = ({
   );
 };
 
-export default EmailIcon;
+export default AnnotationTypingIcon;
