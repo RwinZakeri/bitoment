@@ -10,7 +10,7 @@ export interface twoFactorOptionsProps {
   id: string;
 }
 
-export const twoFactorSelecOption: twoFactorOptionsProps[] = [
+export const twoFactorOption: twoFactorOptionsProps[] = [
   {
     label: "SMS Verification",
     icon: <AnnotationTypingIcon className="w-6 h-6" />,

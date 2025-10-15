@@ -20,6 +20,7 @@
   --gray-100: #525252;
   --gray-70: #b3b3b3;
   --gray-50: #eeeeee;
+  --gray-400: #3a3a3a;
   --blue-500: #256bfd;
   --red-500: #f72e2e;
 }
@@ -40,6 +41,7 @@
   --color-gray-500: var(--gray-500);
   --color-gray-600: var(--gray-600);
   --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
   --color-gray-800: var(--gray-800);
   --color-gray-900: var(--gray-900);
   --color-gray-50: var(--gray-50);
@@ -53,5 +55,34 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+  }
+}
+
+input[type="radio"]:checked ~ label {
+  #dot {
+    border: 2px solid var(--primary-green-500);
+
+    #innerDot {
+      display: block;
+    }
+  }
+}
+
+#dot {
+  width: 18px;
+  height: 18px;
+  background: transparent;
+  border-radius: 100%;
+  border: 2px solid rgba(8, 8, 8, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  #innerDot {
+    display: none;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    border-radius: 100%;
+    background-color: var(--primary-green-500);
   }
 }

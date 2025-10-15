@@ -1,22 +1,22 @@
 import Radio from "../radio";
 import { twoFactorOptionsProps } from "./type";
 
-const SelectOption = ({
-  twoFactorSelecOption,
+const RadioOptions = ({
+  twoFactorOptions,
   label,
 }: {
-  twoFactorSelecOption: twoFactorOptionsProps[];
+  twoFactorOptions: twoFactorOptionsProps[];
   label: string;
 }) => {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-black-600/65">{label}</p>
 
-      <div className="py-5 px-4 bg-white rounded-[10px] cursor-pointer">
-        {twoFactorSelecOption.map((item: twoFactorOptionsProps, index) => {
+      <div className="py-5 px-4 bg-white rounded-[10px]">
+        {twoFactorOptions.map((item: twoFactorOptionsProps, index: number) => {
           return (
-            <div key={item.id}>
-              <div className="flex justify-between items-center">
+            <label htmlFor={item.id} key={item.id}>
+              <div className="flex justify-between items-center cursor-pointer">
                 <div className="flex items-center gap-3">
                   {item.icon}
                   <p className="text-sm text-black">{item.label}</p>
@@ -25,13 +25,14 @@ const SelectOption = ({
                   name="twoFactorOption"
                   value={item.value}
                   variant="turquoise"
+                  id={item.id}
                 />
               </div>
 
-              {twoFactorSelecOption?.length - 1 !== index && (
+              {twoFactorOptions?.length - 1 !== index && (
                 <div className="w-full h-[1px] my-4 bg-black-600/15"></div>
               )}
-            </div>
+            </label>
           );
         })}
       </div>
@@ -39,4 +40,4 @@ const SelectOption = ({
   );
 };
 
-export default SelectOption;
+export default RadioOptions;

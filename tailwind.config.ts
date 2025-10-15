@@ -27,6 +27,7 @@ const config: Config = {
           50: "var(--gray-50)",
           70: "var(--gray-70)",
           300: "var(--gray-300)",
+          400: "var(--gray-400)",
           500: "var(--gray-500)",
           600: "var(--gray-600)",
           800: "var(--gray-800)",
