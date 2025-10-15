@@ -1,9 +1,11 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import TwoFactorDescription from "@/components/pages/profile/two-factore/description";
+import Button from "@/components/UI/button";
 import Drawer from "@/components/UI/drawer";
 import SelectOption from "@/components/UI/radio-options";
 import { twoFactorOption } from "@/components/UI/radio-options/type";
+import VerifyInput from "@/components/UI/verify-input";
 import { TwoFactorMethod } from "@/types";
 import { useState } from "react";
 
@@ -37,11 +39,19 @@ const TwoFactorPage = () => {
 
       {isDrawerOpen && (
         <Drawer
-          title={selectedOption == 1 ? "2FA" : "SMS"}
+          title={selectedOption == 1 ? "2FA" : "Email"}
           onClose={handleCloseDrawer}
           isOpen={isDrawerOpen}
         >
-          <h1>hello world</h1>
+          <div className="px-10">
+            <VerifyInput
+              placeholder={"Enter the code you receive"}
+              label={selectedOption == 1 ? "Phone Number" : "Add Email"}
+            />
+            <Button className="w-full my-8" size="lg">
+              Confirm Code
+            </Button>
+          </div>
         </Drawer>
       )}
     </PageLayout>

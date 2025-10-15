@@ -43,7 +43,7 @@ const Drawer = ({
       />
 
       <div
-        className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-lg z-50 transform transition-transform duration-300 ease-out ${
+        className={`absolute bottom-0 left-0 right-0 bg-gray-200 rounded-t-lg z-50 transform transition-transform duration-300 ease-out ${
           isAnimating ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -53,7 +53,7 @@ const Drawer = ({
         />
 
         <div className="px-4 pb-4">
-          <p className=" max-h-[70vh] text-xs overflow-y-auto font-semibold text-gray-700-alt text-center">
+          <p className=" max-h-[70vh] text-xs overflow-y-auto text-gray-700-alt font-light text-center">
             {title}
           </p>
         </div>

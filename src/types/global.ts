@@ -50,10 +50,7 @@ export enum Currency {
 /**
  * Button size variants
  */
-export enum ButtonSize {
-  MEDIUM = "md",
-  LARGE = "lg",
-}
+export type ButtonSize = "sm" | "md" | "lg";
 
 /**
  * Radio button variants
@@ -100,7 +97,7 @@ export interface LinkedOptionsProps {
  */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline";
+  variant?: "filled" | "outline" | "outline-dark" | "text";
   size?: ButtonSize;
   loading?: boolean;
 }
@@ -113,6 +110,17 @@ export interface RadioProps
   label?: string;
   className?: string;
   variant?: RadioVariant;
+}
+
+/**
+ * Checkbox component props
+ */
+export interface CheckboxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  className?: string;
+  size?: "sm" | "md" | "lg";
+  variant?: "default" | "outline";
 }
 
 /**

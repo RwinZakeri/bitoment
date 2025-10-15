@@ -7,7 +7,7 @@ const Button = ({
   variant = "filled",
   stroke = false,
   icon,
-  size = "md",
+  size = "lg",
   ...props
 }: ButtonProps) => {
   const getSizeStyles = () => {
