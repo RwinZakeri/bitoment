@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import TilteAndDescription from "@/components/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
@@ -24,6 +24,7 @@ your password."
       <Button
         onClick={goBack}
         variant="text"
+        size="lg"
         className="text-blue-500 absolute bottom-24 left-1/2 -translate-x-1/2"
       >
         Back to again{" "}

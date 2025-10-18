@@ -14,10 +14,15 @@ const WelcomePage = () => {
         </h1>
         <div className="h-1.5 w-8 bg-white opacity-[36%] mx-auto mt-12 mb-20"></div>
         <div className="flex flex-col gap-6">
-          <Button variant="filled" className="w-full">
+          <Button variant="filled" size="lg" className="w-full">
             Login
           </Button>
-          <Button icon={<GoogleIcon />} variant="outline" className="w-full">
+          <Button
+            icon={<GoogleIcon />}
+            variant="outline"
+            size="lg"
+            className="w-full"
+          >
             Sign with Google
           </Button>
 
@@ -30,6 +35,7 @@ const WelcomePage = () => {
           <Button
             icon={<ProfileAddIcon />}
             variant="outline"
+            size="lg"
             className="w-full"
           >
             Create new account{" "}

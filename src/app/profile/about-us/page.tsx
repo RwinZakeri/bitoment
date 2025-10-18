@@ -4,7 +4,7 @@ import Paper from "@/components/UI/paper";
 const AboutUsPage = () => {
   return (
     <PageLayout title="About Us">
-      <Paper className="mt-6">
+      <Paper className="mt-6 bg-white p-6">
         <p className="text-lg ">
           At <span className="text-green-600 font-bold">Bittomint</span> , we
           are dedicated to providing a secure, transparent, and efficient

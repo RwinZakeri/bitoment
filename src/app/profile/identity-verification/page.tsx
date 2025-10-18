@@ -43,11 +43,16 @@ const IdentityVerification = () => {
           onChange={(e) => setAgreeToTerms(e.target.checked)}
         />
       </div>
-      <Button size="lg" className="mx-auto px-6" disabled={!agreeToTerms}>
+      <Button
+        size="lg"
+        className="mx-auto px-6"
+        disabled={!agreeToTerms}
+        onClick={() => setIsModalOpen(true)}
+      >
         Confirm
       </Button>
 
-      <VerifyModal isOpen={true} onClose={() => setIsModalOpen(false)} />
+      <VerifyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </PageLayout>
   );
 };

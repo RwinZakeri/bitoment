@@ -8,7 +8,7 @@ const Paper = ({
   className?: string;
   children: ReactNode;
 }) => {
-  return <div className={cn(className, "p-6 bg-white")}>{children}</div>;
+  return <div className={cn(className)}>{children}</div>;
 };
 
 export default Paper;

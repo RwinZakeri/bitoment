@@ -16,7 +16,7 @@ const PageLayout = ({
 }) => {
   const { goBack, isBack } = useNavigationBack();
   return (
-    <div className={`${cn(className, "w-full  px-8 pt-3 pb-4")}`}>
+    <div className={cn("w-full px-8 pt-3 pb-4", className)}>
       <div className="relative w-full">
         {!backHidden && (
           <div
@@ -27,9 +27,11 @@ const PageLayout = ({
           </div>
         )}
 
-        <p className="w-full text- text-center h-7 font-semibold text-lg">
-          {title}
-        </p>
+        {title && (
+          <p className="w-full text- text-center h-7 font-semibold text-lg">
+            {title}
+          </p>
+        )}
       </div>
       {children}
     </div>

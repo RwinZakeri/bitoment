@@ -27,6 +27,7 @@ const config: Config = {
           500: "var(--primary-cyan-500)",
         },
         gray: {
+          100: "var(--gray-100)",
           200: "var(--gray-200)",
           300: "var(--gray-300)",
           "400-alt2": "var(--gray-400-alt2)",
@@ -36,6 +37,7 @@ const config: Config = {
           600: "var(--gray-600)",
           "700-alt": "var(--gray-700-alt)",
           700: "var(--gray-700)",
+          800: "#222222",
         },
         red: {
           500: "var(--red-500)",

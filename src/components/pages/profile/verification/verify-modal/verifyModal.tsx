@@ -11,7 +11,7 @@ const VerifyModal = ({
   onClose: () => void;
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal className="top-0 overflow-scroll max-h-[667px] absolute" isOpen={isOpen}  onClose={onClose}>
       <div className="text-center">
         <p className="text-sm mb-6">
           Verify Your Account To use all the features of our platform, please
@@ -55,7 +55,7 @@ const VerifyModal = ({
         </div>
       </div>
       <Button className="w-fit px-6 mx-auto mt-4 rounded-xl" size="lg">
-      Verify Now
+        Verify Now
       </Button>
     </Modal>
   );

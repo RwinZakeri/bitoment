@@ -1,6 +1,6 @@
 import TilteAndDescription from "@/components/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
-import EmailSvg from "@/public/svgs/illustrations.svg";
+import EmailSvg from "@/public/svgs/verify-illustrat.svg";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ const CheckEmailPage = () => {
         height={240}
       />
       <TilteAndDescription
-      className="mt-6"
+        className="mt-6"
         title="Check your email"
         description="We have sent a password recover instructions
 to your email."
@@ -31,7 +31,7 @@ to your email."
         </p>
 
         <p className="text-gray-500  text-sm font-normal">
-          Did not receive the email? Check your Spam folder or {" "}
+          Did not receive the email? Check your Spam folder or{" "}
           <Link
             href={"/forgot-password"}
             className="text-blue-500 font-semibold"

@@ -116,7 +116,7 @@ export interface RadioProps
  * Checkbox component props
  */
 export interface CheckboxProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
   className?: string;
   size?: "sm" | "md" | "lg";

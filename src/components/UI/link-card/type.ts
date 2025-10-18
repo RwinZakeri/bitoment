@@ -5,4 +5,5 @@ export interface LinkedCardType {
   icon?: ReactNode;
   link: string;
   label?: string;
+  size?: "sm" | "lg";
 }

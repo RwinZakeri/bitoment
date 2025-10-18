@@ -1,0 +1,41 @@
+import check from "@/public/svgs/fill-check-circle.svg";
+import uncheck from "@/public/svgs/stroke-check-circle.svg";
+import Image from "next/image";
+import { verifyCardPropsType } from "./type";
+
+const VerifyCard = ({ img, steps, title, isPassed }: verifyCardPropsType) => {
+  return (
+    <div
+      className={`w-full relative rounded-lg p-4 ${
+        isPassed ? "bg-cyan-200" : "bg-white"
+      }`}
+    >
+      <div className="flex items-center justify-between ">
+        <p className="text-black font-semibold text-base self-start">
+        {title}
+        </p>
+        <Image src={img} alt={title} width={50} height={50} />
+      </div>
+
+      <div className="flex flex-col mt-1 gap-2">
+        {steps?.map((item) => (
+          <div className="flex gap-2" key={item.title}>
+            <Image
+              src={item.isPassed ? check : uncheck}
+              width="20"
+              height="20"
+              className="w-5"
+              alt="check-icon"
+            />
+            <p className="text-sm font-light"> {item.title}</p>
+          </div>
+        ))}
+      </div>
+      {isPassed && <div className="text-sm font-light bg-cyan-500 px-2 py-1 text-white/80 rounded-xl ml-auto w-fit mt-6">Your Current Level</div>}
+        
+      {!isPassed && <button className="border-[1px] rounded-sm p-1.5 border-gray-400 text-xs mx-auto block mt-4 border-solid">Continue Verification</button>}
+    </div>
+  );
+};
+
+export default VerifyCard;

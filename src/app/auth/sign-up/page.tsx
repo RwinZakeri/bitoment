@@ -56,6 +56,7 @@ managing and storing your digital assets."
         </Button>
         <Button
           variant="outline-dark"
+          size="lg"
           icon={<GoogleIcon fill="black" className="size-6" />}
           className="w-full"
         >
