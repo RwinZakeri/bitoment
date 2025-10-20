@@ -9,6 +9,7 @@
   --primary-cyan-400: #15e0cc;
   --primary-cyan-500: #13bcab;
   --gray-200: #eeeeee;
+  --gray-250: #dddddd;
   --gray-300: #ddd;
   --gray-400-alt2: #b3b3b3;
   --gray-400: #aeacac;
@@ -22,6 +23,10 @@
   --primary-slate-800: #222632;
   --primary-cyan-600: #11baaa;
   --primary-cyan-700: #039183;
+  --custom-coral: #93f1e8;
+  --coral-red: #ff7d78;
+  --teal-light: #93f1e8;
+  --border-gray: #dad9d9;
 }
 
 @theme inline {
@@ -34,6 +39,7 @@
   --color-cyan-400: var(--primary-cyan-400);
   --color-cyan-500: var(--primary-cyan-500);
   --color-gray-200: var(--gray-200);
+  --color-gray-250: var(--gray-250);
   --color-gray-300: var(--gray-300);
   --color-gray-400-alt2: var(--gray-400-alt2);
   --color-gray-400: var(--gray-400);
@@ -47,6 +53,9 @@
   --color-slate-800: var(--primary-slate-800);
   --color-cyan-600: var(--primary-cyan-600);
   --color-cyan-700: var(--primary-cyan-700);
+  --color-coral-red: var(--coral-red);
+  --color-teal-light: var(--teal-light);
+  --color-border-gray: var(--border-gray);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,4 +92,22 @@ input[type="radio"]:checked ~ label {
     border-radius: 100%;
     background-color: var(--primary-cyan-400);
   }
+}
+
+#qr-shaded-region {
+  border: none !important;
+}
+
+#qr-shaded-region {
+  border: 100px 10px solid red !important;
+  border-radius: 100px !important;
+  div {
+    display: none;
+  }
+}
+#html5-qrcode-button-camera-stop{
+  display: none;
+}
+#reader__dashboard{
+  display: none !important;
 }

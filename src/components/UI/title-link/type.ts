@@ -6,6 +6,6 @@ export interface titleLinkPropsType {
   label: string;
   address?: string;
   children: ReactNode;
-  className ?: string
-  margin : number
+  className?: string;
+  margin: number;
 }

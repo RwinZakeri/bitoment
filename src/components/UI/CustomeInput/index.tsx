@@ -6,17 +6,45 @@ const CustomeInput = ({
   type,
   className,
   placeholder,
-  props,
+  inputType = "fill",
+  Icon,
+  ...rest
 }: InputProps) => {
   return (
-    <label className={cn(className, "bg-white py-4 px-6 gap-4 rounded-lg flex flex-col")}>
-      {label && <span className="text-sm font-semibold">{label}</span>}
-      <input
-        type={type}
-        placeholder={placeholder}
-        className="border-none placeholder:text-gray-500 focus:outline-none "
-        {...props}
-      />
+    <label
+      className={cn(
+        className,
+        `flex flex-col ${
+          inputType === "fill"
+            ? "bg-white py-4 px-6 rounded-lg gap-4  "
+            : "rounded-xl gap-1"
+        }`
+      )}
+    >
+      {label && (
+        <span
+          className={`${
+            inputType === "fill"
+              ? "text-sm font-semibold"
+              : "text-base font-normal"
+          }`}
+        >
+          {label}
+        </span>
+      )}
+      <div className="relative">
+        <input
+          type={type}
+          placeholder={placeholder}
+          className="border-none bg-white px-4 py-4 h-[60px] placeholder:text-gray-500 rounded-xl focus:outline-none w-full"
+          {...rest}
+        />
+        {Icon && (
+          <div className="absolute cursor-pointer right-4 p-2 bg-white top-1/2 transform -translate-y-1/2">
+            {Icon}
+          </div>
+        )}
+      </div>
     </label>
   );
 };

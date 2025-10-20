@@ -6,4 +6,6 @@ export interface LinkedCardType {
   link: string;
   label?: string;
   size?: "sm" | "lg";
+  type?: "crypto-link" | "normal-link";
+
 }

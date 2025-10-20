@@ -1,32 +1,32 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import TotalPrice from "@/components/module/total-price";
-import Button from "@/components/UI/button";
 import CryptoCard from "@/components/UI/crypto-card/page";
-import CurrencyProgressCard from "@/components/UI/currency-progress-card";
-import Paper from "@/components/UI/paper";
+import CryptoCredit from "@/components/UI/crypto-credit";
 import TitleLink from "@/components/UI/title-link";
 import TransformButton from "@/components/UI/transform-button";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
-import LinkIcon from "@/public/icons/LinkIcon";
+import TetherIcon from "@/public/icons/TetherIcon";
 import Image from "next/image";
+import { use } from "react";
 
-const WalletPage = () => {
+export default function CryptoSlugPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = use(params);
+
   return (
-    <PageLayout title="My Wallet" className="px-5">
-      <Paper className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-gray-100">
-        <TotalPrice
-          className="flex-col-reverse"
-          totalPrice="638,532.21"
-          amount={4.57}
-          button={
-            <Button size="lg" className="bg-cyan-200 px-2" icon={<LinkIcon />}>
-              CGP
-            </Button>
-          }
+    <PageLayout title="BTC Wallet">
+      <div className="mt-6">
+        <CryptoCredit
+          label="USDT  Balance"
+          price="112,345.67"
+          amount={"56,786.04 (+1.37%)"}
+          icon={<TetherIcon className="w-7 h-7" />}
         />
-      </Paper>
+      </div>
       <div className="flex mt-7 justify-between items-center">
         <TransformButton
           icon={
@@ -60,47 +60,8 @@ const WalletPage = () => {
           clickHandler={() => console.log("object")}
         />
       </div>
-
       <TitleLink
-        margin={32}
-        title="Asset Distribution"
-        label="View All"
-        type="link"
-        address="/"
-      >
-        <Paper className="bg-white p-4 grid grid-cols-2 gap-6 rounded-lg">
-          <CurrencyProgressCard
-            vertical
-            icon={<BtcIcon />}
-            price={"112,345.67"}
-            progress={30}
-            title="btc"
-          />
-          <CurrencyProgressCard
-            vertical
-            icon={<BtcIcon />}
-            price={"112,345.67"}
-            progress={30}
-            title="btc"
-          />
-          <CurrencyProgressCard
-            vertical
-            icon={<BtcIcon />}
-            price={"112,345.67"}
-            progress={30}
-            title="btc"
-          />
-          <CurrencyProgressCard
-            vertical
-            price={"112,345.67"}
-            progress={3}
-            title="Other"
-          />
-        </Paper>
-      </TitleLink>
-
-      <TitleLink
-        margin={32}
+        margin={64}
         title="Wallet History"
         address="/"
         type="link"
@@ -137,6 +98,4 @@ const WalletPage = () => {
       </TitleLink>
     </PageLayout>
   );
-};
-
-export default WalletPage;
+}

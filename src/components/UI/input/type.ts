@@ -1,8 +1,9 @@
-export interface InputProps {
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   className?: string;
   label?: string;
-  props?: React.InputHTMLAttributes<HTMLInputElement>;
   type?: string;
-  icon?: React.ReactNode;
+  Icon?: React.ReactNode;
+  inputType: "fill" | "stroke";
 }
