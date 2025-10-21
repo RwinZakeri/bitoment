@@ -25,7 +25,7 @@ export const profileItems: Array<profileItemsType> = [
   {
     id: uuidv4(),
     text: "Verification",
-    address: "/profile/",
+    address: "/profile/verification",
     icon: <FileCheckIcon />,
   },
   {
