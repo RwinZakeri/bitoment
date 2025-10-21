@@ -4,7 +4,7 @@ import { StepperPropsType } from "./type";
 
 const Stepper = ({ passedSteps, steps }: StepperPropsType) => {
   return (
-    <div className="flex gap-12 items-center">
+    <div className="flex gap-12 items-center justify-center">
       {steps.map((item, index) => (
         <div key={uuid()} className="flex items-center flex-col gap-1">
           <div
