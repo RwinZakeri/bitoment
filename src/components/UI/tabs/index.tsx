@@ -32,13 +32,14 @@ const Tabs: React.FC<TabsProps> = ({
   return (
     <div className={`${className} w-full`}>
       <div
-        className={`flex border-b-[1px] overflow-x-auto scrollbar-hide border-gray-300 bg-transparent justify-between ${tabClassName}`}
+        className={`flex border-b-[1px] w-full overflow-x-auto scrollbar-hide border-gray-300 bg-transparent  ${tabClassName}`}
       >
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
             className={`
+              w-full
              text-xs
              p-4
               ${
