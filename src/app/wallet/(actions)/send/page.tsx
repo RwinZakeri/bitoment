@@ -35,14 +35,14 @@ const SendPage = () => {
           label={"Blockchain Network"}
         />
         <CustomeInput
-          Icon={<QrIcon onClick={() => router.push("/wallet/screener")} />}
+          icon={<QrIcon onClick={() => router.push("/wallet/screener")} />}
           placeholder="13agdGAFDe...3SmkjUYR"
           label="Amount"
           inputType="stroke"
         />
 
         <CustomeInput
-          Icon={<CorrosIcon onClick={() => console.log("cleared")} />}
+          icon={<CorrosIcon onClick={() => console.log("cleared")} />}
           placeholder="13agdGAFDe...3SmkjUYR"
           label="To"
           inputType="stroke"

@@ -132,6 +132,10 @@ const config: Config = {
         warning: "var(--warning)",
         error: "var(--error)",
         info: "var(--info)",
+        // App custom neutrals
+        secondary: {
+          DEFAULT: "#C6C6C6",
+        },
       },
     },
   },

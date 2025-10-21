@@ -1,4 +1,4 @@
-import TilteAndDescription from "@/components/TilteAndDescription/TilteAndDescription";
+import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
 import EmailSvg from "@/public/svgs/verify-illustrat.svg";
 import Image from "next/image";

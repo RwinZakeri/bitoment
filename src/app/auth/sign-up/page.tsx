@@ -1,5 +1,5 @@
 import PageLayout from "@/components/layout/page/pageLayout";
-import CardAndTitle from "@/components/TilteAndDescription/TilteAndDescription";
+import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import EmailIcon from "@/public/icons/EmailIcon";

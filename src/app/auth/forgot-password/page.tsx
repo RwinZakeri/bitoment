@@ -1,6 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import TilteAndDescription from "@/components/TilteAndDescription/TilteAndDescription";
+import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import UserNavigationBack from "@/hooks/useNavigationBack";

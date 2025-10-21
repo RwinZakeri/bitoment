@@ -1,9 +1,11 @@
+type inputType = "fill" | "stroke";
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  placeholder?: string;
-  className?: string;
+  id?: string;
   label?: string;
-  type?: string;
-  Icon?: React.ReactNode;
-  inputType: "fill" | "stroke";
+  icon?: React.ReactNode;
+  type?: React.HTMLInputTypeAttribute;
+  className?: string;
+  containerClassName?: string;
+  inputType?: inputType;
 }

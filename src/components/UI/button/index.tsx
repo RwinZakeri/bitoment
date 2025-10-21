@@ -28,6 +28,14 @@ const Button = ({
       );
     }
 
+    if (variant === "secondary") {
+      return cn(
+        baseStyles,
+        "bg-secondary text-black/70 hover:bg-secondary/90",
+        stroke && "border border-black/20"
+      );
+    }
+
     if (variant === "outline") {
       return cn(
         baseStyles,

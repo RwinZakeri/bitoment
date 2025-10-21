@@ -97,7 +97,7 @@ export interface LinkedOptionsProps {
  */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "filled" | "outline" | "outline-dark" | "text";
+  variant?: "filled" | "outline" | "outline-dark" | "text" | "secondary";
   size?: ButtonSize;
   loading?: boolean;
 }

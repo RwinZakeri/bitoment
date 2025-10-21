@@ -18,14 +18,18 @@ const TotalPrice = ({
             <span className="text-3xl">{totalPrice}</span>{" "}
             <span className="text-gray-700/60 text-xl">{currency}</span>{" "}
           </p>
-          <p className="mt-2 text-gray-800/55">Total balance</p>
         </div>
-        <div className="flex gap-1 mt-1">
-          <PositiveFlashIcon />
+        <div className="flex items-center gap-1 mt-1">
+          <p className=" text-gray-800/55">Total balance</p>
+
           {amount && (
-            <span className="text-cyan-600 text-sm font-semibold">
-              +{amount}%
-            </span>
+            <>
+              <PositiveFlashIcon />
+
+              <span className="text-cyan-600 text-sm font-semibold">
+                +{amount}%
+              </span>
+            </>
           )}
         </div>
       </div>

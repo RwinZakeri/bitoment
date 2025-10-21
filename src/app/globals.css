@@ -25,8 +25,10 @@
   --primary-cyan-700: #039183;
   --custom-coral: #93f1e8;
   --coral-red: #ff7d78;
+  --coral-red-200: #ffe0e0;
   --teal-light: #93f1e8;
   --border-gray: #dad9d9;
+  --secondary: #c6c6c6;
 }
 
 @theme inline {
@@ -54,8 +56,10 @@
   --color-cyan-600: var(--primary-cyan-600);
   --color-cyan-700: var(--primary-cyan-700);
   --color-coral-red: var(--coral-red);
+  --color-coral-red-200: var(--coral-red-200);
   --color-teal-light: var(--teal-light);
   --color-border-gray: var(--border-gray);
+  --color-secondary: var(--secondary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -94,20 +98,10 @@ input[type="radio"]:checked ~ label {
   }
 }
 
-#qr-shaded-region {
-  border: none !important;
-}
-
-#qr-shaded-region {
+/* #qr-shaded-region {
   border: 100px 10px solid red !important;
   border-radius: 100px !important;
   div {
     display: none;
   }
-}
-#html5-qrcode-button-camera-stop{
-  display: none;
-}
-#reader__dashboard{
-  display: none !important;
-}
+} */

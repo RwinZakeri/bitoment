@@ -1,5 +1,5 @@
 import PageLayout from "@/components/layout/page/pageLayout";
-import TilteAndDescription from "@/components/TilteAndDescription/TilteAndDescription";
+import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import EmailIcon from "@/public/icons/EmailIcon";
@@ -62,7 +62,10 @@ managing and storing your digital assets."
 
         <p className="text-gray-500 text-center text-sm font-normal">
           Don&apos;t have an account ?{" "}
-          <Link href={"/auth/sign-up"} className="cursor-pointer text-blue-500 font-semibold">
+          <Link
+            href={"/auth/sign-up"}
+            className="cursor-pointer text-blue-500 font-semibold"
+          >
             Sign Up
           </Link>
         </p>

@@ -7,7 +7,7 @@ const CustomeInput = ({
   className,
   placeholder,
   inputType = "fill",
-  Icon,
+  icon,
   ...rest
 }: InputProps) => {
   return (
@@ -39,9 +39,9 @@ const CustomeInput = ({
           className="border-none bg-white px-4 py-4 h-[60px] placeholder:text-gray-500 rounded-xl focus:outline-none w-full"
           {...rest}
         />
-        {Icon && (
+        {icon && (
           <div className="absolute cursor-pointer right-4 p-2 bg-white top-1/2 transform -translate-y-1/2">
-            {Icon}
+            {icon}
           </div>
         )}
       </div>

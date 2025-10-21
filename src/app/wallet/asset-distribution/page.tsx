@@ -48,7 +48,7 @@ const AssetDistributionPage = () => {
   return (
     <PageLayout title="Asset Distribution" className="px-5">
       <Paper className="rounded-xl bg-white mt-4 p-4 shadow-lg">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-cen ter">
           <TotalPrice
             className="flex-col"
             button={
