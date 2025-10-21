@@ -44,7 +44,7 @@ managing and storing your digital assets."
             textDecorationThickness: "auto",
             textUnderlinePosition: "from-font",
           }}
-          href={"/forgot-password"}
+          href={"/auth/forgot-password"}
         >
           Forgot Password?
         </Link>

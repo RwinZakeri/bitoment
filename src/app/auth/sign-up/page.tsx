@@ -1,3 +1,4 @@
+"use client"
 import PageLayout from "@/components/layout/page/pageLayout";
 import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
@@ -8,8 +9,10 @@ import GoogleIcon from "@/public/icons/GoogleIcon";
 import LockIcon from "@/public/icons/LockIcon";
 import UserIcon from "@/public/icons/UserIcon";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
+  const router = useRouter();
   return (
     <PageLayout>
       <CardAndTitle
@@ -55,6 +58,7 @@ managing and storing your digital assets."
           Sign up
         </Button>
         <Button
+          onClick={() => router.push("/auth/sign-in")}
           variant="outline-dark"
           size="lg"
           icon={<GoogleIcon fill="black" className="size-6" />}
@@ -65,7 +69,7 @@ managing and storing your digital assets."
 
         <p className="text-gray-500 text-center text-sm font-normal">
           You have an account ?{" "}
-          <Link href={"/sign-in"} className="text-blue-500 font-semibold">
+          <Link href={"/auth/sign-in"} className="text-blue-500 font-semibold">
             Login
           </Link>
         </p>

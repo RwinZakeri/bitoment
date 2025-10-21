@@ -10,6 +10,7 @@ import TitleLink from "@/components/UI/title-link";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
 import LinkIcon from "@/public/icons/LinkIcon";
+import Link from "next/link";
 
 const WalletPage = () => {
   return (
@@ -22,7 +23,7 @@ const WalletPage = () => {
           amount={4.57}
           button={
             <Button size="lg" className="bg-cyan-200 px-2" icon={<LinkIcon />}>
-              CGP
+              <Link href={"/wallet/cpg"}>CGP</Link>
             </Button>
           }
         />

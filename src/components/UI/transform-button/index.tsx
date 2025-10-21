@@ -12,7 +12,7 @@ const TransformButton = ({
     clickHandler();
   };
   return (
-    <div className="flex flex-col gap-2 items-center">
+    <div className="flex flex-col cursor-pointer gap-2 items-center">
       <div
         className={cn(
           "w-[70px] h-[70px] bg-white flex items-center justify-center rounded-2xl " , 

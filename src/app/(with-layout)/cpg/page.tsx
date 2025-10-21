@@ -5,13 +5,14 @@ import CpgCard from "@/components/UI/cpg-card";
 import Modal from "@/components/UI/modal";
 import VerifyInput from "@/components/UI/verify-input";
 import SearchIcon from "@/public/icons/SearchIcon";
+import Link from "next/link";
 
 const CpgPage = () => {
   return (
     <PageLayout title="CPG">
       <div className="flex flex-col gap-3">
         <Button className="w-full mt-5" size="md">
-          Create payment link
+          <Link href={"/wallet/link-cpg"}>asdadsa Create payment link</Link>
         </Button>
         <VerifyInput
           icon={<SearchIcon />}
