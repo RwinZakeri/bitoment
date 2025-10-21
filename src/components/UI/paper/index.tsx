@@ -14,10 +14,12 @@ const Paper = ({
 }) => {
   return (
     <div className={cn(className)}>
-      <div className="flex items-center gap-2">
-        {icon && icon}
-        {label && <p className="text-lg">{label}</p>}
-      </div>
+      {(icon || label) && (
+        <div className="flex items-center gap-2">
+          {icon && icon}
+          {label && <p className="text-lg">{label}</p>}
+        </div>
+      )}
       {children}
     </div>
   );

@@ -1,23 +1,23 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
+import ActionButtons from "@/components/module/action-button/actionButtons";
 import TotalPrice from "@/components/module/total-price";
 import Button from "@/components/UI/button";
 import CryptoCard from "@/components/UI/crypto-card/page";
 import CurrencyProgressCard from "@/components/UI/currency-progress-card";
 import Paper from "@/components/UI/paper";
 import TitleLink from "@/components/UI/title-link";
-import TransformButton from "@/components/UI/transform-button";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
 import LinkIcon from "@/public/icons/LinkIcon";
-import Image from "next/image";
 
 const WalletPage = () => {
   return (
     <PageLayout title="My Wallet" className="px-5">
       <Paper className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-gray-100">
         <TotalPrice
-          className="flex-col-reverse"
+          labelPosition="top"
+          className="flex-col"
           totalPrice="638,532.21"
           amount={4.57}
           button={
@@ -27,72 +27,40 @@ const WalletPage = () => {
           }
         />
       </Paper>
-      <div className="flex mt-7 justify-between items-center">
-        <TransformButton
-          icon={
-            <Image src="/svgs/send.svg" alt="Send" width={24} height={24} />
-          }
-          label="Send"
-          clickHandler={() => console.log("object")}
-        />
-        <TransformButton
-          icon={
-            <Image
-              src="/svgs/recieve.svg"
-              alt="Receive"
-              width={24}
-              height={24}
-            />
-          }
-          label="Receive"
-          clickHandler={() => console.log("object")}
-        />
-        <TransformButton
-          icon={
-            <Image src="/svgs/swap.svg" alt="Swap" width={24} height={24} />
-          }
-          label="Swap"
-          clickHandler={() => console.log("object")}
-        />
-        <TransformButton
-          icon={<Image src="/svgs/plus.svg" alt="Add" width={24} height={24} />}
-          label="Add"
-          clickHandler={() => console.log("object")}
-        />
-      </div>
+      <ActionButtons />
 
       <TitleLink
         margin={32}
         title="Asset Distribution"
         label="View All"
         type="link"
-        address="/"
+        address="/wallet/asset-distribution"
       >
         <Paper className="bg-white p-4 grid grid-cols-2 gap-6 rounded-lg">
           <CurrencyProgressCard
             vertical
             icon={<BtcIcon />}
-            price={"112,345.67"}
+            price="112,345.67"
             progress={30}
             title="btc"
           />
           <CurrencyProgressCard
             vertical
             icon={<BtcIcon />}
-            price={"112,345.67"}
+            price="112,345.67"
             progress={30}
             title="btc"
           />
           <CurrencyProgressCard
             vertical
             icon={<BtcIcon />}
-            price={"112,345.67"}
+            price="112,345.67"
             progress={30}
             title="btc"
           />
           <CurrencyProgressCard
             vertical
-            price={"112,345.67"}
+            price="112,345.67"
             progress={3}
             title="Other"
           />
@@ -102,7 +70,7 @@ const WalletPage = () => {
       <TitleLink
         margin={32}
         title="Wallet History"
-        address="/"
+        address="/wallet/history"
         type="link"
         label="Show All"
       >

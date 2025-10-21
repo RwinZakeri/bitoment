@@ -8,12 +8,12 @@ const Security = () => {
         <LinkedCard
           label="Two-Factor Authentication"
           title="Two-factor is off"
-          link="/"
+          link="/profile/two-factor"
         />
         <LinkedCard
           label="Connected Devices"
           title="3 linked devices"
-          link="/"
+          link="/profile/devices"
         />
         <LinkedCard
           label="Account Management"

@@ -8,10 +8,14 @@ const TotalPrice = ({
   className,
   button,
   amount,
+  labelPosition = "bottom",
 }: totalPriceType) => {
   return (
     <div className="flex justify-between w-full">
-      <div>
+      <div className="flex flex-col gap-2">
+        {labelPosition !== "bottom" && (
+          <p className=" text-gray-800/55">Total balance</p>
+        )}
         <div className={cn(className, "flex gap-3")}>
           <p>
             {" "}
@@ -20,7 +24,9 @@ const TotalPrice = ({
           </p>
         </div>
         <div className="flex items-center gap-1 mt-1">
-          <p className=" text-gray-800/55">Total balance</p>
+          {labelPosition === "bottom" && (
+            <p className=" text-gray-800/55">Total balance</p>
+          )}
 
           {amount && (
             <>

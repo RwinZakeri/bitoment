@@ -35,7 +35,7 @@ const LinkCpg = () => {
 
         <AutoComplete
           onClick={(e) => {
-            console.log(e);
+            e;
           }}
           list={["iron man", "ppp", "ttt"]}
           label={"Blockchain Network"}
@@ -59,7 +59,7 @@ const LinkCpg = () => {
         />
 
         <CustomeInput
-          icon={<CorrosIcon onClick={() => console.log("cleared")} />}
+          icon={<CorrosIcon onClick={() => ""} />}
           placeholder="Optional"
           label="Order ID"
           inputType="stroke"
@@ -95,7 +95,9 @@ const LinkCpg = () => {
           onChange={() => handleCheckboxChange("amlCheck")}
         />
       </div>
-      <Button size="lg" className="mx-auto mt-8 px-12">Confirm</Button>
+      <Button size="lg" className="mx-auto mt-8 px-12">
+        Confirm
+      </Button>
     </PageLayout>
   );
 };

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import CircleProgressBar from "../circle-progress-bar";
 import { CurrencyProgressCardPropsType } from "./type";
 
@@ -9,11 +10,12 @@ const CurrencyProgressCard = ({
   vertical,
 }: CurrencyProgressCardPropsType) => {
   return (
-    <div
+    <Link
+      href={`/wallet/${title.toLocaleLowerCase()}`}
       className={`flex justify-between ${
         vertical
-          ? " bg-[#EFEFEF] flex-col-reverse gap-4 items-center rounded-lg p-4 w-full"
-          : " p-4 rounded-xl  shadow-[0px_2px_10px_rgba(32,32,32,25%)]"
+          ? " bg-[#EFEFEF] flex-col-reverse gap-4 items-center rounded-lg p-4"
+          : " p-4 rounded-xl shadow-[0px_2px_10px_rgba(32,32,32,25%)]"
       }`}
     >
       <div className={`flex flex-col gap-2 ${vertical && "items-center"}`}>
@@ -44,7 +46,7 @@ const CurrencyProgressCard = ({
         animated={true}
         duration={1500}
       />
-    </div>
+    </Link>
   );
 };
 

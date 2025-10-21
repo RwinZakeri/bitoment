@@ -6,4 +6,5 @@ export interface CurrencyProgressCardPropsType {
   price: number | string;
   progress: number;
   vertical?: boolean;
+  onClick?: () => void;
 }

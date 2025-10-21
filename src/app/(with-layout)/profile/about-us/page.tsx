@@ -6,7 +6,7 @@ const AboutUsPage = () => {
     <PageLayout title="About Us">
       <Paper className="mt-6 bg-white p-6">
         <p className="text-lg ">
-          At <span className="text-green-600 font-bold">Bittomint</span> , we
+          At <span className="text-cyan-400 font-bold">Bittomint</span> , we
           are dedicated to providing a secure, transparent, and efficient
           platform for investors looking to explore the world of digital assets.
           We offer a range of investment opportunities through carefully curated

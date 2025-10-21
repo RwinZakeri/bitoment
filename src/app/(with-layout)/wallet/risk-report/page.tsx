@@ -12,7 +12,7 @@ const RiskReportPage = () => {
     <PageLayout title="Risk Report">
       <div className="mt-4">
         <Filters
-          onClick={(e) => console.log(e)}
+          onClick={(e) => e}
           selectedQuery="all"
           FiltersItems={filters}
         />

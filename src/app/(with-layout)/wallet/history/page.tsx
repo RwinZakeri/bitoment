@@ -11,7 +11,7 @@ const HistoryPage = () => {
     <PageLayout title="Wallet History">
       <div className="mt-4">
         <Filters
-          onClick={(e) => console.log(e)}
+          onClick={(e) => e}
           selectedQuery="all"
           FiltersItems={filters}
         />

@@ -6,4 +6,5 @@ export interface totalPriceType {
   className?: string;
   button?: ReactNode;
   amount?: number;
+  labelPosition?: "bottom" | "top";
 }

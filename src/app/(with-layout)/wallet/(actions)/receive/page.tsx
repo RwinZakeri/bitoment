@@ -19,9 +19,7 @@ const ReceivePage = () => {
         />
 
         <AutoComplete
-          onClick={(e) => {
-            console.log(e);
-          }}
+          onClick={(e) => {}}
           list={["iron man", "ppp", "ttt"]}
           label={"Blockchain Network"}
         />

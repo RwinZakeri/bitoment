@@ -44,7 +44,11 @@ const CustomeInput = ({
         <input
           type={type}
           placeholder={placeholder}
-          className={`border-none px-4 py-4 h-[60px] placeholder:text-gray-500 rounded-xl focus:outline-none w-full ${variant === "secondary" ? "bg-gray-200" : "bg-white"}`}
+          className={`border-none ${
+            inputType !== "fill" && "px-4 rounded-xl h-[60px]  py-4"
+          } placeholder:text-gray-500  focus:outline-none w-full ${
+            variant === "secondary" ? "bg-gray-200" : "bg-white"
+          }`}
           {...rest}
         />
         {icon && (

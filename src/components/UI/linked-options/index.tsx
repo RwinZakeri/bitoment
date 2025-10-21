@@ -25,7 +25,7 @@ const LinkedOptions = ({
             <React.Fragment key={item.title}>
               <div
                 data-value={item.value}
-                className="flex justify-between cursor-pointer"
+                className="flex justify-between items-center cursor-pointer"
                 onClick={clickHandler}
               >
                 <p className={`w-full text-sm ${centerized && "text-center"}`}>

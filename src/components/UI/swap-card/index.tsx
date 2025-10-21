@@ -27,7 +27,7 @@ const SwapCard = ({
           className={"w-32"}
           size="sm"
           list={["btc", "etc", "binance"]}
-          onClick={(e) => console.log(e)}
+          onClick={(e) => e}
           zIndex={zIndex}
         />
       </div>

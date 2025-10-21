@@ -11,7 +11,6 @@ const TitleLink = ({
   className,
   margin,
 }: titleLinkPropsType) => {
-  console.log(type);
   return (
     <div style={{ marginTop: margin }}>
       <div className="flex justify-between mb-3">

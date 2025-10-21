@@ -19,7 +19,7 @@ const ScreenerPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const onScanSuccess = useCallback((decodedText: string) => {
-    console.log("QR Code detected:", decodedText);
+    // console.log("QR Code detected:", decodedText);
     setScanResult(decodedText);
     setIsScanning(false);
     // Stop scanning after successful scan

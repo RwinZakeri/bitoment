@@ -3,9 +3,9 @@ import { FileLockIcon } from "@/public/icons/FileLockIcon";
 import { GridFrameIcon } from "@/public/icons/GridFrameIcon";
 import { HelpIcon } from "@/public/icons/HelpIcon";
 import { SettingsIcon } from "@/public/icons/SettingsIcon";
+import { UserProfileIcon } from "@/public/icons/UserProfileIcon";
 import { ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { UserProfileIcon } from "../../../public/icons/UserProfileIcon";
 
 export interface profileItemsType {
   text: string;
@@ -18,38 +18,38 @@ export const profileItems: Array<profileItemsType> = [
   {
     id: uuidv4(),
     text: "Profile Information",
-    address: "/",
+    address: "/profile/profile-information",
     icon: <UserProfileIcon />,
   },
 
   {
     id: uuidv4(),
     text: "Verification",
-    address: "/",
+    address: "/profile/",
     icon: <FileCheckIcon />,
   },
   {
     id: uuidv4(),
     text: "Security",
-    address: "/",
+    address: "/profile/security",
     icon: <FileLockIcon />,
   },
   {
     id: uuidv4(),
     text: "Settings",
-    address: "/",
+    address: "/profile/setting",
     icon: <SettingsIcon />,
   },
   {
     id: uuidv4(),
     text: "Help & Support",
-    address: "/",
+    address: "/profile/setting",
     icon: <HelpIcon />,
   },
   {
     id: uuidv4(),
     text: "About Us",
-    address: "/",
+    address: "/profile/about-us",
     icon: <GridFrameIcon />,
   },
 ];

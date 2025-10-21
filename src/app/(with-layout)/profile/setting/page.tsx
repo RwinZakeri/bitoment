@@ -51,7 +51,7 @@ const SettingPage = () => {
         >
           <LinkedOptions
             centerized
-            onLinkedOption={(e) => console.log(e)}
+            onLinkedOption={(e) => e}
             options={chooseDrawerOption(selectedOption as string).options}
           />
         </Drawer>

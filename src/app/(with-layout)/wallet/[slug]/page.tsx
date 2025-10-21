@@ -1,13 +1,12 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
+import ActionButtons from "@/components/module/action-button/actionButtons";
 import CryptoCard from "@/components/UI/crypto-card/page";
 import CryptoCredit from "@/components/UI/crypto-credit";
 import TitleLink from "@/components/UI/title-link";
-import TransformButton from "@/components/UI/transform-button";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
 import TetherIcon from "@/public/icons/TetherIcon";
-import Image from "next/image";
 import { use } from "react";
 
 export default function CryptoSlugPage({
@@ -27,43 +26,11 @@ export default function CryptoSlugPage({
           icon={<TetherIcon className="w-7 h-7" />}
         />
       </div>
-      <div className="flex mt-7 justify-between items-center">
-        <TransformButton
-          icon={
-            <Image src="/svgs/send.svg" alt="Send" width={24} height={24} />
-          }
-          label="Send"
-          clickHandler={() => console.log("object")}
-        />
-        <TransformButton
-          icon={
-            <Image
-              src="/svgs/recieve.svg"
-              alt="Receive"
-              width={24}
-              height={24}
-            />
-          }
-          label="Receive"
-          clickHandler={() => console.log("object")}
-        />
-        <TransformButton
-          icon={
-            <Image src="/svgs/swap.svg" alt="Swap" width={24} height={24} />
-          }
-          label="Swap"
-          clickHandler={() => console.log("object")}
-        />
-        <TransformButton
-          icon={<Image src="/svgs/plus.svg" alt="Add" width={24} height={24} />}
-          label="Add"
-          clickHandler={() => console.log("object")}
-        />
-      </div>
+      <ActionButtons />
       <TitleLink
         margin={64}
         title="Wallet History"
-        address="/"
+        address="/wallet/history"
         type="link"
         label="Show All"
       >

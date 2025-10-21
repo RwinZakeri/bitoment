@@ -19,7 +19,9 @@ const ProfileInformationPage = () => {
         />
       </div>
       <div>
-        <Button icon={<LogoutIcon />} className="w-full mt-12" size="lg">Log Out</Button>
+        <Button icon={<LogoutIcon />} className="w-full mt-12" size="lg">
+          Log Out
+        </Button>
       </div>
     </PageLayout>
   );

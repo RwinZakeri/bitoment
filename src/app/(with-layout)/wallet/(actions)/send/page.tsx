@@ -8,11 +8,8 @@ import BtcIcon from "@/public/icons/BtcIcon";
 import CorrosIcon from "@/public/icons/CorrosIcon";
 import QrIcon from "@/public/icons/QrIcon";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const SendPage = () => {
-  const [select, setSelect] = useState("");
-  console.log(select);
   const router = useRouter();
   return (
     <PageLayout title="Send">
@@ -28,8 +25,7 @@ const SendPage = () => {
 
         <AutoComplete
           onClick={(e) => {
-            console.log(e);
-            setSelect(e);
+            ("");
           }}
           list={["iron man", "ppp", "ttt"]}
           label={"Blockchain Network"}
@@ -42,7 +38,7 @@ const SendPage = () => {
         />
 
         <CustomeInput
-          icon={<CorrosIcon onClick={() => console.log("cleared")} />}
+          icon={<CorrosIcon onClick={() => ""} />}
           placeholder="13agdGAFDe...3SmkjUYR"
           label="To"
           inputType="stroke"
@@ -55,7 +51,9 @@ const SendPage = () => {
           inputType="stroke"
         />
 
-        <Button size="lg" className="w-fit mx-auto mt-6">Confirm</Button>
+        <Button size="lg" className="w-fit mx-auto mt-6">
+          Confirm
+        </Button>
       </div>
     </PageLayout>
   );

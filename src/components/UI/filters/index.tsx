@@ -15,7 +15,7 @@ const Filters = ({
           <div
             onClick={() => clickEvent(item.query)}
             className={`px-5 py-1.5 rounded-sm w-fit cursor-pointer ${
-              selectedQuery === item.query ? "bg-teal-custom" : "bg-white"
+              selectedQuery === item.query ? "bg-teal-light" : "bg-white"
             }`}
             key={item.label}
           >

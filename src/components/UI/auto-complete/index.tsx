@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import LeftIcon from "@/public/icons/left-icon";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AutoCompletePropsType } from "./type";
 
 const AutoComplete = ({
@@ -14,11 +14,6 @@ const AutoComplete = ({
 }: AutoCompletePropsType) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
-
-  useEffect(() => {
-    console.log(type);
-    console.log(isOpen);
-  }, [type, isOpen]);
 
   const eventHandler = (item: string) => {
     setType(item);

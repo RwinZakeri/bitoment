@@ -24,7 +24,6 @@ const TwoFactorPage = () => {
     setIsDrawerOpen(false);
   };
 
-  console.log(selectedOption);
 
   return (
     <PageLayout title="Security">

@@ -81,7 +81,7 @@ const PerformanceTab = () => {
             <Image src="/svgs/rington.svg" alt="Send" width={24} height={24} />
           }
           label="News"
-          clickHandler={() => console.log("object")}
+          clickHandler={() => ""}
         />
         <TransformButton
           className="bg-teal-light"
@@ -94,7 +94,7 @@ const PerformanceTab = () => {
             />
           }
           label="Transactions"
-          clickHandler={() => console.log("object")}
+          clickHandler={() => ""}
         />
         <TransformButton
           className="bg-teal-light"
@@ -107,7 +107,7 @@ const PerformanceTab = () => {
             />
           }
           label="Calculation"
-          clickHandler={() => console.log("object")}
+          clickHandler={() => ""}
         />
         <TransformButton
           className="bg-teal-light"
@@ -115,7 +115,7 @@ const PerformanceTab = () => {
             <Image src="/svgs/plus-teal.svg" alt="Add" width={24} height={24} />
           }
           label="Invest"
-          clickHandler={() => console.log("object")}
+          clickHandler={() => ""}
         />
       </div>
       <Paper className="bg-white p-4 mt-2 rounded-xl" label="Features">

@@ -68,7 +68,7 @@ const WalletPage = () => {
           title="Your Active Plans"
           type="link"
           label="View All"
-          address="/"
+          address="/plans"
           className="flex gap-2 flex-col"
           margin={0}
         >
@@ -79,7 +79,7 @@ const WalletPage = () => {
             amount={"4"}
             price={"71,367.78"}
           />
-          <LinkedCard title="Show more details" size="sm" link="/" />
+          <LinkedCard title="Show more details" size="sm" link="/plans" />
         </TitleLink>
       </div>
 
@@ -88,7 +88,7 @@ const WalletPage = () => {
           title="Plans Summary"
           type="link"
           label="Learn More"
-          address="/"
+          address="/plans"
           className="flex gap-2 flex-col"
           margin={0}
         >

@@ -30,7 +30,7 @@ const DeviceCard = ({
 }: DeviceCardProps) => {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-gray-500/65">{label}</p>
+      <p className="text-gray-600">{label}</p>
       <div className="py-6 rounded-[10px] border-solid border-[1px] border-black/10 bg-white px-4">
         {titleAndDesc({
           title,
