@@ -1,6 +1,6 @@
 import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
-import EmailSvg from "@/public/svgs/verify-illustrat.svg";
+import EmailSvg from "@/public/svgs/illustrationsTwo.svg";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ to your email."
         <p className="text-gray-500  text-sm font-normal">
           Did not receive the email? Check your Spam folder or{" "}
           <Link
-            href={"/forgot-password"}
+            href={"/auth/forgot-password"}
             className="text-blue-500 font-semibold"
           >
             try another email address.

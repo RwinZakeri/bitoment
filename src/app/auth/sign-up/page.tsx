@@ -60,7 +60,7 @@ managing and storing your digital assets."
         <Button
           onClick={() => router.push("/auth/sign-in")}
           variant="outline-dark"
-          size="lg"
+          size="sm"
           icon={<GoogleIcon fill="black" className="size-6" />}
           className="w-full"
         >

@@ -4,9 +4,11 @@ import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAn
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import UserNavigationBack from "@/hooks/useNavigationBack";
+import { useRouter } from "next/navigation";
 
 const ForgotPasswordPage = () => {
   const { goBack } = UserNavigationBack();
+  const router = useRouter();
   return (
     <PageLayout title="Forgot Password">
       <TilteAndDescription
@@ -17,7 +19,11 @@ your password."
       />
 
       <Input type="email" label="Email" placeholder="example@gmail.com" />
-      <Button className="w-full mt-6" size="lg">
+      <Button
+        className="w-full mt-6"
+        size="lg"
+        onClick={() => router.push("/auth/check-email")}
+      >
         Send
       </Button>
 
