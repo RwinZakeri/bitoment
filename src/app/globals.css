@@ -102,6 +102,61 @@ input[type="radio"]:checked ~ label {
   }
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Stepper Component Styles */
+.stepper-step {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stepper-step:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 224, 204, 0.15);
+}
+
+.stepper-step:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.stepper-connector {
+  transition: all 0.3s ease-in-out;
+}
+
+.stepper-connector.completed {
+  background: linear-gradient(
+    90deg,
+    var(--primary-cyan-400),
+    var(--primary-cyan-500)
+  );
+}
+
+.stepper-connector.pending {
+  background: linear-gradient(90deg, var(--gray-300), var(--gray-400));
+}
+
+/* Stepper Animation Keyframes */
+@keyframes stepper-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(21, 224, 204, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(21, 224, 204, 0.1);
+  }
+}
+
+.stepper-step.active {
+  animation: stepper-pulse 2s infinite;
+}
+
 /* #qr-shaded-region {
   border: 100px 10px solid red !important;
   border-radius: 100px !important;

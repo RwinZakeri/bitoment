@@ -1,0 +1,57 @@
+import React from "react";
+
+interface ThreelayerIconProps {
+  width?: number | string;
+  height?: number | string;
+  className?: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+}
+
+const ThreelayerIcon: React.FC<ThreelayerIconProps> = ({
+  width = 50,
+  height = 50,
+  className = "",
+  fill = "#0F9D8F",
+  stroke = "black",
+  strokeWidth = 2,
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 50 50"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M25 17.7083C36.506 17.7083 45.8334 14.91 45.8334 11.4583C45.8334 8.00647 36.506 5.20825 25 5.20825C13.4941 5.20825 4.16669 8.00647 4.16669 11.4583C4.16669 14.91 13.4941 17.7083 25 17.7083Z"
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.2197 16.1458C6.89458 17.291 4.16669 18.9666 4.16669 20.8333C4.16669 24.285 13.4941 27.0833 25 27.0833C36.506 27.0833 45.8334 24.285 45.8334 20.8333C45.8334 18.9666 43.1054 17.291 38.7803 16.1458C35.1078 17.1181 30.2836 17.7083 25 17.7083C19.7165 17.7083 14.8922 17.1181 11.2197 16.1458Z"
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.2197 25.5208C6.89458 26.666 4.16669 28.3416 4.16669 30.2083C4.16669 33.66 13.4941 36.4583 25 36.4583C36.506 36.4583 45.8334 33.66 45.8334 30.2083C45.8334 28.3416 43.1054 26.666 38.7803 25.5208C35.1078 26.4931 30.2836 27.0833 25 27.0833C19.7165 27.0833 14.8922 26.4931 11.2197 25.5208Z"
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export default ThreelayerIcon;

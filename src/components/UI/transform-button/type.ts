@@ -4,4 +4,5 @@ export interface TransformButtonProps {
   label: string;
   icon: ReactNode;
   clickHandler: () => void;
+  className?: string;
 }

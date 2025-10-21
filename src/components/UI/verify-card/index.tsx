@@ -31,7 +31,7 @@ const VerifyCard = ({ img, steps, title, isPassed }: verifyCardPropsType) => {
           </div>
         ))}
       </div>
-      {isPassed && <div className="text-sm font-light bg-cyan-500 px-2 py-1 text-white/80 rounded-xl ml-auto w-fit mt-6">Your Current Level</div>}
+      {isPassed && <div className="text-sm font-light bg-cyan-500 px-2 py-1 text-white rounded-xl ml-auto w-fit mt-6">Your Current Level</div>}
         
       {!isPassed && <button className="border-[1px] rounded-sm p-1.5 border-gray-400 text-xs mx-auto block mt-4 border-solid">Continue Verification</button>}
     </div>

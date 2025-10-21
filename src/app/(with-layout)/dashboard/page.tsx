@@ -13,7 +13,6 @@ import { LayerIcon } from "@/public/icons/LayerIcon";
 import LayoutGridIcon from "@/public/icons/LayoutGridIcon";
 
 const WalletPage = () => {
-  // Sample data for the line chart
   const chartData = {
     labels: [
       "Jan",
@@ -84,7 +83,7 @@ const WalletPage = () => {
         </TitleLink>
       </div>
 
-      <div>
+      <div className="mt-6">
         <TitleLink
           title="Plans Summary"
           type="link"

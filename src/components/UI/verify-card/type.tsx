@@ -48,7 +48,7 @@ export const verifyLevel = [
         isPassed: false,
       },
     ],
-    img: "/svgs/level-one.svg",
+    img: "/svgs/threelayer.svg",
     isPassed: false,
   },
 ];

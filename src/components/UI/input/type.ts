@@ -1,4 +1,5 @@
 type inputType = "fill" | "stroke";
+type inputVariant = "primary" | "secondary";
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   id?: string;
@@ -8,4 +9,5 @@ export interface InputProps
   className?: string;
   containerClassName?: string;
   inputType?: inputType;
+  variant?: inputVariant;
 }

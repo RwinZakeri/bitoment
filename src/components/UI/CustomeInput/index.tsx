@@ -8,15 +8,23 @@ const CustomeInput = ({
   placeholder,
   inputType = "fill",
   icon,
+  variant = "primary",
   ...rest
 }: InputProps) => {
+  const getBackgroundColor = () => {
+    if (variant === "secondary") {
+      return "bg-gray-200";
+    }
+    return "bg-white";
+  };
+
   return (
     <label
       className={cn(
         className,
         `flex flex-col ${
           inputType === "fill"
-            ? "bg-white py-4 px-6 rounded-lg gap-4  "
+            ? `${getBackgroundColor()} py-4 px-6 rounded-lg gap-4  `
             : "rounded-xl gap-1"
         }`
       )}
@@ -36,7 +44,7 @@ const CustomeInput = ({
         <input
           type={type}
           placeholder={placeholder}
-          className="border-none bg-white px-4 py-4 h-[60px] placeholder:text-gray-500 rounded-xl focus:outline-none w-full"
+          className={`border-none px-4 py-4 h-[60px] placeholder:text-gray-500 rounded-xl focus:outline-none w-full ${variant === "secondary" ? "bg-gray-200" : "bg-white"}`}
           {...rest}
         />
         {icon && (
