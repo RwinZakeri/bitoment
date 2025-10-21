@@ -24,8 +24,8 @@ const SendPage = () => {
         />
 
         <AutoComplete
-          onClick={(e) => {
-            ("");
+          onClick={() => {
+            // Handle network selection
           }}
           list={["iron man", "ppp", "ttt"]}
           label={"Blockchain Network"}

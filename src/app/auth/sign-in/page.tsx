@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
@@ -7,7 +7,7 @@ import EmailIcon from "@/public/icons/EmailIcon";
 import EyeIcon from "@/public/icons/EyeIcon";
 import GoogleIcon from "@/public/icons/GoogleIcon";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const SignInPage = () => {
   const router = useRouter();
@@ -52,8 +52,11 @@ managing and storing your digital assets."
           Forgot Password?
         </Link>
         <Button
-        onClick={()=> router.push("/dashboard")}
-        variant="filled" size="lg" className="w-full">
+          onClick={() => router.push("/dashboard")}
+          variant="filled"
+          size="lg"
+          className="w-full"
+        >
           Sign In
         </Button>
         <Button

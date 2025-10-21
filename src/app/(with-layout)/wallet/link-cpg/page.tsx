@@ -34,8 +34,8 @@ const LinkCpg = () => {
         />
 
         <AutoComplete
-          onClick={(e) => {
-            e;
+          onClick={() => {
+            // Handle network selection
           }}
           list={["iron man", "ppp", "ttt"]}
           label={"Blockchain Network"}
