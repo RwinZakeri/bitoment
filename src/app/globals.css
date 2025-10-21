@@ -29,6 +29,8 @@
   --teal-light: #93f1e8;
   --border-gray: #dad9d9;
   --secondary: #c6c6c6;
+  --amber-500: #fcb62b;
+  --emerald-500: #00da49;
 }
 
 @theme inline {
@@ -60,6 +62,8 @@
   --color-teal-light: var(--teal-light);
   --color-border-gray: var(--border-gray);
   --color-secondary: var(--secondary);
+  --color-amber-500: var(--amber-500);
+  --color-emerald-500: var(--emerald-500);
 }
 
 @media (prefers-color-scheme: dark) {

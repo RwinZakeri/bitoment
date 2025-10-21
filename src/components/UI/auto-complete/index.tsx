@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { AutoCompletePropsType } from "./type";
 
 const AutoComplete = ({
-  size = "md",
   label,
   list,
   onClick,

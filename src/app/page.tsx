@@ -1,5 +1,4 @@
 import PageLayout from "@/components/layout/page/pageLayout";
-import Link from "next/link";
 
 const Home = () => {
   return (

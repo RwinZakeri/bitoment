@@ -83,10 +83,6 @@ const ScreenerPage = () => {
     setIsScanning(true);
   };
 
-  const handleStop = () => {
-    setIsScanning(false);
-  };
-
   return (
     <PageLayout title="Screener">
       <div className="flex flex-col items-center justify-center w-full h-screen p-4">

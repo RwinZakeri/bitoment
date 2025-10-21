@@ -6,7 +6,6 @@ export const titleAndDesc = ({
   deviceName,
   cityConnection,
   isLast,
-  isDevice,
 }: DeviceCardProps) => {
   return (
     <div>
@@ -28,7 +27,6 @@ const DeviceCard = ({
   deviceName,
   cityConnection,
   label,
-  isDevice = true,
 }: DeviceCardProps) => {
   return (
     <div className="flex flex-col gap-3">
@@ -40,15 +38,12 @@ const DeviceCard = ({
           cityConnection,
           label,
           isLast: false,
-          isDevice,
         })}
 
-        {isDevice && (
-          <div className="w-full h-full flex items-center justify-center gap-2">
-            <XSquareContainedIcon />
-            <p className="text-sm text-red-500">Remove from other devices</p>
-          </div>
-        )}
+        <div className="w-full h-full flex items-center justify-center gap-2">
+          <XSquareContainedIcon />
+          <p className="text-sm text-red-500">Remove from other devices</p>
+        </div>
       </div>
     </div>
   );

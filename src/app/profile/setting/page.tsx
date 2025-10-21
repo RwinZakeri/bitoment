@@ -27,19 +27,12 @@ const drawerItems = {
 
 const SettingPage = () => {
   const [selectedOption, setSelectedOption] = useState<string | number>();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const chooseDrawerOption = (selected: string) => {
     return drawerItems[selected as keyof typeof drawerItems];
   };
 
-  const handleOptionSelect = (option: string | number) => {
-    setSelectedOption(option);
-    setIsDrawerOpen(true);
-  };
-
   const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
     setSelectedOption(undefined);
   };
   return (

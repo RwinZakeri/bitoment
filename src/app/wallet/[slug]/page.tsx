@@ -15,7 +15,7 @@ export default function CryptoSlugPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = use(params);
+  use(params);
 
   return (
     <PageLayout title="BTC Wallet">

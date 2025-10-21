@@ -136,6 +136,13 @@ const config: Config = {
         secondary: {
           DEFAULT: "#C6C6C6",
         },
+        // Custom brand colors
+        amber: {
+          500: "var(--amber-500)",
+        },
+        emerald: {
+          500: "var(--emerald-500)",
+        },
       },
     },
   },

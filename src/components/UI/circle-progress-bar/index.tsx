@@ -20,7 +20,6 @@ const CircleProgressBar = ({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   // Animate progress if enabled
   useEffect(() => {

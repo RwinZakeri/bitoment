@@ -71,6 +71,7 @@ const WalletPage = () => {
           label="View All"
           address="/"
           className="flex gap-2 flex-col"
+          margin={0}
         >
           <PlanCard
             title="Peace Fund"
@@ -90,6 +91,7 @@ const WalletPage = () => {
           label="Learn More"
           address="/"
           className="flex gap-2 flex-col"
+          margin={0}
         >
           <PlanCard
             title="Future Fund"
@@ -108,8 +110,6 @@ const WalletPage = () => {
           />
         </TitleLink>
       </div>
-
-    
     </PageLayout>
   );
 };

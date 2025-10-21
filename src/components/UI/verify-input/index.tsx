@@ -1,20 +1,8 @@
-import LeftIcon from "@/public/icons/left-icon";
 import React from "react";
 import { VerifyInputPropsType } from "./type";
 
 const VerifyInput = React.forwardRef<HTMLInputElement, VerifyInputPropsType>(
-  (
-    {
-      type,
-      placeholder,
-      label,
-      icon = <LeftIcon className="rotate-180" />,
-      inputSize = "lg",
-      id,
-      ...props
-    },
-    ref
-  ) => {
+  ({ type, placeholder, label, icon, inputSize = "lg", id, ...props }, ref) => {
     const inputId =
       id ||
       (label
