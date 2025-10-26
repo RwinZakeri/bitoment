@@ -11,35 +11,45 @@ import { SignUpFormData, singUpSchema } from "@/schema/auth/authSchema";
 import { SignUpResponse } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(singUpSchema),
   });
 
-  const { mutate: onSubmit } = useMutation({
-    mutationFn: (data: SignUpFormData) => {
-      return axios
-        .post<SignUpResponse>("/api/auth/signup", data)
-        .then((res) => res.data);
+  const { mutate: onSubmit, isPending } = useMutation({
+    mutationFn: async (data: SignUpFormData) => {
+      const response = await axios.post<SignUpResponse>(
+        "/api/auth/signup",
+        data
+      );
+
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+
+      return response;
     },
     onSuccess: (data) => {
-      setCookie("token", data.token || "");
+      toast.success("Account created successfully");
+      setCookie("token", data.data.token || "");
       router.push("/");
     },
-    onError: (error: AxiosError<SignUpResponse>) => {
-      console.log(error.response?.data);
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
     },
   });
+
   return (
     <PageLayout>
       <CardAndTitle
@@ -96,9 +106,10 @@ const SignUp = () => {
             variant="filled"
             size="lg"
             className="w-full"
-            disabled={isSubmitting}
+            disabled={isPending}
+            loading={isPending}
           >
-            {isSubmitting ? "Creating account..." : "Sign up"}
+            {isPending ? "Creating account..." : "Sign up"}
           </Button>
         </div>
       </form>
