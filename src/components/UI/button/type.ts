@@ -7,4 +7,5 @@ export interface ButtonProps extends GlobalButtonProps {
   stroke?: boolean;
   icon?: React.ReactNode;
   size: ButtonSize;
+  isLoading?: boolean;
 }

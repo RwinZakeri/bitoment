@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/UI/button";
+import { Button } from "@/components/UI/button";
 import GoogleIcon from "@/public/icons/GoogleIcon";
 import ProfileAddIcon from "@/public/icons/ProfileAddIcon";
 import { useRouter } from "next/navigation";

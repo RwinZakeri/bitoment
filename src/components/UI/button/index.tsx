@@ -1,72 +1,74 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { forwardRef } from "react";
 import { ButtonProps } from "./type";
 
-const Button = ({
-  children,
-  className,
-  variant = "filled",
-  stroke = false,
-  icon,
-  size = "lg",
-  ...props
-}: ButtonProps) => {
-  const getSizeStyles = () => {
-    if (size === "lg") {
-      return "h-12.5 px-4 text-base";
-    }
-    return "h-10 px-3 text-sm";
-  };
+const VARIANTS = {
+  filled: "bg-cyan-300 text-black/70 hover:bg-cyan-400 focus:ring-cyan-400",
+  text: "bg-transparent text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 focus:ring-cyan-400",
+  secondary: "bg-secondary text-black/70 hover:bg-secondary/90",
+  outline: "bg-transparent border border-white text-white hover:bg-white/10",
+  "outline-dark":
+    "bg-transparent border border-black/25 text-black/70 hover:bg-black/5",
+} as const;
 
-  const getVariantStyles = () => {
-    const baseStyles = `${getSizeStyles()} cursor-pointer font-normal rounded-lg flex items-center justify-center`;
+const SIZES = {
+  lg: "h-12.5 px-4 text-base",
+  md: "h-10 px-3 text-sm",
+  sm: "h-8 px-2 text-xs py-5",
+} as const;
 
-    if (variant === "text") {
-      return cn(
-        baseStyles,
-        "bg-transparent text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 focus:ring-cyan-400",
-        stroke && "border border-cyan-500 hover:border-cyan-600"
-      );
-    }
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      className,
+      variant = "filled",
+      stroke = false,
+      icon,
+      size = "lg",
+      isLoading = false,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles =
+      "inline-flex items-center justify-center rounded-lg font-normal transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
-    if (variant === "secondary") {
-      return cn(
-        baseStyles,
-        "bg-secondary text-black/70 hover:bg-secondary/90",
-        stroke && "border border-black/20"
-      );
-    }
+    const variantClass = VARIANTS[variant] ?? VARIANTS.filled;
+    const sizeClass = SIZES[size] ?? SIZES.lg;
+    const strokeClass = stroke
+      ? "border border-cyan-500 hover:border-cyan-600"
+      : "";
 
-    if (variant === "outline") {
-      return cn(
-        baseStyles,
-        "bg-transparent border-[1px] border-white text-white",
-        stroke && "border-cyan-500"
-      );
-    }
-
-    if (variant === "outline-dark") {
-      return cn(
-        baseStyles,
-        "bg-transparent border-[1px] border-black/25 text-black/70",
-        stroke && "border-cyan-500"
-      );
-    }
-
-    return cn(
-      baseStyles,
-      "bg-cyan-300 text-black/70",
-      stroke && "border-2 border-cyan-500 hover:border-cyan-600"
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          baseStyles,
+          variantClass,
+          sizeClass,
+          strokeClass,
+          className
+        )}
+        disabled={isLoading || disabled}
+        aria-busy={isLoading}
+        {...props}
+      >
+        <div className="flex items-center justify-center gap-2">
+          {/* {isLoading && (
+            <span className="mr-1">
+              loading ...
+            </span>
+          )} */}
+          {icon && <span className="flex items-center">{icon}</span>}
+          <span>{children}</span>
+        </div>
+      </button>
     );
-  };
+  }
+);
 
-  return (
-    <button className={cn(getVariantStyles(), className)} {...props}>
-      <div className="flex items-center justify-center gap-2">
-        {icon && <div className="flex items-center justify-center">{icon}</div>}
-        <span className="text-center">{children}</span>
-      </div>
-    </button>
-  );
-};
-
-export default Button;
+Button.displayName = "Button";

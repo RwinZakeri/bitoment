@@ -10,4 +10,6 @@ export interface InputProps
   containerClassName?: string;
   inputType?: inputType;
   variant?: inputVariant;
+  error?: string;
+  showPasswordToggle?: boolean;
 }
