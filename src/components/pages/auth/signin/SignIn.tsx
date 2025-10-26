@@ -1,20 +1,58 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
-import {Button} from "@/components/UI/button";
+import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescription";
+import { Button } from "@/components/UI/button";
 import Input from "@/components/UI/input";
+import { setCookie } from "@/lib/utils";
 import EmailIcon from "@/public/icons/EmailIcon";
-import EyeIcon from "@/public/icons/EyeIcon";
 import GoogleIcon from "@/public/icons/GoogleIcon";
+import { SignInFormData, signInSchema } from "@/schema/auth/authSchema";
+import { SignInResponse } from "@/types/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const SignIn = () => {
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
+  });
 
-    return (    <PageLayout backHidden>
-      <TilteAndDescription
-        className="mt-52"
+  const { mutate: onSubmit, isPending } = useMutation({
+    mutationFn: async (data: SignInFormData) => {
+      const response = await axios.post<SignInResponse>(
+        "/api/auth/signin",
+        data
+      );
+
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+
+      return response;
+    },
+    onSuccess: (data) => {
+      toast.success("Signed in successfully");
+      setCookie("token", data.data.token || "");
+      router.push("/dashboard");
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error?.response?.data?.message || "Sign in failed");
+    },
+  });
+
+  return (
+    <PageLayout>
+      <CardAndTitle
+        className="mt-20"
         title={
           <div className="flex flex-col">
             <span>Sign in</span>
@@ -22,21 +60,28 @@ const SignIn = () => {
           </div>
         }
         description="cryptocurrency wallet mobile apps available for
-managing and storing your digital assets."
+        managing and storing your digital assets."
       />
 
-      <div className="mt-8 flex flex-col gap-6">
+      <form
+        onSubmit={handleSubmit((data) => onSubmit(data))}
+        className="flex flex-col gap-6 mt-6"
+      >
         <Input
           type="email"
           label="Email"
-          placeholder="example@gmail.com"
+          placeholder="Enter your email"
           icon={<EmailIcon className="size-6" />}
+          {...register("email")}
+          error={errors.email?.message}
         />
         <Input
-          type="password"
           label="Password"
+          type="password"
           placeholder="*************"
-          icon={<EyeIcon className="size-6" />}
+          showPasswordToggle={true}
+          {...register("password")}
+          error={errors.password?.message}
         />
 
         <Link
@@ -51,18 +96,26 @@ managing and storing your digital assets."
         >
           Forgot Password?
         </Link>
-        <Button
-          onClick={() => router.push("/dashboard")}
-          variant="filled"
-          size="lg"
-          className="w-full"
-        >
-          Sign In
-        </Button>
+
+        <div className="mt-8 flex flex-col gap-4">
+          <Button
+            type="submit"
+            variant="filled"
+            size="lg"
+            className="w-full"
+            disabled={isPending}
+            loading={isPending}
+          >
+            {isPending ? "Signing in..." : "Sign In"}
+          </Button>
+        </div>
+      </form>
+
+      <div className="mt-8 flex flex-col gap-4">
         <Button
           variant="outline-dark"
+          size="sm"
           icon={<GoogleIcon fill="black" className="size-6" />}
-          size="md"
           className="w-full"
         >
           Sign with Google
@@ -78,7 +131,8 @@ managing and storing your digital assets."
           </Link>
         </p>
       </div>
-    </PageLayout> );
-}
- 
+    </PageLayout>
+  );
+};
+
 export default SignIn;

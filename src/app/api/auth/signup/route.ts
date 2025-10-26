@@ -90,6 +90,8 @@ export async function POST(
       );
     }
 
+    
+
     const existingUser = db
       .prepare("SELECT id FROM users WHERE email = ?")
       .get(email);

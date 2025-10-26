@@ -39,7 +39,11 @@ export const signInSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
-    .min(1, "Password cannot be empty"),
+    .min(5, "Password must be at least 5 characters")
+    .regex(
+      passwordRegex,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
 });
 
 // Custom error messages for different scenarios

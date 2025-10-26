@@ -38,6 +38,7 @@ export async function POST(
         { status: 400 }
       );
     }
+    
 
     const user = db
       .prepare("SELECT id, email, password, name FROM users WHERE email = ?")
