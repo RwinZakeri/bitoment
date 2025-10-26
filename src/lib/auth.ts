@@ -157,3 +157,64 @@ export function getContentType(request: NextRequest): string | undefined {
   }
   return contentType;
 }
+
+/**
+ * Generate a random OTP
+ * @param length - Length of OTP (default: 4)
+ * @returns string - Generated OTP
+ */
+export function generateOTP(length: number = 4): string {
+  const digits = "0123456789";
+  let otp = "";
+  for (let i = 0; i < length; i++) {
+    otp += digits[Math.floor(Math.random() * 10)];
+  }
+  return otp;
+}
+
+/**
+ * Check if OTP is expired
+ * @param expiresAt - Expiration timestamp
+ * @returns boolean - True if expired
+ */
+export function isOTPExpired(expiresAt: string): boolean {
+  return new Date() > new Date(expiresAt);
+}
+
+/**
+ * Generate expiration time for OTP (default: 5 minutes)
+ * @param minutes - Minutes until expiration (default: 5)
+ * @returns string - ISO timestamp
+ */
+export function generateOTPExpiration(minutes: number = 5): string {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + minutes);
+  return now.toISOString();
+}
+
+/**
+ * Check if OTP verification time has expired (time between state 0 to 1)
+ * @param createdAt - When OTP was created (state 0)
+ * @param verifiedAt - When OTP was verified (state 1), null if not verified yet
+ * @param maxMinutes - Maximum minutes allowed for verification (default: 10)
+ * @returns boolean - True if verification time has expired
+ */
+export function isOTPVerificationTimeExpired(
+  createdAt: string,
+  verifiedAt: string | null,
+  maxMinutes: number = 10
+): boolean {
+  if (!verifiedAt) {
+    // If not verified yet, check if too much time has passed since creation
+    const created = new Date(createdAt);
+    const now = new Date();
+    const diffMinutes = (now.getTime() - created.getTime()) / (1000 * 60);
+    return diffMinutes > maxMinutes;
+  }
+
+  // If verified, check if verification happened within the allowed time
+  const created = new Date(createdAt);
+  const verified = new Date(verifiedAt);
+  const diffMinutes = (verified.getTime() - created.getTime()) / (1000 * 60);
+  return diffMinutes > maxMinutes;
+}

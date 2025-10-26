@@ -2,18 +2,15 @@
 import useNavigationBack from "@/hooks/useNavigationBack";
 import { cn } from "@/lib/utils";
 import LeftIcon from "@/public/icons/left-icon";
+import { LayoutPropType } from "./type";
 
 const PageLayout = ({
   children,
   title,
   className,
   backHidden,
-}: {
-  children: React.ReactNode;
-  title?: string;
-  className?: string;
-  backHidden?: boolean;
-}) => {
+  onClick,
+} : LayoutPropType) => {
   const { goBack, isBack } = useNavigationBack();
   return (
     <div className={cn("w-full px-8 pt-3 pb-4", className)}>
@@ -21,7 +18,13 @@ const PageLayout = ({
         {!backHidden && (
           <div
             className="absolute cursor-pointer left-0 top-0"
-            onClick={goBack}
+            onClick={() => {
+              if (onClick) {
+                onClick();
+              } else {
+                goBack();
+              }
+            }}
           >
             {isBack && <LeftIcon className="w-7 h-7 " />}
           </div>
