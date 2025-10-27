@@ -85,3 +85,66 @@ export interface ResetPasswordResponse {
   success: boolean;
   message: string;
 }
+
+// Device related types
+export interface DeviceInfo {
+  id: number;
+  user_id: number;
+  device_id: string;
+  device_name?: string;
+  device_type?: string;
+  operating_system?: string;
+  browser?: string;
+  browser_version?: string;
+  user_agent?: string;
+  ip_address?: string;
+  location?: string;
+  is_active: boolean;
+  last_seen: string;
+  created_at: string;
+}
+
+export interface CreateDeviceRequest {
+  device_id: string;
+  device_name?: string;
+  device_type?: string;
+  operating_system?: string;
+  browser?: string;
+  browser_version?: string;
+  user_agent?: string;
+  ip_address?: string;
+  location?: string;
+}
+
+export interface CreateDeviceResponse {
+  success: boolean;
+  message: string;
+  device?: DeviceInfo;
+}
+
+export interface GetDevicesResponse {
+  success: boolean;
+  message: string;
+  devices?: DeviceInfo[];
+}
+
+export interface UpdateDeviceRequest {
+  device_id: string;
+  device_name?: string;
+  is_active?: boolean;
+}
+
+export interface UpdateDeviceResponse {
+  success: boolean;
+  message: string;
+  device?: DeviceInfo;
+}
+
+export interface DeleteDeviceRequest {
+  device_id: string;
+}
+
+export interface DeleteDeviceResponse {
+  success: boolean;
+  message: string;
+}

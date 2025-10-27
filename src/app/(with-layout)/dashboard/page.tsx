@@ -1,6 +1,7 @@
+"use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import TotalPrice from "@/components/module/total-price";
-import {Button} from "@/components/UI/button";
+import { Button } from "@/components/UI/button";
 import LineChart from "@/components/UI/line-chart";
 import LinkedCard from "@/components/UI/link-card/LinkCard";
 import Paper from "@/components/UI/paper";

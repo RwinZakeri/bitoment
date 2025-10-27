@@ -2,6 +2,7 @@
 import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAndDescription";
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
+import axios from "@/config/axios.config";
 import UserNavigationBack from "@/hooks/useNavigationBack";
 import {
   ForgotPasswordFormData,
@@ -10,7 +11,7 @@ import {
 import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -52,7 +53,7 @@ const ForgotPasswordEmail = ({
   const { mutate: onSubmit, isPending } = useMutation({
     mutationFn: async (data: ForgotPasswordFormData) => {
       const response = await axios.post<SendOTPResponse>(
-        "/api/auth/send-otp",
+        "/auth/send-otp",
         data as SendOTPRequest
       );
 

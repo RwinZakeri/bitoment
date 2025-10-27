@@ -2,7 +2,7 @@ import { getToken } from "@/lib/utils";
 import axios, { InternalAxiosRequestConfig } from "axios";
 
 const instance = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: "http://localhost:3000/api/",
   timeout: 1000,
   headers: { "X-Custom-Header": "foobar" },
 });
@@ -22,7 +22,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers["Content-Type"] = "application/json";
-  console.log(config.headers);
   return config;
 });
 

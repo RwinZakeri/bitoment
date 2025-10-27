@@ -4,6 +4,7 @@ import {
   getContentType,
   isValidEmail,
 } from "@/lib/auth";
+import { Resend } from 'resend';
 import db from "@/lib/db";
 import { OTPState, SendOTPRequest, SendOTPResponse } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,8 +23,22 @@ export async function POST(
       );
     }
 
-    const body: SendOTPRequest = await request.json();
-    const { email } = body;
+    let body: SendOTPRequest;
+    try {
+      const rawBody = await request.json();
+      body = rawBody as SendOTPRequest;
+    } catch (error) {
+      console.error("JSON parsing error:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid JSON format in request body",
+        },
+        { status: 400 }
+      );
+    }
+
+    const email = body.email;
 
     if (!email) {
       return NextResponse.json(
@@ -61,33 +76,32 @@ export async function POST(
     }
 
     const otp = generateOTP(4);
-    const expiresAt = generateOTPExpiration(10);
+    const expiresAt = generateOTPExpiration(1);
     db.prepare("DELETE FROM password_reset_otps WHERE email = ?").run(email);
 
     db.prepare(
-      "INSERT INTO password_reset_otps (email, otp, expires_at, state) VALUES (?, ?, ?, ?)"
-    ).run(email, otp, expiresAt, OTPState.EMAIL_SENT);
+      "INSERT INTO password_reset_otps (email, otp, expires_at, state , created_at) VALUES (?, ?, ?, ? , ?)"
+    ).run(email, otp, expiresAt, OTPState.EMAIL_SENT , new Date().getTime());
 
-    // const emailSent = await sendOTPEmail(email, otp);
 
-    // const resend = new Resend("re_d6MrqPK8_8McYpLp1rxoLf7D3FhkoJKAz");
+    const resend = new Resend("re_d6MrqPK8_8McYpLp1rxoLf7D3FhkoJKAz");
 
-    // await resend.emails.send({
-    //   from: "Acme <onboarding@resend.dev>",
-    //   to: [email],
-    //   subject: `OTP code : ${otp}`,
-    //   html: "<p>back to website please</p>",
-    // });
+    await resend.emails.send({
+      from: "Acme <onboarding@resend.dev>",
+      to: [email],
+      subject: `OTP code : ${otp}`,
+      html: "<p>back to website please</p>",
+    });
 
-    // if (!resend) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "Failed to send OTP email. Please try again.",
-    //     },
-    //     { status: 500 }
-    //   );
-    // }
+    if (!resend) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to send OTP email. Please try again.",
+        },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {

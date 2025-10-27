@@ -189,7 +189,7 @@ export function isOTPExpired(expiresAt: string): boolean {
 export function generateOTPExpiration(minutes: number = 5): string {
   const now = new Date();
   now.setMinutes(now.getMinutes() + minutes);
-  return now.toISOString();
+  return String(now.getTime());
 }
 
 /**

@@ -9,9 +9,8 @@ import { extractTokenFromHeader, verifyToken } from "./auth";
  */
 export function verifyAuthToken(request: NextRequest): JWTPayload | null {
   try {
-    const authHeader = request.headers.get("authorization");
+    const authHeader = request.headers.get("Authorization");
     const token = extractTokenFromHeader(authHeader);
-
     if (!token) {
       return null;
     }

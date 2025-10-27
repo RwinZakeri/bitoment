@@ -21,13 +21,14 @@ export async function GET(request: NextRequest) {
 
     const user = db
       .prepare(
-        `
+    `
       SELECT id, email, name, created_at 
       FROM users 
       WHERE id = ?
     `
       )
-      .get(tokenPayload.userId) as User | undefined;
+      .get(tokenPayload.data.userId) as User | undefined;
+
 
     if (!user) {
       return NextResponse.json(

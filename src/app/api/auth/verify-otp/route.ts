@@ -28,8 +28,21 @@ export async function POST(
       );
     }
 
-    // ✅ Parse body safely
-    const body = (await request.json()) as VerifyOTPRequest;
+    let body: VerifyOTPRequest;
+    try {
+      const rawBody = await request.json();
+      body = rawBody as VerifyOTPRequest;
+    } catch (error) {
+      console.error("JSON parsing error:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid JSON format in request body",
+        },
+        { status: 400 }
+      );
+    }
+
     const { email, otp } = body;
 
     if (!email || !otp) {

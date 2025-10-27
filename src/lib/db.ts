@@ -58,4 +58,37 @@ try {
   console.log("Verified_at column already exists or table doesn't exist yet");
 }
 
+// Create user_devices table for tracking user device information
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS user_devices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    device_id TEXT NOT NULL,
+    device_name TEXT,
+    device_type TEXT,
+    operating_system TEXT,
+    browser TEXT,
+    browser_version TEXT,
+    user_agent TEXT,
+    ip_address TEXT,
+    location TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    last_seen TEXT DEFAULT CURRENT_TIMESTAMP,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE(user_id, device_id)
+  )
+`
+).run();
+
+// Create index for better performance
+db.prepare(
+  `CREATE INDEX IF NOT EXISTS idx_user_devices_user_id ON user_devices (user_id)`
+).run();
+
+db.prepare(
+  `CREATE INDEX IF NOT EXISTS idx_user_devices_device_id ON user_devices (device_id)`
+).run();
+
 export default db;
