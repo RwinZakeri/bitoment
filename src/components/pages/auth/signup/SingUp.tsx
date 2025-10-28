@@ -9,6 +9,7 @@ import GoogleIcon from "@/public/icons/GoogleIcon";
 import UserIcon from "@/public/icons/UserIcon";
 import { SignUpFormData, singUpSchema } from "@/schema/auth/authSchema";
 import { SignUpResponse } from "@/types/auth";
+import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -28,6 +29,7 @@ const SignUp = () => {
   });
 
   const { mutate: onSubmit, isPending } = useMutation({
+    mutationKey: [MutationKey.signUp],
     mutationFn: async (data: SignUpFormData) => {
       const response = await axios.post<SignUpResponse>(
         "/api/auth/signup",
@@ -45,10 +47,18 @@ const SignUp = () => {
       setCookie("token", data.data.token || "");
       router.push("/");
     },
-    onError: (error) => {
-      toast.error(error?.response?.data?.message);
+    onError: (error: unknown) => {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "An error occurred";
+      toast.error(errorMessage);
     },
   });
+
+  const handleGoogleSignIn = async () => {
+    // TODO: Implement Google OAuth without NextAuth
+    console.log("Google sign-in not implemented yet");
+  };
 
   return (
     <PageLayout>
@@ -115,11 +125,11 @@ const SignUp = () => {
       </form>
       <div className="mt-8 flex flex-col gap-4">
         <Button
-          onClick={() => router.push("/auth/sign-in")}
           variant="outline-dark"
           size="sm"
           icon={<GoogleIcon fill="black" className="size-6" />}
           className="w-full"
+          onClick={handleGoogleSignIn}
         >
           Sign with Google{" "}
         </Button>

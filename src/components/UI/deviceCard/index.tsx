@@ -6,13 +6,15 @@ export const titleAndDesc = ({
   deviceName,
   cityConnection,
   isLast,
+  browser,
 }: DeviceCardProps) => {
   return (
     <div>
       <p className="text-base font-bold">{title}</p>
       <div className="pt-3">
-        <p className="text-sm">{deviceName}</p>
-        <p className="text-sm">{cityConnection}</p>
+        <p className="text-sm"><span className="font-semibold">OS :</span> {deviceName}</p>
+        <p className="text-sm"><span className="font-semibold">IP :</span> {cityConnection}</p>
+        <p className="text-sm"><span className="font-semibold">Broswer :</span> {browser}</p>
       </div>
 
       {!isLast && (
@@ -26,23 +28,22 @@ const DeviceCard = ({
   title,
   deviceName,
   cityConnection,
-  label,
+  browser,
 }: DeviceCardProps) => {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-gray-600">{label}</p>
       <div className="py-6 rounded-[10px] border-solid border-[1px] border-black/10 bg-white px-4">
         {titleAndDesc({
           title,
           deviceName,
           cityConnection,
-          label,
           isLast: false,
+          browser,
         })}
 
-        <div className="w-full h-full flex items-center justify-center gap-2">
+        <div className="w-full text-center flex justify-center cursor-pointer  h-full items-center gap-2">
           <XSquareContainedIcon />
-          <p className="text-sm text-red-500">Remove from other devices</p>
+          <p className="text-sm w-fit text-red-500">Remove from other devices</p>
         </div>
       </div>
     </div>

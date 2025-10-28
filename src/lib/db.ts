@@ -17,6 +17,7 @@ db.prepare(
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     name TEXT,
+    phoneNumber INTEGER,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `
@@ -43,7 +44,7 @@ try {
   db.prepare(
     `ALTER TABLE password_reset_otps ADD COLUMN state INTEGER DEFAULT 0`
   ).run();
-} catch (error) {
+} catch {
   // Column already exists, ignore error
   console.log("State column already exists or table doesn't exist yet");
 }
@@ -53,7 +54,7 @@ try {
   db.prepare(
     `ALTER TABLE password_reset_otps ADD COLUMN verified_at TEXT`
   ).run();
-} catch (error) {
+} catch {
   // Column already exists, ignore error
   console.log("Verified_at column already exists or table doesn't exist yet");
 }
@@ -89,6 +90,30 @@ db.prepare(
 
 db.prepare(
   `CREATE INDEX IF NOT EXISTS idx_user_devices_device_id ON user_devices (device_id)`
+).run();
+
+// Create login_sessions table for tracking login sessions
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS login_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    device_name TEXT,
+    os TEXT,
+    browser TEXT,
+    ip TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`
+).run();
+
+// Create index for better performance on login_sessions
+db.prepare(
+  `CREATE INDEX IF NOT EXISTS idx_login_sessions_user_email ON login_sessions (user_email)`
+).run();
+
+db.prepare(
+  `CREATE INDEX IF NOT EXISTS idx_login_sessions_created_at ON login_sessions (created_at)`
 ).run();
 
 export default db;

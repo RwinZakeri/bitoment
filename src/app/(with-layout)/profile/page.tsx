@@ -1,7 +1,7 @@
-import Dashboard from "@/components/pages/dashboard/dashboard";
+import Profile from "@/components/pages/dashboard/dashboard";
 
 const ProfilePage = () => {
-  return <Dashboard />;
+  return <Profile />;
 };
 
 export default ProfilePage;

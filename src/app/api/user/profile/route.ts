@@ -7,8 +7,6 @@ export async function GET(request: NextRequest) {
   try {
     const tokenPayload = verifyAuthToken(request);
 
-    console.log(tokenPayload)
-
     if (!tokenPayload) {
       return NextResponse.json(
         {
@@ -21,14 +19,13 @@ export async function GET(request: NextRequest) {
 
     const user = db
       .prepare(
-    `
-      SELECT id, email, name, created_at 
+        `
+      SELECT id, email , phoneNumber , name, created_at 
       FROM users 
       WHERE id = ?
     `
       )
       .get(tokenPayload.data.userId) as User | undefined;
-
 
     if (!user) {
       return NextResponse.json(
@@ -72,15 +69,22 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { fullName } = body;
+    const { fullName, email, phoneNumber } = body;
+
+    console.log(fullName, email, phoneNumber);
 
     const updateUser = db.prepare(`
       UPDATE users 
-      SET name = ? 
+    SET name = ?, email = ?, phoneNumber = ?
       WHERE id = ?
     `);
 
-    const result = updateUser.run(fullName, tokenPayload.userId);
+    const result = updateUser.run(
+      fullName,
+      email,
+      phoneNumber,
+      tokenPayload.data.userId
+    );
 
     if (result.changes === 0) {
       return NextResponse.json(
@@ -100,7 +104,7 @@ export async function PUT(request: NextRequest) {
       WHERE id = ?
     `
       )
-      .get(tokenPayload.userId) as User;
+      .get(tokenPayload.data.userId) as User;
 
     return NextResponse.json({
       success: true,

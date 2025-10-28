@@ -1,6 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import VerifyModal from "@/components/pages/profile/verification/verify-modal/verifyModal";
+import VerifyModal from "@/components/pages/dashboard/profile/verification/verify-modal/verifyModal";
 import Button from "@/components/UI/button";
 import Checkbox from "@/components/UI/checkbox";
 import CustomeInput from "@/components/UI/CustomeInput";

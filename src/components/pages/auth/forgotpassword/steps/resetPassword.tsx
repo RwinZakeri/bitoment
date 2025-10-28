@@ -3,12 +3,9 @@ import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAn
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import UserNavigationBack from "@/hooks/useNavigationBack";
-import {
-  ForgotPasswordFormData,
-  resetPassword,
-  resetPasswordSchema,
-} from "@/schema/auth/authSchema";
+import { resetPassword, resetPasswordSchema } from "@/schema/auth/authSchema";
 import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
+import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -23,7 +20,7 @@ interface ResetPasswordData {
 }
 
 const ForgotPasswordResetPassword = ({
-  setStep,
+  // setStep,
   resetPasswordData,
 }: {
   setStep: Dispatch<SetStateAction<number>>;
@@ -42,12 +39,15 @@ const ForgotPasswordResetPassword = ({
   const router = useRouter();
 
   const { mutate: onSubmit, isPending } = useMutation({
-    mutationFn: async (data: ForgotPasswordFormData) => {
-      const response = await axios.post<SendOTPResponse>("/api/auth/reset-password", {
-        
-        newPassword : data.password , 
-        ...resetPasswordData,
-      } as SendOTPRequest);
+    mutationKey: [MutationKey.resetPassword],
+    mutationFn: async (data: resetPassword) => {
+      const response = await axios.post<SendOTPResponse>(
+        "/api/auth/reset-password",
+        {
+          newPassword: data.password,
+          ...resetPasswordData,
+        } as SendOTPRequest
+      );
 
       if (!response.data.success) {
         throw new Error(response.data.message);
@@ -58,7 +58,7 @@ const ForgotPasswordResetPassword = ({
     onSuccess: (data) => {
       toast.success("OTP sent successfully to your email");
       sessionStorage.setItem("resetEmail", data.data.message || "");
-      router.push("/auth/sign-in")
+      router.push("/auth/sign-in");
     },
     onError: (error: AxiosError<{ message: string }>) => {
       toast.error(error?.response?.data?.message || "Failed to send OTP");

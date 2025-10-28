@@ -7,6 +7,12 @@ import { useRouter } from "next/navigation";
 
 const WelcomePage = () => {
   const router = useRouter();
+
+  const handleGoogleSignIn = async () => {
+    // TODO: Implement Google OAuth without NextAuth
+    console.log("Google sign-in not implemented yet");
+  };
+
   return (
     <div className="w-full p-4 relative h-screen bg-cyan-400 flex items-center justify-center">
       <div className="z-0 absolute w-full h-full bg-[url('/images/welcome_background.png')] bg-cover bg-bottom-left opacity-100"></div>
@@ -26,7 +32,7 @@ const WelcomePage = () => {
           </Button>
           <Button
             icon={<GoogleIcon />}
-            onClick={() => router.push("/auth/sign-in")}
+            onClick={handleGoogleSignIn}
             variant="outline"
             size="lg"
             className="w-full"

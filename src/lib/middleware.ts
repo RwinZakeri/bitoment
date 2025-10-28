@@ -38,5 +38,5 @@ export function isAuthenticated(request: NextRequest): boolean {
  */
 export function getCurrentUserId(request: NextRequest): number | null {
   const payload = verifyAuthToken(request);
-  return payload?.userId || null;
+  return payload?.data?.userId || null;
 }

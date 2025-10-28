@@ -8,6 +8,7 @@ import EmailIcon from "@/public/icons/EmailIcon";
 import GoogleIcon from "@/public/icons/GoogleIcon";
 import { SignInFormData, signInSchema } from "@/schema/auth/authSchema";
 import { SignInResponse } from "@/types/auth";
+import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -27,6 +28,7 @@ const SignIn = () => {
   });
 
   const { mutate: onSubmit, isPending } = useMutation({
+    mutationKey: [MutationKey.signIn],
     mutationFn: async (data: SignInFormData) => {
       const response = await axios.post<SignInResponse>(
         "/api/auth/signin",
@@ -48,6 +50,11 @@ const SignIn = () => {
       toast.error(error?.response?.data?.message || "Sign in failed");
     },
   });
+
+  const handleGoogleSignIn = async () => {
+    // TODO: Implement Google OAuth without NextAuth
+    console.log("Google sign-in not implemented yet");
+  };
 
   return (
     <PageLayout>
@@ -117,6 +124,7 @@ const SignIn = () => {
           size="sm"
           icon={<GoogleIcon fill="black" className="size-6" />}
           className="w-full"
+          onClick={handleGoogleSignIn}
         >
           Sign with Google
         </Button>

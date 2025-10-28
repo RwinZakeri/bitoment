@@ -48,10 +48,12 @@ export interface User {
 }
 
 export interface JWTPayload {
-  userId: number;
-  email: string;
-  iat?: number;
-  exp?: number;
+  data: {
+    userId: number;
+    email: string;
+    iat?: number;
+    exp?: number;
+  };
 }
 
 // OTP related types
@@ -147,4 +149,21 @@ export interface DeleteDeviceRequest {
 export interface DeleteDeviceResponse {
   success: boolean;
   message: string;
+}
+
+// Login session related types
+export interface LoginSession {
+  id: number;
+  user_email: string;
+  device_name?: string;
+  os?: string;
+  browser?: string;
+  ip?: string;
+  created_at: string;
+}
+
+export interface LoginSessionResponse {
+  success: boolean;
+  message: string;
+  sessions?: LoginSession[];
 }

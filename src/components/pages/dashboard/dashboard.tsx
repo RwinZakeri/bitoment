@@ -8,9 +8,8 @@ import { ProfileItem } from "@/types/global";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect } from "react";
 
-const Dashboard = () => {
+const Profile = () => {
   const { data: profileData } = useQuery({
     queryKey: [ReactQueryKey.profile],
     queryFn: async () => {
@@ -18,10 +17,6 @@ const Dashboard = () => {
       return response.data;
     },
   });
-
-  useEffect(() => {
-    console.log(profileData);
-  }, [profileData]);
 
   return (
     <PageLayout backHidden title="Profile">
@@ -57,4 +52,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Profile;

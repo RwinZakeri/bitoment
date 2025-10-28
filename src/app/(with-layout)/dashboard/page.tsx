@@ -74,7 +74,7 @@ const WalletPage = () => {
           margin={0}
         >
           <PlanCard
-            title="Peace Fund"
+            title="Peace Fund"
             date="09/06/2024 - 08/07/2024"
             icon={<LayerIcon className="w-6 h-6" />}
             amount={"4"}
@@ -104,7 +104,7 @@ const WalletPage = () => {
             icon={<LayoutGridIcon className="w-6 h-6" />}
           />
           <PlanCard
-            title="Peace Fund"
+            title="Peace Fund"
             date="Up to 1.70% per year"
             icon={<CylinderIcon className="w-6 h-6" />}
           />

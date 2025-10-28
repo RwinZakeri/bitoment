@@ -1,6 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import TwoFactorDescription from "@/components/pages/profile/two-factore/description";
+import TwoFactorDescription from "@/components/pages/dashboard/profile/two-factore/description";
 import Button from "@/components/UI/button";
 import Drawer from "@/components/UI/drawer";
 import SelectOption from "@/components/UI/radio-options";
@@ -23,7 +23,6 @@ const TwoFactorPage = () => {
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
   };
-
 
   return (
     <PageLayout title="Security">

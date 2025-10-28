@@ -3,9 +3,10 @@ import Button from "@/components/UI/button";
 import axios from "@/config/axios.config";
 import { ForgotPasswordFormData } from "@/schema/auth/authSchema";
 import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
+import MutationKey from "@/types/mutation_key";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import Link from "next/link";
+// import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import OtpInput from "react-otp-input";
@@ -47,6 +48,7 @@ const ForgotPasswordOtp = ({
   }, [otp, setResetPasswordData]);
 
   const { mutate, isPending } = useMutation({
+    mutationKey: [MutationKey.verifyOtp],
     mutationFn: async (otp: string) => {
       const res = await axios.post("auth/verify-otp", {
         email: resetPasswordData.email,
@@ -58,13 +60,17 @@ const ForgotPasswordOtp = ({
       toast.success("OTP verified successfully");
       setStep(2);
     },
-    onError: (err) => {
+    onError: (err: unknown) => {
       console.log(err);
-      toast.error(err?.response?.data?.message);
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "An error occurred";
+      toast.error(errorMessage);
     },
   });
 
   const { mutate: onResend } = useMutation({
+    mutationKey: [MutationKey.sendOtp],
     mutationFn: async (data: ForgotPasswordFormData) => {
       const response = await axios.post<SendOTPResponse>(
         "/auth/send-otp",
@@ -125,8 +131,8 @@ const ForgotPasswordOtp = ({
             size="sm"
             variant="text"
             onClick={() => {
-              onResend({ email: resetPasswordData.email })
-              setTimer(60)
+              onResend({ email: resetPasswordData.email });
+              setTimer(60);
             }}
             className="text-blue-500 hover:p-0 p-0 hover:bg-none cursor-pointer font-semibold"
             disabled={timer > 0}

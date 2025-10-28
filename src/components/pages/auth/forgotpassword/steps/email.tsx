@@ -9,6 +9,7 @@ import {
   forgotPasswordSchema,
 } from "@/schema/auth/authSchema";
 import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
+import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -51,6 +52,7 @@ const ForgotPasswordEmail = ({
   }, [emailValue, setResetPasswordData]);
 
   const { mutate: onSubmit, isPending } = useMutation({
+    mutationKey: [MutationKey.sendOtp],
     mutationFn: async (data: ForgotPasswordFormData) => {
       const response = await axios.post<SendOTPResponse>(
         "/auth/send-otp",
