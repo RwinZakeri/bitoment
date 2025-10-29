@@ -118,4 +118,24 @@ db.prepare(
   `CREATE INDEX IF NOT EXISTS idx_login_sessions_created_at ON login_sessions (created_at)`
 ).run();
 
+// Create wallets table for user wallet balances
+db.prepare(
+  `
+  CREATE TABLE IF NOT EXISTS wallets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    balance REAL DEFAULT 0.0,
+    currency TEXT DEFAULT 'USD',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  )
+`
+).run();
+
+// Create index for better performance on wallets
+db.prepare(
+  `CREATE INDEX IF NOT EXISTS idx_wallets_user_id ON wallets (user_id)`
+).run();
+
 export default db;

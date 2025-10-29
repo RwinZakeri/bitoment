@@ -170,3 +170,39 @@ export interface LoginSessionResponse {
   message: string;
   sessions?: LoginSession[];
 }
+
+// Wallet related types
+export interface Wallet {
+  id: number;
+  user_id: number;
+  balance: number;
+  currency: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GetWalletResponse {
+  success: boolean;
+  message: string;
+  wallet?: Wallet;
+}
+
+export interface AddMoneyRequest {
+  amount: number;
+}
+
+export interface AddMoneyResponse {
+  success: boolean;
+  message: string;
+  wallet?: Wallet;
+}
+
+export interface DeleteMoneyRequest {
+  amount: number;
+}
+
+export interface DeleteMoneyResponse {
+  success: boolean;
+  message: string;
+  wallet?: Wallet;
+}

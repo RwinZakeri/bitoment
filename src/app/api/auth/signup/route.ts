@@ -90,8 +90,6 @@ export async function POST(
       );
     }
 
-    
-
     const existingUser = db
       .prepare("SELECT id FROM users WHERE email = ?")
       .get(email);
@@ -117,6 +115,13 @@ export async function POST(
 
     const result = insertUser.run(email, hashedPassword, fullName);
     const userId = result.lastInsertRowid as number;
+
+    // Create wallet for the new user
+    const insertWallet = db.prepare(`
+      INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
+      VALUES (?, ?, ?, datetime('now'), datetime('now'))
+    `);
+    insertWallet.run(userId, 0.0, "USD");
 
     const token = generateToken({
       userId: userId,
