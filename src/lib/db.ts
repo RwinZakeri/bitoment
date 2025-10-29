@@ -18,6 +18,8 @@ db.prepare(
     password TEXT NOT NULL,
     name TEXT,
     phoneNumber INTEGER,
+    nationalInsuranceNumber TEXT,
+    birthDate TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `

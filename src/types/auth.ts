@@ -43,7 +43,10 @@ export interface SignInResponse {
 export interface User {
   id: number;
   email: string;
-  fullName?: string;
+  name?: string;
+  phoneNumber?: number;
+  nationalInsuranceNumber?: string;
+  birthDate?: string;
   created_at: string;
 }
 

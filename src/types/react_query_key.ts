@@ -4,6 +4,7 @@ const ReactQueryKey = {
   mobileDevices: "mobileDevices",
   activeDevices: "activeDevices",
   desktopDevices: "desktopDevices",
+  profileVerificationStep: "profileVerificationStep",
 } as const;
 
 export default ReactQueryKey;

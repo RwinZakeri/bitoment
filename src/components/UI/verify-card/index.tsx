@@ -1,9 +1,21 @@
 import check from "@/public/svgs/fill-check-circle.svg";
 import uncheck from "@/public/svgs/stroke-check-circle.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Button from "../button";
 import { verifyCardPropsType } from "./type";
 
-const VerifyCard = ({ img, steps, title, isPassed }: verifyCardPropsType) => {
+const VerifyCard = ({
+  img,
+  steps,
+  title,
+  index,
+  passedSteps,
+}: verifyCardPropsType) => {
+   console.log(index === passedSteps)
+  const isPassed = passedSteps > (index );
+
+  const router = useRouter();
   return (
     <div
       className={`w-full relative rounded-lg p-4 ${
@@ -11,9 +23,7 @@ const VerifyCard = ({ img, steps, title, isPassed }: verifyCardPropsType) => {
       }`}
     >
       <div className="flex items-center justify-between ">
-        <p className="text-black font-semibold text-base self-start">
-        {title}
-        </p>
+        <p className="text-black font-semibold text-base self-start">{title}</p>
         <Image src={img} alt={title} width={50} height={50} />
       </div>
 
@@ -27,13 +37,27 @@ const VerifyCard = ({ img, steps, title, isPassed }: verifyCardPropsType) => {
               className="w-5"
               alt="check-icon"
             />
-            <p className="text-sm font-light"> {item.title}</p>
+            <p className="text-sm font-light"> {item.subStepName}</p>
           </div>
         ))}
       </div>
-      {isPassed && <div className="text-sm font-light bg-cyan-500 px-2 py-1 text-white rounded-xl ml-auto w-fit mt-6">Your Current Level</div>}
-        
-      {!isPassed && <button className="border-[1px] rounded-sm p-1.5 border-gray-400 text-xs mx-auto block mt-4 border-solid">Continue Verification</button>}
+      {index + 1 === passedSteps && (
+        <div className="text-sm font-light bg-cyan-500 px-2 py-1 text-white rounded-xl ml-auto w-fit mt-6">
+          Your Current Level
+        </div>
+      )}
+
+      {!isPassed && (
+        <Button
+          onClick={() => {
+            router.push("/profile/identity-verification");
+          }}
+          size="sm"
+          className="cursor-pointer rounded-sm p-1.5 border-gray-400 text-xs mx-auto block mt-4 border-solid"
+        >
+          Continue Verification
+        </Button>
+      )}
     </div>
   );
 };

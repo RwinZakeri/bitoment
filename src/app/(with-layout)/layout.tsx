@@ -7,6 +7,7 @@ import SwapIcon from "@/public/icons/SwapIcon";
 import WalletIcon from "@/public/icons/WalletIcon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import "react-loading-skeleton/dist/skeleton.css";
 import { v4 as uuid } from "uuid";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

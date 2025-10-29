@@ -80,8 +80,68 @@ export const resetPasswordSchema = z.object({
     ),
 });
 
+export const profileUpdateSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, "Full name is required")
+    .min(2, "Full name must be at least 2 characters")
+    .max(50, "Full name must be less than 50 characters"),
+
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+
+  phoneNumber: z
+    .string()
+    .min(1, "Phone number is required")
+    .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number must be less than 15 digits")
+    .regex(/^[\+]?[0-9\s\-\(\)]+$/, "Please enter a valid phone number"),
+});
+
+export const optionalProfileUpdateSchema = z.object({
+  fullName: z
+    .string()
+    .min(2, "Full name must be at least 2 characters")
+    .max(50, "Full name must be less than 50 characters")
+    .optional(),
+
+  email: z.string().email("Please enter a valid email address").optional(),
+
+  phoneNumber: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number must be less than 15 digits")
+    .regex(/^[\+]?[0-9\s\-\(\)]+$/, "Please enter a valid phone number")
+    .optional(),
+
+  nationalInsuranceNumber: z
+    .string()
+    .min(1, "National Insurance Number cannot be empty")
+    .max(20, "National Insurance Number must be less than 20 characters")
+    .regex(
+      /^[A-Z]{2}[0-9]{6}[A-Z]$/,
+      "Please enter a valid National Insurance Number format (e.g., AB123456C)"
+    )
+    .optional(),
+
+  birthDate: z
+    .string()
+    .min(1, "Birth date cannot be empty")
+    .regex(
+      /^\d{4}-\d{2}-\d{2}$/,
+      "Please enter a valid birth date format (YYYY-MM-DD)"
+    )
+    .optional(),
+});
+
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export type SignUpFormData = z.infer<typeof singUpSchema>;
 export type SignInFormData = z.infer<typeof signInSchema>;
 export type resetPassword = z.infer<typeof resetPasswordSchema>;
+export type ProfileUpdateFormData = z.infer<typeof profileUpdateSchema>;
+export type OptionalProfileUpdateFormData = z.infer<
+  typeof optionalProfileUpdateSchema
+>;
