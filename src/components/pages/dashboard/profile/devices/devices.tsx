@@ -1,5 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
+import { DeviceCardSkeleton } from "@/components/module/skeleton";
 import DeviceCard from "@/components/UI/deviceCard";
 import Paper from "@/components/UI/paper";
 import axios from "@/config/axios.config";
@@ -21,7 +22,7 @@ const Devices = () => {
       <Paper label="Devices" className="pt-4 pb-0 gap-2 flex flex-col">
         <div className=" flex flex-col gap-6">
           {isLoading ? (
-            <div>loading ...</div>
+            <DeviceCardSkeleton count={3} />
           ) : (
             data?.sessions?.map((session: LoginSession) => (
               <DeviceCard

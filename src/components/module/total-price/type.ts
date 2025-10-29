@@ -7,4 +7,8 @@ export interface totalPriceType {
   button?: ReactNode;
   amount?: number;
   labelPosition?: "bottom" | "top";
+  textColor?: string;
+  percentageColor?: string;
+  iconColor?: string;
+  iconRotation?: string;
 }

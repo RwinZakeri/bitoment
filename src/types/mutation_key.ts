@@ -9,6 +9,12 @@ const MutationKey = {
   // Profile mutations
   updateProfile: "updateProfile",
 
+  // Wallet mutations
+  addMoney: "addMoney",
+  deleteMoney: "deleteMoney",
+  transferMoney: "transferMoney",
+  investMoney: "investMoney",
+
   // Session mutations
   createSession: "createSession",
   deleteSession: "deleteSession",

@@ -361,3 +361,15 @@ export const enumToOptions = <T extends Record<string, string | number>>(
     value,
   }));
 };
+
+export interface AssetData {
+  name: string;
+  percentage: string;
+  price: string;
+  icon: string;
+}
+
+export interface AssetDistributionResponse {
+  success: boolean;
+  data: AssetData[];
+}

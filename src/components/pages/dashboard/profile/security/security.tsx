@@ -1,5 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
+import { LinkedCardSkeleton } from "@/components/module/skeleton";
 import LinkedCard from "@/components/UI/link-card/LinkCard";
 import axios from "@/config/axios.config";
 import ReactQueryKey from "@/types/react_query_key";
@@ -26,13 +27,15 @@ const Security = () => {
           title="Two-factor is off"
           link="/profile/two-factor"
         />
-        <LinkedCard
-          label="Connected Devices"
-          title={`${
-            isLoading ? "finding..." : data?.sessions?.length
-          } linked devices`}
-          link="/profile/devices"
-        />
+        {isLoading ? (
+          <LinkedCardSkeleton />
+        ) : (
+          <LinkedCard
+            label="Connected Devices"
+            title={`${data?.sessions?.length || 0} linked devices`}
+            link="/profile/devices"
+          />
+        )}
         <LinkedCard
           label="Account Management"
           title="Lock user account"

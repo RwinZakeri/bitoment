@@ -1,6 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import VerifyModal from "@/components/pages/dashboard/profile/verification/verify-modal/verifyModal";
+import { VerificationSkeleton } from "@/components/module/skeleton";
 import Button from "@/components/UI/button";
 import Checkbox from "@/components/UI/checkbox";
 import CustomeInput from "@/components/UI/CustomeInput";
@@ -20,7 +20,6 @@ import toast from "react-hot-toast";
 
 const IdentityVerification = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     register,
@@ -40,7 +39,7 @@ const IdentityVerification = () => {
 
   const watchedFields = watch();
 
-  const { data: profileData } = useQuery({
+  const { data: profileData, isLoading } = useQuery({
     queryKey: [ReactQueryKey.profile],
     queryFn: async () => {
       const response = await axios.get("user/profile");
@@ -66,13 +65,21 @@ const IdentityVerification = () => {
     },
     onSuccess: () => {
       toast.success("Identity verification information updated successfully");
-      setIsModalOpen(true);
+      // setIsModalOpen(true);
     },
     onError: (error) => {
       toast.error("Failed to update identity verification information");
       console.error("Identity verification update error:", error);
     },
   });
+
+  if (isLoading) {
+    return (
+      <PageLayout title="identity verification">
+        <VerificationSkeleton showPaper={true} fieldCount={3} />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="identity verification">

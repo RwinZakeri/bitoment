@@ -39,6 +39,7 @@ export async function GET(
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId) as Wallet | undefined;
 
+
     if (!wallet) {
       return NextResponse.json(
         {

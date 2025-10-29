@@ -1,12 +1,15 @@
 interface stepsType {
   title: string;
   isPassed: boolean;
+  subStepName?: string;
 }
 export interface verifyCardPropsType {
   steps: stepsType[];
   title: string;
   img: string;
   isPassed: boolean;
+  index: number;
+  passedSteps: number;
 }
 
 export const verifyLevel = [

@@ -9,6 +9,7 @@ const CustomeInput = ({
   inputType = "fill",
   icon,
   variant = "primary",
+  error,
   ...rest
 }: InputProps) => {
   const getBackgroundColor = () => {
@@ -44,11 +45,12 @@ const CustomeInput = ({
         <input
           type={type}
           placeholder={placeholder}
-          className={`border-none ${
-            inputType !== "fill" && "px-4 rounded-xl h-[60px]  py-4"
-          } placeholder:text-gray-500  focus:outline-none w-full ${
-            variant === "secondary" ? "bg-gray-200" : "bg-white"
-          }`}
+          className={cn(
+            "border-none placeholder:text-gray-500 focus:outline-none w-full",
+            inputType !== "fill" && "px-4 rounded-xl h-[60px] py-4",
+            variant === "secondary" ? "bg-gray-200" : "bg-white",
+            error && "border-2 border-red-500 focus:border-red-500"
+          )}
           {...rest}
         />
         {icon && (
@@ -57,6 +59,9 @@ const CustomeInput = ({
           </div>
         )}
       </div>
+      {error && (
+        <span className="text-red-500 text-sm mt-1 font-medium">{error}</span>
+      )}
     </label>
   );
 };

@@ -206,3 +206,28 @@ export interface DeleteMoneyResponse {
   message: string;
   wallet?: Wallet;
 }
+
+// Wallet History related types
+export interface Transaction {
+  amount: string;
+  title: string;
+  icon: string;
+  type: "up" | "down" | "link";
+  price: string;
+  dateAsName: string;
+  hour: string;
+  category?: "crypto" | "cpg";
+}
+
+export interface HistoryDay {
+  date: string;
+  dateAsName: string;
+  hour: string;
+  type: "up" | "down";
+  transactions: Transaction[];
+}
+
+export interface GetWalletHistoryResponse {
+  success: boolean;
+  data: HistoryDay[];
+}

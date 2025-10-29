@@ -11,7 +11,18 @@ export async function GET(
     const tokenPayload = verifyAuthToken(request);
     
     console.log(tokenPayload)
-    const {email} = tokenPayload?.data
+    
+    if (!tokenPayload) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Authentication required",
+        },
+        { status: 401 }
+      );
+    }
+
+    const { email } = tokenPayload.data;
 
     if (!email) {
       return NextResponse.json(

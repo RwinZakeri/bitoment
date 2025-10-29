@@ -35,7 +35,7 @@ export async function GET(
         ORDER BY last_seen DESC
         `
       )
-      .all(tokenPayload.userId) as DeviceInfo[];
+      .all(tokenPayload.data.userId) as DeviceInfo[];
 
     return NextResponse.json({
       success: true,

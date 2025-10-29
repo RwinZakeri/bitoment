@@ -1,6 +1,7 @@
 import ConfigProvider from "@/provider/provider";
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -32,6 +33,30 @@ export default function RootLayout({
       >
         <main className="bg-gray-200 min-h-screen">
           <ConfigProvider>{children}</ConfigProvider>
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+              success: {
+                duration: 3000,
+                iconTheme: {
+                  primary: '#00e4cc',
+                  secondary: '#fff',
+                },
+              },
+              error: {
+                duration: 5000,
+                iconTheme: {
+                  primary: '#ff6b6b',
+                  secondary: '#fff',
+                },
+              },
+            }}
+          />
         </main>
       </body>
     </html>

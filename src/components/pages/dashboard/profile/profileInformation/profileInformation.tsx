@@ -1,5 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
+import { FormSkeleton } from "@/components/module/skeleton";
 import Button from "@/components/UI/button";
 import CustomeInput from "@/components/UI/CustomeInput";
 import axios from "@/config/axios.config";
@@ -39,7 +40,7 @@ const ProfileInformation = () => {
 
   const watchedFields = watch();
 
-  const { data: profileData } = useQuery({
+  const { data: profileData, isLoading } = useQuery({
     queryKey: [ReactQueryKey.profile],
     queryFn: async () => {
       const response = await axios.get("user/profile");
@@ -72,6 +73,14 @@ const ProfileInformation = () => {
       console.error("Profile update error:", error);
     },
   });
+
+  if (isLoading) {
+    return (
+      <PageLayout title="Profile Information">
+        <FormSkeleton fieldCount={3} showButton={true} />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="Profile Information">

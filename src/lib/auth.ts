@@ -41,7 +41,7 @@ export async function comparePassword(
  * @returns string - JWT token
  */
 export function generateToken(
-  payload: Omit<JWTPayload, "iat" | "exp">,
+  payload: JWTPayload["data"],
   expiresIn: string = "7d"
 ): string {
   return jwt.sign({ expiresIn, data: payload }, JWT_SECRET);
