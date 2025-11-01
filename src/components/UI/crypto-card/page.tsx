@@ -1,7 +1,9 @@
+import LinkIcon from "@/public/icons/LinkIcon";
 import Down from "@/public/svgs/arrow-down-red.svg";
 import Link from "@/public/svgs/link.svg";
 import UP from "@/public/svgs/up-arrow-red.svg";
 import Image from "next/image";
+import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import { CryptoCardPropsType } from "./type";
 const CryptoCard = ({
   title,
@@ -24,8 +26,16 @@ const CryptoCard = ({
             }`}
           >
             <Image
-              src={type === "up" ? UP : type === "down" ? Down : Link}
-              alt="up arrow"
+              src={
+                type === "up"
+                  ? UP
+                  : type === "down"
+                  ? Down
+                  : type === "cpg"
+                  ? cpgIcon
+                  : Link
+              }
+              alt="transaction type"
               width={type === "link" ? 35 : 25}
               height={type === "link" ? 35 : 25}
             />
@@ -76,10 +86,25 @@ const CryptoCard = ({
         </div>
       ) : (
         <div className="flex flex-col gap-1 items-center">
-          <p className={`${cardType === "asset" ? "" : "text-lg font-semibold"}`}>
-            {type === "up" ? "-" : "+"}${price}
+          <p
+            className={`${cardType === "asset" ? "" : "text-lg font-semibold"}`}
+          >
+            {type === "up"
+              ? "-"
+              : type === "down"
+              ? "+"
+              : type === "cpg"
+              ? "+"
+              : ""}
+            ${price}
           </p>
-          <p className={`text-gray-500 ${cardType === "asset" ? "text-sm self-end" : ""}`}>{amount}</p>
+          <p
+            className={`text-gray-500 ${
+              cardType === "asset" ? "text-sm self-end" : ""
+            }`}
+          >
+            {amount}
+          </p>
         </div>
       )}
     </div>

@@ -53,7 +53,7 @@ export const getCryptoIcon = (name: string) => {
     case "sol":
       return <SolIcon className="w-4 h-4" />;
     case "bnb":
-      return <LinkIcon className="w-4 h-4" />; // Using EtcIcon as placeholder for BNB
+      return <LinkIcon className="w-6 h-6" />; // Using EtcIcon as placeholder for BNB
     default:
       return <BtcIcon className="w-4 h-4" />;
   }

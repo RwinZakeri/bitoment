@@ -25,7 +25,7 @@ function generateRandomHistory(filter?: string) {
     "November",
     "December",
   ];
-  const transactionTypes = ["up", "down"];
+  const transactionTypes = ["up", "down", "cpg"];
   const cryptoCurrencies = [
     { name: "BTC", icon: "/icons/btc.svg", symbol: "BTC", category: "crypto" },
     { name: "ETH", icon: "/icons/eth.svg", symbol: "ETH", category: "crypto" },
@@ -43,9 +43,6 @@ function generateRandomHistory(filter?: string) {
       category: "crypto",
     },
   ];
-  const cpgCurrencies = [
-    { name: "CPG", icon: "/icons/corros.svg", symbol: "CPG", category: "cpg" },
-  ];
 
   const data = [];
   const numDays = Math.floor(Math.random() * 15) + 10; // 10-24 days of data for lots of history
@@ -60,23 +57,36 @@ function generateRandomHistory(filter?: string) {
     const transactions = [];
 
     for (let j = 0; j < numTransactions; j++) {
-      // Choose between crypto and CPG transactions based on filter
-      let selectedCurrency;
+      // Choose type based on filter first
+      let type;
       if (filter === "crypto") {
-        selectedCurrency =
-          cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
+        // For crypto filter, only use "up" or "down" types
+        const cryptoTypes = ["up", "down"];
+        type = cryptoTypes[Math.floor(Math.random() * cryptoTypes.length)];
       } else if (filter === "cpg") {
-        selectedCurrency =
-          cpgCurrencies[Math.floor(Math.random() * cpgCurrencies.length)];
+        // For cpg filter, only use "cpg" type
+        type = "cpg";
       } else {
-        // For "all" filter, choose randomly between all currencies
-        const allCurrencies = [...cryptoCurrencies, ...cpgCurrencies];
-        selectedCurrency =
-          allCurrencies[Math.floor(Math.random() * allCurrencies.length)];
+        // For "all" filter, use any type
+        type =
+          transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
       }
 
-      const type =
-        transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
+      // Choose currency based on type
+      let selectedCurrency;
+      if (type === "cpg") {
+        // If type is cpg, use a crypto currency for name and icon, but keep category as cpg
+        const cryptoCurrency =
+          cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
+        selectedCurrency = {
+          ...cryptoCurrency,
+          category: "cpg", // Override category to cpg
+        };
+      } else {
+        // For "up" or "down" types, use crypto currencies
+        selectedCurrency =
+          cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
+      }
       const amount = (Math.random() * 10 + 0.1).toFixed(2);
       const price = (Math.random() * 100000 + 1000).toFixed(2);
       const hour = `${Math.floor(Math.random() * 24)

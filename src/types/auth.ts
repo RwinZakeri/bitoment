@@ -212,7 +212,7 @@ export interface Transaction {
   amount: string;
   title: string;
   icon: string;
-  type: "up" | "down" | "link";
+  type: "up" | "down" | "link" | "cpg";
   price: string;
   dateAsName: string;
   hour: string;

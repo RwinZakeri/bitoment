@@ -37,7 +37,8 @@ const HistoryPage = () => {
     refetchOnWindowFocus: false,
   });
 
-  const getCryptoIcon = (name: string) => {
+  const getCryptoIcon = (name: string, category?: "crypto" | "cpg") => {
+    // Both crypto and CPG transactions use their respective crypto icons
     switch (name.toLowerCase()) {
       case "btc":
         return <BtcIcon className="w-4 h-4" />;
@@ -50,7 +51,6 @@ const HistoryPage = () => {
         return <SolIcon className="w-4 h-4" />;
       case "bnb":
         return <EtcIcon className="w-4 h-4" />; // Using EtcIcon as placeholder for BNB
-
       default:
         return <BtcIcon className="w-4 h-4" />;
     }
@@ -132,7 +132,7 @@ const HistoryPage = () => {
                   amount={transaction.amount}
                   title={transaction.title}
                   label={`${day.dateAsName} - ${transaction.hour}`}
-                  icon={getCryptoIcon(transaction.title)}
+                  icon={getCryptoIcon(transaction.title, transaction.category)}
                   type={transaction.type}
                   price={transaction.price}
                 />
