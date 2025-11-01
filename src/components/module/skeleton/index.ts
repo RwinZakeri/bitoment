@@ -1,3 +1,4 @@
+export { default as AssetDistributionSkeleton } from "./AssetDistributionSkeleton";
 export { default as DashboardSkeleton } from "./DashboardSkeleton";
 export { default as DeviceCardSkeleton } from "./DeviceCardSkeleton";
 export { default as FormSkeleton } from "./FormSkeleton";

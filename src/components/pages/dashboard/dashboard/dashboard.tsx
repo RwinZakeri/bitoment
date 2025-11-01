@@ -4,7 +4,7 @@ import { DashboardSkeleton } from "@/components/module/skeleton";
 import TotalPrice from "@/components/module/total-price";
 import { Button } from "@/components/UI/button";
 import LineChart from "@/components/UI/line-chart";
-import LinkedCard from "@/components/UI/link-card/LinkCard";
+import LinkedCard from "@/components/UI/link-card";
 import Paper from "@/components/UI/paper";
 import PlanCard from "@/components/UI/plan-card";
 import TitleLink from "@/components/UI/title-link";

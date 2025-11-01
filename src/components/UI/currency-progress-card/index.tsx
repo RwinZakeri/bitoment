@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import CircleProgressBar from "../circle-progress-bar";
 import { CurrencyProgressCardPropsType } from "./type";
@@ -9,6 +10,8 @@ const CurrencyProgressCard = ({
   progress,
   vertical,
 }: CurrencyProgressCardPropsType) => {
+  console.log(icon);
+
   return (
     <Link
       href={`/wallet/${title.toLocaleLowerCase()}`}
@@ -26,7 +29,13 @@ const CurrencyProgressCard = ({
                 vertical ? "bg-white" : "bg-gray-200 "
               } w-8 flex items-center justify-center h-8 rounded-full`}
             >
-              {icon}
+              <Image
+                className="w-4"
+                src={icon}
+                width={25}
+                height={25}
+                alt="cryptoIcon"
+              />
             </div>
           )}
           <p className="font-bold text-xl">{title}</p>

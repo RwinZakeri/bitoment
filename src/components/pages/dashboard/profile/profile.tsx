@@ -2,7 +2,7 @@
 import { profileItems } from "@/app/(with-layout)/profile/type";
 import PageLayout from "@/components/layout/page/pageLayout";
 import { ProfileSkeleton } from "@/components/module/skeleton";
-import LinkedCard from "@/components/UI/link-card/LinkCard";
+import LinkedCard from "@/components/UI/link-card";
 import axios from "@/config/axios.config";
 import ProfileImage from "@/public/images/profile.png";
 import { ProfileItem } from "@/types/global";

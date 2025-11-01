@@ -8,4 +8,6 @@ export interface AutoCompletePropsType {
   size?: "sm" | "md";
   className?: string;
   icon?: ReactNode;
+  value?: string;
+  onChange?: (value: string) => void;
 }

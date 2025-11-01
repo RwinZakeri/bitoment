@@ -17,7 +17,7 @@ const CryptoCard = ({
   cryptoName,
 }: CryptoCardPropsType) => {
   return (
-    <div className="w-full bg-white flex items-center justify-between rounded-lg p-3">
+    <div className="w-full cursor-pointer bg-white flex items-center justify-between rounded-lg p-3">
       <div className="flex gap-2.5 items-center">
         {cardType === "crypto" ? (
           <div

@@ -4,19 +4,23 @@ import ActionButtons from "@/components/module/action-button/actionButtons";
 import { WalletSkeleton } from "@/components/module/skeleton";
 import TotalPrice from "@/components/module/total-price";
 import Button from "@/components/UI/button";
-import CryptoCard from "@/components/UI/crypto-card/page";
+import CryptoCard from "@/components/UI/crypto-card";
 import CurrencyProgressCard from "@/components/UI/currency-progress-card";
 import Paper from "@/components/UI/paper";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
-import { formatCurrency, generateRandomPercentage, getCryptoIcon } from "@/lib/utils";
+import {
+  formatCurrency,
+  generateRandomPercentage,
+  getCryptoIcon,
+} from "@/lib/utils";
 import LinkIcon from "@/public/icons/LinkIcon";
 import { AssetData, AssetDistributionResponse } from "@/types";
 import type { GetWalletHistoryResponse, GetWalletResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 
 const Wallet = () => {
   const { data: walletData, isLoading: walletLoading } = useQuery({
@@ -38,6 +42,8 @@ const Wallet = () => {
     },
     refetchOnWindowFocus: false,
   });
+
+  const router = useRouter();
 
   const { data: historyData, isLoading: historyLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletHistory],
@@ -70,8 +76,8 @@ const Wallet = () => {
           totalPrice={formatCurrency(walletBalance)}
           amount={percentageChange}
           button={
-            <Button size="lg" className="bg-cyan-200 px-2" icon={<LinkIcon />}>
-              <Link href={"/wallet/cpg"}>CGP</Link>
+            <Button onClick={()=> router.push("/wallet/cpg")} size="lg" className="bg-cyan-200 px-2" icon={<LinkIcon />}>
+              CGP
             </Button>
           }
           percentageColor={
@@ -91,16 +97,18 @@ const Wallet = () => {
         address="/wallet/asset-distribution"
       >
         <Paper className="bg-white p-4 grid grid-cols-2 gap-6 rounded-lg">
-          {assetData?.data?.map((asset: AssetData, index: number) => (
-            <CurrencyProgressCard
-              key={index}
-              vertical
-              icon={asset.icon ? getCryptoIcon(asset.name) : ""}
-              price={formatCurrency(parseFloat(asset.price))}
-              progress={parseInt(asset.percentage)}
-              title={asset.name.toLowerCase()}
-            />
-          ))}
+          {assetData?.data
+            ?.slice(0, 4)
+            .map((asset: AssetData, index: number) => (
+              <CurrencyProgressCard
+                key={index}
+                vertical
+                icon={asset.icon ? asset.icon : ""}
+                price={formatCurrency(parseFloat(asset.price))}
+                progress={parseInt(asset.percentage)}
+                title={asset.name.toLowerCase()}
+              />
+            ))}
         </Paper>
       </TitleLink>
 

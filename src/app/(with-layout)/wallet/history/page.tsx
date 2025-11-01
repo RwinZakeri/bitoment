@@ -1,7 +1,7 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import { HistorySkeleton } from "@/components/module/skeleton";
-import CryptoCard from "@/components/UI/crypto-card/page";
+import CryptoCard from "@/components/UI/crypto-card";
 import Filters from "@/components/UI/filters";
 import { filters } from "@/components/UI/filters/type";
 import TitleLink from "@/components/UI/title-link";

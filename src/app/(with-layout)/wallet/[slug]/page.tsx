@@ -1,7 +1,7 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import ActionButtons from "@/components/module/action-button/actionButtons";
-import CryptoCard from "@/components/UI/crypto-card/page";
+import CryptoCard from "@/components/UI/crypto-card";
 import CryptoCredit from "@/components/UI/crypto-credit";
 import TitleLink from "@/components/UI/title-link";
 import BtcIcon from "@/public/icons/BtcIcon";

@@ -1,7 +1,7 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import { LinkedCardSkeleton } from "@/components/module/skeleton";
-import LinkedCard from "@/components/UI/link-card/LinkCard";
+import LinkedCard from "@/components/UI/link-card";
 import axios from "@/config/axios.config";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";

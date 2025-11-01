@@ -11,9 +11,20 @@ const AutoComplete = ({
   zIndex = 50,
   className,
   icon,
+  value: controlledValue,
+  onChange,
 }: AutoCompletePropsType) => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [type, setType] = useState<string>("");
+  const [internalValue, setInternalValue] = useState<string>("");
+
+  const type = controlledValue !== undefined ? controlledValue : internalValue;
+
+  const setType = (newValue: string) => {
+    if (controlledValue === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange?.(newValue);
+  };
 
   const eventHandler = (item: string) => {
     setType(item);

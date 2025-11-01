@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export interface CryptoCardPropsType {
   title: string;
   icon: ReactNode;
-  type: "up" | "link" | "down" | "cpg";
+  type?: "up" | "link" | "down" | "cpg";
   label: string;
   price: number | string;
   amount: string;

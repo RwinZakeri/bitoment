@@ -1,8 +1,6 @@
-import { ReactNode } from "react";
-
 export interface CurrencyProgressCardPropsType {
   title: string;
-  icon?: ReactNode;
+  icon?: string;
   price: number | string;
   progress: number;
   vertical?: boolean;

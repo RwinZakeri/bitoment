@@ -4,7 +4,7 @@ import AutoComplete from "@/components/UI/auto-complete";
 import Button from "@/components/UI/button";
 import Checkbox from "@/components/UI/checkbox";
 import CustomeInput from "@/components/UI/CustomeInput";
-import LinkedCard from "@/components/UI/link-card/LinkCard";
+import LinkedCard from "@/components/UI/link-card";
 import BtcIcon from "@/public/icons/BtcIcon";
 import CorrosIcon from "@/public/icons/CorrosIcon";
 import { useState } from "react";

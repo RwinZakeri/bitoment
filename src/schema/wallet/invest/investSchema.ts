@@ -93,3 +93,77 @@ export const formatExpiryDate = (value: string): string => {
 export const formatRoutingNumber = (value: string): string => {
   return value.replace(/\D/g, "").slice(0, 9);
 };
+
+export const payFromWalletSchema = z.object({
+  selectedCrypto: z
+    .object({
+      name: z.string(),
+      shortName: z.string(),
+      icon: z.string(),
+      price: z.string(),
+      percentage: z.string(),
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "Please select a cryptocurrency",
+    }),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .refine((val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num > 0 && num <= 1000000;
+    }, "Please enter a valid amount (0.01 - 1,000,000)"),
+});
+
+export const sendCryptoSchema = z.object({
+  selectedCrypto: z
+    .object({
+      name: z.string(),
+      shortName: z.string(),
+      icon: z.string(),
+      price: z.string(),
+      percentage: z.string(),
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "Please select a cryptocurrency",
+    }),
+  blockchainNetwork: z.string().min(1, "Blockchain network is required"),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .refine((val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num > 0 && num <= 1000000;
+    }, "Please enter a valid amount (0.01 - 1,000,000)"),
+  toAddress: z
+    .string()
+    .min(1, "Recipient address is required")
+    .min(26, "Address must be at least 26 characters")
+    .max(64, "Address must be less than 64 characters")
+    .regex(
+      /^[a-zA-Z0-9]+$/,
+      "Address must contain only alphanumeric characters"
+    ),
+});
+
+export const receiveCryptoSchema = z.object({
+  selectedCrypto: z
+    .object({
+      name: z.string(),
+      shortName: z.string(),
+      icon: z.string(),
+      price: z.string(),
+      percentage: z.string(),
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "Please select a cryptocurrency",
+    }),
+  blockchainNetwork: z.string().optional(),
+});
+
+export type PayFromWalletFormData = z.infer<typeof payFromWalletSchema>;
+export type SendCryptoFormData = z.infer<typeof sendCryptoSchema>;
+export type ReceiveCryptoFormData = z.infer<typeof receiveCryptoSchema>;

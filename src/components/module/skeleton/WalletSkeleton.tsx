@@ -84,3 +84,4 @@ const WalletSkeleton = () => {
 };
 
 export default WalletSkeleton;
+

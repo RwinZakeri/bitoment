@@ -1,8 +1,26 @@
 import { cn } from "@/lib/utils";
+import { XSquareContainedIcon } from "@/public/icons/XSquareContainedIcon";
 import { useEffect, useRef } from "react";
 import { ModalPropsType } from "./type";
 
-const Modal = ({ children, isOpen, onClose, className }: ModalPropsType) => {
+const Modal = ({
+  children,
+  isOpen,
+  onClose,
+  className,
+  close = false,
+  closeButtonClassName,
+  backdropClassName,
+  closeOnBackdropClick = true,
+  closeOnEscape = true,
+  size = "auto",
+  maxWidth,
+  maxHeight,
+  position = "center",
+  showBackdrop = true,
+  backdropOpacity = 0.5,
+  backdropBlur = true,
+}: ModalPropsType) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,6 +42,8 @@ const Modal = ({ children, isOpen, onClose, className }: ModalPropsType) => {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!closeOnEscape) return;
+
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
@@ -37,50 +57,79 @@ const Modal = ({ children, isOpen, onClose, className }: ModalPropsType) => {
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, closeOnEscape]);
 
   if (!isOpen) return null;
 
+  // Size variants
+  const sizeClasses = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    full: "max-w-full w-full",
+    auto: "max-w-full",
+  };
+
+  // Position variants
+  const positionClasses = {
+    center: "items-center justify-center",
+    top: "items-start justify-center pt-4",
+    bottom: "items-end justify-center pb-4",
+  };
+
+  // Backdrop styles
+  const backdropStyle = {
+    backgroundColor: `rgba(0, 0, 0, ${backdropOpacity})`,
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className={cn("fixed inset-0 z-50 flex", positionClasses[position])}>
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      {showBackdrop && (
+        <div
+          className={cn(
+            "absolute inset-0",
+            backdropBlur && "backdrop-blur-sm",
+            backdropClassName
+          )}
+          style={backdropStyle}
+          onClick={closeOnBackdropClick ? onClose : undefined}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Modal Content */}
       <div
         ref={modalRef}
         className={cn(
-          "relative bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl focus:outline-none",
+          "relative bg-white w-full rounded-xl p-6 mx-4 shadow-xl focus:outline-none",
+          size !== "auto" && sizeClasses[size],
           className
         )}
+        style={{
+          ...(maxWidth && { maxWidth }),
+          ...(maxHeight && { maxHeight }),
+        }}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-          aria-label="Close modal"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        {close && (
+          <button
+            onClick={onClose}
+            className={cn(
+              "absolute top-4 right-4 z-10 p-1 rounded-md hover:bg-gray-100 transition-colors",
+              closeButtonClassName
+            )}
+            aria-label="Close modal"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            <XSquareContainedIcon />
+          </button>
+        )}
+
         {children}
       </div>
     </div>
