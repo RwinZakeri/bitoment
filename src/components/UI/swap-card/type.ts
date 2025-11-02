@@ -1,3 +1,4 @@
+import { CryptoCurrency } from "@/components/module/selectAssets/type";
 import { ReactNode } from "react";
 
 export interface SwapCardPropsType {
@@ -6,4 +7,8 @@ export interface SwapCardPropsType {
   balance: string;
   zIndex?: number;
   icon?: ReactNode;
+  crypto?: CryptoCurrency | null;
+  onClick?: () => void;
+  label?: string;
+  onAmountChange?: (value: string) => void;
 }
