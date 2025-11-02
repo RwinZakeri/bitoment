@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 interface CryptoCurrency {
   name: string;
@@ -645,9 +645,9 @@ function getCryptoList(): CryptoCurrency[] {
   }));
 }
 
-export async function GET(
-  request: NextRequest
-): Promise<NextResponse<{ success: boolean; data: CryptoCurrency[] }>> {
+export async function GET(): Promise<
+  NextResponse<{ success: boolean; data: CryptoCurrency[] }>
+> {
   try {
     const cryptoList = getCryptoList();
 

@@ -16,6 +16,7 @@ import { LayerIcon } from "@/public/icons/LayerIcon";
 import LayoutGridIcon from "@/public/icons/LayoutGridIcon";
 import type { GetWalletResponse } from "@/types/auth";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 function formatCurrency(value: number): string {
@@ -152,6 +153,7 @@ const Dashboard = () => {
             icon={<LayerIcon className="w-6 h-6" />}
             amount={"4"}
             price={"71,367.78"}
+            link="/plans"
           />
           <LinkedCard title="Show more details" size="sm" link="/plans" />
         </TitleLink>
@@ -166,6 +168,7 @@ const Dashboard = () => {
           className="flex gap-2 flex-col"
           margin={0}
         >
+        <Link className="flex flex-col gap-2" href={"/plans"}>
           <PlanCard
             title="Future Fund"
             date="Up to 4.00% per year"
@@ -180,7 +183,7 @@ const Dashboard = () => {
             title="Peace Fund"
             date="Up to 1.70% per year"
             icon={<CylinderIcon className="w-6 h-6" />}
-          />
+          /></Link>
         </TitleLink>
       </div>
     </PageLayout>

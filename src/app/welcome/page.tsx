@@ -1,17 +1,86 @@
 "use client";
 
 import { Button } from "@/components/UI/button";
+import useGoogleOAuth from "@/hooks/useGoogleOAuth";
+import { setCookie } from "@/lib/utils";
 import GoogleIcon from "@/public/icons/GoogleIcon";
 import ProfileAddIcon from "@/public/icons/ProfileAddIcon";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const WelcomePage = () => {
   const router = useRouter();
 
+  // Google OAuth configuration
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+  const googleScope =
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+
+  const { signInWithGoogle, isLoading: isGoogleLoading } = useGoogleOAuth(
+    {
+      clientId: googleClientId,
+      scope: googleScope,
+      redirectUri: typeof window !== "undefined" ? window.location.origin : "",
+    },
+    {
+      onSuccess: (data) => {
+        toast.success(data.message || "Signed in successfully with Google");
+        setCookie("token", data.token || "");
+        router.push("/dashboard");
+      },
+      onError: (error) => {
+        toast.error(error || "Google sign-in failed");
+      },
+    }
+  );
+
   const handleGoogleSignIn = async () => {
-    // TODO: Implement Google OAuth without NextAuth
-    console.log("Google sign-in not implemented yet");
+    if (!googleClientId) {
+      toast.error(
+        "Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID"
+      );
+      return;
+    }
+    await signInWithGoogle();
   };
+
+  // Load Google Sign-In script
+  useEffect(() => {
+    if (!googleClientId || typeof window === "undefined") return;
+
+    // Check if script is already loaded
+    if (window.google) {
+      return;
+    }
+
+    // Check if script is already in DOM
+    const existingScript = document.querySelector(
+      'script[src="https://accounts.google.com/gsi/client"]'
+    );
+    if (existingScript) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onerror = () => {
+      console.error("Failed to load Google Sign-In script");
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      // Only remove if we added it and it still exists
+      const scriptToRemove = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]'
+      );
+      if (scriptToRemove && scriptToRemove.parentNode) {
+        scriptToRemove.parentNode.removeChild(scriptToRemove);
+      }
+    };
+  }, [googleClientId]);
 
   return (
     <div className="w-full p-4 relative h-screen bg-cyan-400 flex items-center justify-center">
@@ -36,8 +105,10 @@ const WelcomePage = () => {
             variant="outline"
             size="lg"
             className="w-full"
+            disabled={isGoogleLoading || !googleClientId}
+            loading={isGoogleLoading}
           >
-            Sign with Google
+            {isGoogleLoading ? "Signing in..." : "Sign with Google"}
           </Button>
 
           <div className="flex items-center justify-center gap-2">

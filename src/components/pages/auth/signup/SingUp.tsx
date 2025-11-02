@@ -69,13 +69,12 @@ const SignUp = () => {
     },
     {
       onSuccess: (data) => {
-        // const message = data.isNewUser
-        //   ? "Account created successfully with Google"
-        //   : "Signed in successfully with Google";
-        // toast.success(data.message || message);
-        // setCookie("token", data.token || "");
-        // router.push("/dashboard");
-        console.log(data);
+        const message = data.isNewUser
+          ? "Account created successfully with Google"
+          : "Signed in successfully with Google";
+        toast.success(data.message || message);
+        setCookie("token", data.token || "");
+        router.push("/dashboard");
       },
       onError: (error) => {
         toast.error(error || "Google sign-up failed");
@@ -97,18 +96,35 @@ const SignUp = () => {
   useEffect(() => {
     if (!googleClientId || typeof window === "undefined") return;
 
+    // Check if script is already loaded
+    if (window.google) {
+      return;
+    }
+
+    // Check if script is already in DOM
+    const existingScript = document.querySelector(
+      'script[src="https://accounts.google.com/gsi/client"]'
+    );
+    if (existingScript) {
+      return;
+    }
+
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
-    document.body.appendChild(script);
+    script.onerror = () => {
+      console.error("Failed to load Google Sign-In script");
+    };
+    document.head.appendChild(script);
 
     return () => {
-      const existingScript = document.querySelector(
+      // Only remove if we added it and it still exists
+      const scriptToRemove = document.querySelector(
         'script[src="https://accounts.google.com/gsi/client"]'
       );
-      if (existingScript) {
-        document.body.removeChild(existingScript);
+      if (scriptToRemove && scriptToRemove.parentNode) {
+        scriptToRemove.parentNode.removeChild(scriptToRemove);
       }
     };
   }, [googleClientId]);

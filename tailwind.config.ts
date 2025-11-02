@@ -114,6 +114,7 @@ const config: Config = {
         // Custom Colors
         teal: {
           custom: "var(--custom-teal)",
+          500: "var(--teal-500)",
         },
         coral: {
           custom: "var(--custom-coral)",

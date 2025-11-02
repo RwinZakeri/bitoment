@@ -14,10 +14,21 @@ const useGoogleOAuth = (
   const [isLoading, setIsLoading] = useState(false);
 
   const signInWithGoogle = useCallback(async () => {
+    // Wait for Google API to be loaded
     if (!window.google) {
-      options?.onError?.(
-        "Google API not loaded. Please make sure Google Sign-In script is included."
-      );
+      // Try to wait a bit if script is still loading
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      if (!window.google) {
+        options?.onError?.(
+          "Google API not loaded. Please make sure Google Sign-In script is included."
+        );
+        return;
+      }
+    }
+
+    if (!config.clientId) {
+      options?.onError?.("Google OAuth client ID is not configured.");
       return;
     }
 
@@ -32,21 +43,32 @@ const useGoogleOAuth = (
           scope: config.scope,
           callback: async (response) => {
             try {
+              if (!response.access_token) {
+                throw new Error("No access token received from Google");
+              }
+
+              // Send access token to backend API
               const apiResponse = await axios.post<GoogleOAuthResponse>(
                 "/api/auth/google",
                 { accessToken: response.access_token }
               );
 
               if (!apiResponse.data.success) {
-                throw new Error(apiResponse.data.message);
+                throw new Error(
+                  apiResponse.data.message || "Authentication failed"
+                );
               }
 
+              // Call onSuccess with the API response
               options?.onSuccess?.(apiResponse.data);
               resolve();
             } catch (error) {
               const errorMessage =
                 (error as AxiosError<{ message?: string }>)?.response?.data
-                  ?.message || "Failed to authenticate with Google";
+                  ?.message ||
+                (error instanceof Error
+                  ? error.message
+                  : "Failed to authenticate with Google");
               options?.onError?.(errorMessage);
               reject(error);
             } finally {

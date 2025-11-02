@@ -194,12 +194,3 @@ export type PayFromWalletFormData = z.infer<typeof payFromWalletSchema>;
 export type SendCryptoFormData = z.infer<typeof sendCryptoSchema>;
 export type ReceiveCryptoFormData = z.infer<typeof receiveCryptoSchema>;
 export type LinkCpgFormData = z.infer<typeof linkCpgSchema>;
-
-
-
-
-const signinSchema = z.object({
-  phoneNumber : z.refine(()=>{}) ,
-  isAccepted : z.boolean("please accept out policiy") 
-
-})

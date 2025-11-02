@@ -6,4 +6,6 @@ export interface planCardPropsType {
   price?: number | string;
   amount?: string | number;
   icon: ReactNode;
+  onClick?: () => void;
+  link?: string;
 }

@@ -15,9 +15,9 @@ import type { GetWalletHistoryResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
-const HistoryPage = () => {
+const HistoryPageContent = () => {
   const searchParams = useSearchParams();
   const cryptoParam = searchParams.get("crypto");
   const [selectedFilter, setSelectedFilter] = useState("all");
@@ -43,7 +43,7 @@ const HistoryPage = () => {
     refetchOnWindowFocus: false,
   });
 
-  const getCryptoIcon = (name: string, category?: "crypto" | "cpg") => {
+  const getCryptoIcon = (name: string) => {
     // Both crypto and CPG transactions use their respective crypto icons
     switch (name.toLowerCase()) {
       case "btc":
@@ -143,7 +143,7 @@ const HistoryPage = () => {
                   amount={transaction.amount}
                   title={transaction.title}
                   label={`${day.dateAsName} - ${transaction.hour}`}
-                  icon={getCryptoIcon(transaction.title, transaction.category)}
+                  icon={getCryptoIcon(transaction.title)}
                   type={transaction.type}
                   price={transaction.price}
                 />
@@ -153,6 +153,20 @@ const HistoryPage = () => {
         ))
       )}
     </PageLayout>
+  );
+};
+
+const HistoryPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <PageLayout title="Wallet History">
+          <HistorySkeleton />
+        </PageLayout>
+      }
+    >
+      <HistoryPageContent />
+    </Suspense>
   );
 };
 

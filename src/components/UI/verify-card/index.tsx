@@ -11,9 +11,10 @@ const VerifyCard = ({
   title,
   index,
   passedSteps,
+  stepsLength,
 }: verifyCardPropsType) => {
-   console.log(index === passedSteps)
-  const isPassed = passedSteps > (index );
+  console.log(stepsLength);
+  const isPassed = passedSteps > index;
 
   const router = useRouter();
   return (
@@ -29,7 +30,7 @@ const VerifyCard = ({
 
       <div className="flex flex-col mt-1 gap-2">
         {steps?.map((item) => (
-          <div className="flex gap-2" key={item.title}>
+          <div className="flex gap-2" key={item.subStepName}>
             <Image
               src={item.isPassed ? check : uncheck}
               width="20"
@@ -47,7 +48,7 @@ const VerifyCard = ({
         </div>
       )}
 
-      {!isPassed && (
+      {stepsLength - passedSteps === index + 1 && !isPassed && (
         <Button
           onClick={() => {
             router.push("/profile/identity-verification");

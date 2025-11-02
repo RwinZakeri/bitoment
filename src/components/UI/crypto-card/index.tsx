@@ -1,9 +1,8 @@
-import LinkIcon from "@/public/icons/LinkIcon";
 import Down from "@/public/svgs/arrow-down-red.svg";
+import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import Link from "@/public/svgs/link.svg";
 import UP from "@/public/svgs/up-arrow-red.svg";
 import Image from "next/image";
-import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import { CryptoCardPropsType } from "./type";
 const CryptoCard = ({
   title,

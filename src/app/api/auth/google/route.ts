@@ -61,7 +61,7 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
   }
 
   if (!response.ok) {
-    let errorData: any = {};
+    let errorData: Record<string, unknown> = {};
     try {
       const text = await response.text();
       errorData = text ? JSON.parse(text) : {};
@@ -87,7 +87,13 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
     }
   }
 
-  let data: any;
+  let data: {
+    email?: string;
+    name?: string;
+    given_name?: string;
+    picture?: string;
+    id?: string;
+  };
   try {
     data = await response.json();
   } catch (parseError) {
@@ -97,6 +103,10 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
 
   if (!data.email) {
     throw new Error("Email not found in Google user info");
+  }
+
+  if (!data.id) {
+    throw new Error("User ID not found in Google user info");
   }
 
   return {
@@ -187,14 +197,25 @@ export async function POST(
       // User exists - sign in
       userId = existingUser.id;
 
-      // Update OAuth info if not already set
-      if (!existingUser.oauth_provider) {
-        db.prepare(
+      // Update OAuth info if not already set to google
+      if (existingUser.oauth_provider !== "google") {
+        const updateOAuth = db.prepare(
           "UPDATE users SET oauth_provider = ?, oauth_id = ?, name = COALESCE(name, ?) WHERE id = ?"
-        ).run("google", googleUser.id, googleUser.name, userId);
+        );
+        updateOAuth.run(
+          "google",
+          googleUser.id,
+          googleUser.name || existingUser.name,
+          userId
+        );
+      } else {
+        // Ensure oauth_id is set even if provider is already google
+        db.prepare(
+          "UPDATE users SET oauth_id = ? WHERE id = ? AND (oauth_id IS NULL OR oauth_id = '')"
+        ).run(googleUser.id, userId);
       }
 
-      // Update name if it changed
+      // Update name if it changed and is not null
       if (googleUser.name && googleUser.name !== existingUser.name) {
         db.prepare("UPDATE users SET name = ? WHERE id = ?").run(
           googleUser.name,
@@ -205,13 +226,14 @@ export async function POST(
       // New user - sign up
       isNewUser = true;
       const insertUser = db.prepare(`
-        INSERT INTO users (email, name, oauth_provider, oauth_id, created_at)
-        VALUES (?, ?, ?, ?, datetime('now'))
+        INSERT INTO users (email, name, password, oauth_provider, oauth_id, created_at)
+        VALUES (?, ?, ?, ?, ?, datetime('now'))
       `);
 
       const result = insertUser.run(
         googleUser.email,
         googleUser.name,
+        null, // Explicitly set password to NULL for OAuth users
         "google",
         googleUser.id
       );

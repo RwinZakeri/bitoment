@@ -1,9 +1,9 @@
 "use client";
-import { useEffect } from "react";
 import PageLayout from "@/components/layout/page/pageLayout";
 import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescription";
 import { Button } from "@/components/UI/button";
 import Input from "@/components/UI/input";
+import useGoogleOAuth from "@/hooks/useGoogleOAuth";
 import { setCookie } from "@/lib/utils";
 import EmailIcon from "@/public/icons/EmailIcon";
 import GoogleIcon from "@/public/icons/GoogleIcon";
@@ -15,9 +15,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import useGoogleOAuth from "@/hooks/useGoogleOAuth";
 
 const SignIn = () => {
   const router = useRouter();
@@ -55,7 +55,8 @@ const SignIn = () => {
 
   // Google OAuth configuration
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
-  const googleScope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+  const googleScope =
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
 
   const { signInWithGoogle, isLoading: isGoogleLoading } = useGoogleOAuth(
     {
@@ -77,7 +78,9 @@ const SignIn = () => {
 
   const handleGoogleSignIn = async () => {
     if (!googleClientId) {
-      toast.error("Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID");
+      toast.error(
+        "Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID"
+      );
       return;
     }
     await signInWithGoogle();
@@ -87,18 +90,35 @@ const SignIn = () => {
   useEffect(() => {
     if (!googleClientId || typeof window === "undefined") return;
 
+    // Check if script is already loaded
+    if (window.google) {
+      return;
+    }
+
+    // Check if script is already in DOM
+    const existingScript = document.querySelector(
+      'script[src="https://accounts.google.com/gsi/client"]'
+    );
+    if (existingScript) {
+      return;
+    }
+
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
-    document.body.appendChild(script);
+    script.onerror = () => {
+      console.error("Failed to load Google Sign-In script");
+    };
+    document.head.appendChild(script);
 
     return () => {
-      const existingScript = document.querySelector(
+      // Only remove if we added it and it still exists
+      const scriptToRemove = document.querySelector(
         'script[src="https://accounts.google.com/gsi/client"]'
       );
-      if (existingScript) {
-        document.body.removeChild(existingScript);
+      if (scriptToRemove && scriptToRemove.parentNode) {
+        scriptToRemove.parentNode.removeChild(scriptToRemove);
       }
     };
   }, [googleClientId]);

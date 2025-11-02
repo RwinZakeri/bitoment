@@ -19,7 +19,6 @@ import { AssetData, AssetDistributionResponse } from "@/types";
 import type { GetWalletHistoryResponse, GetWalletResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Wallet = () => {
@@ -76,7 +75,12 @@ const Wallet = () => {
           totalPrice={formatCurrency(walletBalance)}
           amount={percentageChange}
           button={
-            <Button onClick={()=> router.push("/wallet/cpg")} size="lg" className="bg-cyan-200 px-2" icon={<LinkIcon />}>
+            <Button
+              onClick={() => router.push("/wallet/cpg")}
+              size="lg"
+              className="bg-cyan-200 px-2"
+              icon={<LinkIcon />}
+            >
               CGP
             </Button>
           }

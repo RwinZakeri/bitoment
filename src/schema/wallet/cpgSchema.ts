@@ -12,9 +12,7 @@ export const createCpgLinkSchema = z.object({
     .regex(/^[A-Z]+$/, "Currency must be uppercase letters only"),
   status: z
     .enum(["active", "inactive", "completed", "expired"], {
-      errorMap: () => ({
-        message: "Status must be one of: active, inactive, completed, expired",
-      }),
+      message: "Status must be one of: active, inactive, completed, expired",
     })
     .optional(),
 });

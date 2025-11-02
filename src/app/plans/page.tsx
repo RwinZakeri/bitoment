@@ -2,10 +2,10 @@
 import PageLayout from "@/components/layout/page/pageLayout";
 import {
   DocumentationTab,
-  FeaturTab,
   OperationTab,
   PerformanceTab,
 } from "@/components/pages/plans/plan-tabs-content/tabsContent";
+import { FeaturesTab } from "@/components/pages/plans/plan-tabs-content/tabsFeature";
 import Tabs from "@/components/UI/tabs";
 import { TabItem } from "@/components/UI/tabs/type";
 import { useState } from "react";
@@ -22,7 +22,7 @@ const PlanPage = () => {
     {
       id: "features",
       label: "Features",
-      content: <FeaturTab />,
+      content: <FeaturesTab />,
     },
     {
       id: "operation",

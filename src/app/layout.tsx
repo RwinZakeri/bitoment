@@ -13,6 +13,16 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/bitoment_rounded.png", sizes: "any" },
+      { url: "/bitoment_rounded.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/bitoment_rounded.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/bitoment_rounded.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -38,21 +48,21 @@ export default function RootLayout({
             toastOptions={{
               duration: 4000,
               style: {
-                background: '#363636',
-                color: '#fff',
+                background: "#363636",
+                color: "#fff",
               },
               success: {
                 duration: 3000,
                 iconTheme: {
-                  primary: '#00e4cc',
-                  secondary: '#fff',
+                  primary: "#00e4cc",
+                  secondary: "#fff",
                 },
               },
               error: {
                 duration: 5000,
                 iconTheme: {
-                  primary: '#ff6b6b',
-                  secondary: '#fff',
+                  primary: "#ff6b6b",
+                  secondary: "#fff",
                 },
               },
             }}

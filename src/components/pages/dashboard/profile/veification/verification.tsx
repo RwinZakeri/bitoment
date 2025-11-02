@@ -50,6 +50,9 @@ const Verification = () => {
                     ? "/svgs/level-two.svg"
                     : "/svgs/threelayer.svg"
                 }
+                stepsLength={
+                  verificationStep?.verificationStep.steps.length || 0
+                }
                 steps={item.passSteps}
                 title={item.stepName}
                 isPassed={item.passSteps.every((step) => step.isPassed)}

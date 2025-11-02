@@ -2,7 +2,6 @@
 import Button from "@/components/UI/button";
 import CustomeInput from "@/components/UI/CustomeInput";
 import DoughnutChart from "@/components/UI/doughnut-chart";
-import LineChart from "@/components/UI/line-chart";
 import Paper from "@/components/UI/paper";
 import Rank from "@/components/UI/rank";
 import Stepper from "@/components/UI/stepper";
@@ -10,54 +9,24 @@ import TransformButton from "@/components/UI/transform-button";
 import AwardIcon from "@/public/icons/AwardIcon";
 import ChartFrameIcon from "@/public/icons/ChartFrameIcon";
 import DocumentIcon from "@/public/icons/DocumentIcon";
+import DocumentWithEyeIcon from "@/public/icons/DocumentWithEyeIcon";
 import LineChartIcon from "@/public/icons/LineChartIcon";
 import WindowIcon from "@/public/icons/WindowIcon";
-import womenBtc from "@/public/svgs/women-btc.svg";
+import twoWomanOneBitcoin from "@/public/svgs/twoWomanOneBitcoin.svg";
 import Image from "next/image";
-import { palnFeatures } from "./type";
-
-const PerformanceTab = () => {
-  const chartData = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    datasets: [
-      {
-        label: "Portfolio Value",
-        data: [
-          45000, 52000, 48000, 61000, 55000, 67000, 72000, 68000, 75000, 82000,
-          78000, 16000,
-        ],
-        borderColor: "#15E0CC",
-        backgroundColor: "rgba(21, 224, 204, 0.1)",
-        fill: true,
-        tension: 0.4,
-      },
-    ],
-  };
-
+import { v4 as uuid } from "uuid";
+const FeaturesTab = () => {
   const assetAllocationData = {
     labels: ["Bitcoin", "Ethereum", "Solana", "Tether", "Others"],
     datasets: [
       {
         data: [35, 25, 20, 15, 5],
         backgroundColor: [
-          "#F7931A", // Bitcoin orange
-          "#627EEA", // Ethereum blue
-          "#9945FF", // Solana purple
-          "#26A17B", // Tether green
-          "#6B7280", // Others gray
+          "#F7931A",
+          "#627EEA",
+          "#9945FF",
+          "#26A17B",
+          "#6B7280",
         ],
         borderColor: ["#F7931A", "#627EEA", "#9945FF", "#26A17B", "#6B7280"],
         borderWidth: 2,
@@ -66,12 +35,17 @@ const PerformanceTab = () => {
   };
   return (
     <div className="p-2 mt-4">
-      <div className="w-full flex bg-white rounded-2xl p-4">
-        <p className="text-xs">
-          Low-risk investments focus on well-established cryptocurrencies,
-          offering stable returns with lower risk.
+      <div className="w-full flex bg-white justify-between rounded-2xl p-4">
+        <p className="text-sm w-64">
+          Smart investing in traditional markets and cryptocurrencies with a
+          focus on maximizing returns and managing risk.
         </p>
-        <Image src={womenBtc} alt="women btc" width={100} height={100} />
+        <Image
+          src={twoWomanOneBitcoin}
+          alt="women btc"
+          width={100}
+          height={100}
+        />
       </div>
 
       <div className="flex mt-7 justify-between items-center">
@@ -118,22 +92,23 @@ const PerformanceTab = () => {
           clickHandler={() => ""}
         />
       </div>
-      <Paper className="bg-white p-4 mt-2 rounded-xl" label="Features">
-        <div className="flex flex-col gap-4 ">
-          {palnFeatures.map((item) => (
-            <div
-              className="flex shadow-sm p-3 mt-2 rounded-xl items-center justify-between gap-2 text-sm"
-              key={item.title}
-            >
-              <Image
-                src={item.address}
-                alt={item.title}
-                width={50}
-                height={50}
-              />
-              <p>{item.title}</p>{" "}
-            </div>
-          ))}
+      <Paper
+        icon={<DocumentWithEyeIcon />}
+        className="bg-white p-4 rounded-2xl mt-4"
+        label="Asset Allocation"
+      >
+        <div className="grid grid-cols-2">
+          {Array.from({ length: 4 }).map(() => {
+            return (
+              <div
+                key={uuid()}
+                className="w-full text-center py-2 flex flex-col gap-2"
+              >
+                <p className="text-base">Last Month</p>
+                <p className="text-2xl font-semibold text-teal-500">+22.28%</p>
+              </div>
+            );
+          })}
         </div>
       </Paper>
       <Paper
@@ -141,7 +116,29 @@ const PerformanceTab = () => {
         className="bg-white p-2 rounded-2xl mt-4"
         label="Fund Performance Chart"
       >
-        <LineChart data={chartData} />
+        <div className="mt-4 flex-col flex gap-4">
+          <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <p className="text-xs">Fund Type :</p>{" "}
+            <p className="text-gray-400 text-xs">Active</p>
+          </div>
+
+          <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <p className="text-xs">Fund Performance Fee :</p>{" "}
+            <p className="text-gray-400 text-xs"> 20%</p>
+          </div>
+          <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <p className="text-xs">Risk Level: :</p>{" "}
+            <p className="text-gray-400 text-xs">High Risk</p>
+          </div>
+          <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <p className="text-xs">Establishment Date :</p>{" "}
+            <p className="text-gray-400 text-xs">1401/12/20 - 10:00</p>
+          </div>
+          <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <p className="text-xs">Minimum Investment Amount :</p>{" "}
+            <p className={`text-xs`}>ssss</p>
+          </div>
+        </div>
       </Paper>
 
       <Paper
@@ -201,7 +198,11 @@ const PerformanceTab = () => {
           </p>
         </div>
 
-        <Button size="sm" variant="outline-dark" className="w-9/12 w-full mx-auto">
+        <Button
+          size="sm"
+          variant="outline-dark"
+          className="w-9/12 w-full mx-auto"
+        >
           <p>Learn More</p>
         </Button>
       </Paper>
@@ -251,4 +252,4 @@ const DocumentationTab = () => {
   );
 };
 
-export { DocumentationTab, FeaturTab, OperationTab, PerformanceTab };
+export { DocumentationTab, FeaturesTab, FeaturTab, OperationTab };

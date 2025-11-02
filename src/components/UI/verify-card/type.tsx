@@ -10,6 +10,7 @@ export interface verifyCardPropsType {
   isPassed: boolean;
   index: number;
   passedSteps: number;
+  stepsLength: number;
 }
 
 export const verifyLevel = [

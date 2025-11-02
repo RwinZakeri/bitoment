@@ -123,7 +123,7 @@ export async function POST(
     let body: CreateCpgLinkRequest;
     try {
       body = await request.json();
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         {
           success: false,
@@ -139,7 +139,7 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          message: validationResult.error.errors[0].message,
+          message: validationResult.error.issues[0].message,
         },
         { status: 400 }
       );

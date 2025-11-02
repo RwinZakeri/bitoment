@@ -27,7 +27,83 @@ db.prepare(
 `
 ).run();
 
-// Make password nullable for existing users (if column exists)
+// Ensure password column allows NULL for OAuth users
+// SQLite doesn't support dropping NOT NULL constraints directly
+// We need to recreate the table to remove the constraint
+try {
+  // Check table info to see if password column has NOT NULL constraint
+  const tableInfo = db.prepare("PRAGMA table_info(users)").all() as Array<{
+    cid: number;
+    name: string;
+    type: string;
+    notnull: number;
+    dflt_value: string | null;
+    pk: number;
+  }>;
+
+  const passwordColumn = tableInfo.find((col) => col.name === "password");
+
+  // If password column has NOT NULL constraint (notnull = 1), migrate the table
+  if (passwordColumn && passwordColumn.notnull === 1) {
+    console.log(
+      "Migrating users table to allow NULL passwords for OAuth users..."
+    );
+
+    // Disable foreign key constraints temporarily for migration
+    db.prepare("PRAGMA foreign_keys = OFF").run();
+
+    // Create a new table with the correct schema (password nullable)
+    db.prepare(
+      `
+      CREATE TABLE users_migration (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT,
+        name TEXT,
+        phoneNumber INTEGER,
+        nationalInsuranceNumber TEXT,
+        birthDate TEXT,
+        oauth_provider TEXT,
+        oauth_id TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    `
+    ).run();
+
+    // Copy data from old table to new table
+    db.prepare(
+      `
+      INSERT INTO users_migration 
+      SELECT id, email, password, name, phoneNumber, nationalInsuranceNumber, 
+             birthDate, oauth_provider, oauth_id, created_at
+      FROM users
+    `
+    ).run();
+
+    // Drop old table
+    db.prepare("DROP TABLE users").run();
+
+    // Rename new table to original name
+    db.prepare("ALTER TABLE users_migration RENAME TO users").run();
+
+    // Re-enable foreign key constraints
+    db.prepare("PRAGMA foreign_keys = ON").run();
+
+    console.log(
+      "Migration completed successfully - password column now allows NULL."
+    );
+  }
+} catch (error) {
+  // If migration fails, log but don't crash - the INSERT with explicit NULL should still work
+  console.error("Error during password column migration:", error);
+  // Re-enable foreign keys in case of error
+  try {
+    db.prepare("PRAGMA foreign_keys = ON").run();
+  } catch {
+    // Ignore
+  }
+}
+
 try {
   db.prepare(`ALTER TABLE users ADD COLUMN oauth_provider TEXT`).run();
 } catch {
