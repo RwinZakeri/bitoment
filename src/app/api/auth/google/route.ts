@@ -93,19 +93,29 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
     given_name?: string;
     picture?: string;
     id?: string;
+    sub?: string; // Google OAuth returns 'sub' as the user ID
   };
   try {
     data = await response.json();
+    // Debug log to help troubleshoot (remove in production if needed)
+    console.log("Google API response data keys:", Object.keys(data));
   } catch (parseError) {
     console.error("Failed to parse Google API response:", parseError);
     throw new Error("Invalid response format from Google API");
   }
 
   if (!data.email) {
+    console.error("Google API response missing email:", data);
     throw new Error("Email not found in Google user info");
   }
 
-  if (!data.id) {
+  // Google OAuth returns 'sub' (subject) as the user ID, not 'id'
+  const userId = data.sub || data.id;
+  if (!userId) {
+    console.error(
+      "Google API response missing user ID. Available fields:",
+      Object.keys(data)
+    );
     throw new Error("User ID not found in Google user info");
   }
 
@@ -113,7 +123,7 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
     email: data.email,
     name: data.name || data.given_name || "User",
     picture: data.picture,
-    id: data.id,
+    id: userId,
   };
 }
 
