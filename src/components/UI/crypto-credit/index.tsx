@@ -27,7 +27,7 @@ const CryptoCredit = ({
           <UpArrowCreditIcon className="w-4 h-4" /> {amount}
         </p>
       </div>
-      <div className="w-fit h-fit p-3 rounded-full bg-white flex items-center justify-center">
+      <div className="w-fit h-fit p-1 rounded-full bg-white flex items-center justify-center">
         <p> {icon}</p>
       </div>
     </div>

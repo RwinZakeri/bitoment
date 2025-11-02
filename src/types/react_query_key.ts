@@ -12,15 +12,16 @@ const ReactQueryKey = {
   walletBalance: "walletBalance",
   walletHistory: "walletHistory",
   walletAssetDistribution: "walletAssetDistribution",
-  
+  walletCpgLinks: "walletCpgLinks",
+
   // Session related
   sessions: "sessions",
 
   // asset
-  assetDistribution : "assetDistributionData" ,
+  assetDistribution: "assetDistributionData",
 
   // crypto
-  allCrypto : "allCrypto"
+  allCrypto: "allCrypto",
 } as const;
 
 export default ReactQueryKey;

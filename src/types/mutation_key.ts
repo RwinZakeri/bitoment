@@ -14,6 +14,7 @@ const MutationKey = {
   deleteMoney: "deleteMoney",
   transferMoney: "transferMoney",
   investMoney: "investMoney",
+  createCpgLink: "createCpgLink",
 
   // Session mutations
   createSession: "createSession",

@@ -1,7 +1,8 @@
 "use client";
-import LinkIcon from "@/public/icons/LinkIcon";
 import ShareIcon from "@/public/icons/ShareIcon";
 import TrashIcon from "@/public/icons/TrashIcon";
+import LinkIcon from "@/public/svgs/blackLink.svg";
+import Image from "next/image";
 import { useState } from "react";
 import Modal from "../modal";
 import { CpgCardPropsType } from "./type";
@@ -13,6 +14,7 @@ const CpgCard = ({
   currency,
   url,
   status,
+  onDelete,
 }: CpgCardPropsType) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,12 +25,39 @@ const CpgCard = ({
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(id, id);
+    }
+  };
+
+  const getStatusDisplay = () => {
+    switch (status) {
+      case "active":
+        return { text: "Active", color: "text-blue-500" };
+      case "inactive":
+        return { text: "Inactive", color: "text-gray-500" };
+      case "completed":
+        return { text: "Completed", color: "text-emerald-500" };
+      case "expired":
+        return { text: "Expired", color: "text-red-500" };
+      case "wait":
+        return { text: "Waiting", color: "text-amber-500" };
+      case "success":
+        return { text: "Success", color: "text-emerald-500" };
+      default:
+        return { text: status, color: "text-gray-500" };
+    }
+  };
+
+  const statusDisplay = getStatusDisplay();
   return (
     <>
       <div className="bg-white p-4 rounded-xl">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <LinkIcon />
+            <Image src={LinkIcon} alt="link icon" width={16} height={16} />
             <p className="text-xs">{id}</p>
           </div>
           <div className="flex items-center gap-2">
@@ -38,15 +67,24 @@ const CpgCard = ({
             >
               <ShareIcon />
             </div>
-            <TrashIcon />
+            {onDelete && (
+              <div
+                onClick={handleDelete}
+                className="cursor-pointer hover:opacity-70 transition-opacity"
+              >
+                <TrashIcon />
+              </div>
+            )}
           </div>
         </div>
         <div>
           <div className="mt-4 flex-col flex gap-4">
-            <div className="flex justify-between border-b-[1px] border-gray-300 ">
-              <p className="text-xs">Order ID :</p>{" "}
-              <p className="text-gray-400 text-xs">{orderId}</p>
-            </div>
+            {orderId && (
+              <div className="flex justify-between border-b-[1px] border-gray-300 ">
+                <p className="text-xs">Order ID :</p>{" "}
+                <p className="text-gray-400 text-xs">{orderId}</p>
+              </div>
+            )}
             <div className="flex justify-between border-b-[1px] border-gray-300 ">
               <p className="text-xs">Price :</p>{" "}
               <p className="text-gray-400 text-xs">{price}</p>
@@ -61,20 +99,8 @@ const CpgCard = ({
             </div>
             <div className="flex justify-between border-b-[1px] border-gray-300 ">
               <p className="text-xs">Status :</p>{" "}
-              <p
-                className={`${
-                  status === "wait"
-                    ? "text-amber-500"
-                    : status === "success"
-                    ? "text-emerald-500"
-                    : ""
-                } text-xs`}
-              >
-                {status === "wait"
-                  ? "waiting"
-                  : status === "success"
-                  ? "success"
-                  : null}
+              <p className={`${statusDisplay.color} text-xs`}>
+                {statusDisplay.text}
               </p>
             </div>
           </div>

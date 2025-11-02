@@ -6,6 +6,7 @@ import Filters from "@/components/UI/filters";
 import { filters } from "@/components/UI/filters/type";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
+import BinanceIcon from "@/public/icons/BinanceIcon";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
 import SolIcon from "@/public/icons/SolIcon";
@@ -13,9 +14,12 @@ import TetherIcon from "@/public/icons/TetherIcon";
 import type { GetWalletHistoryResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const HistoryPage = () => {
+  const searchParams = useSearchParams();
+  const cryptoParam = searchParams.get("crypto");
   const [selectedFilter, setSelectedFilter] = useState("all");
 
   const {
@@ -27,10 +31,12 @@ const HistoryPage = () => {
       ReactQueryKey.wallet,
       ReactQueryKey.walletHistory,
       selectedFilter,
+      cryptoParam,
     ],
     queryFn: async () => {
+      const cryptoQuery = cryptoParam ? `&crypto=${cryptoParam}` : "";
       const response = await axios.get<GetWalletHistoryResponse>(
-        `/wallet/history?filter=${selectedFilter}`
+        `/wallet/history?filter=${selectedFilter}${cryptoQuery}`
       );
       return response.data;
     },
@@ -43,6 +49,7 @@ const HistoryPage = () => {
       case "btc":
         return <BtcIcon className="w-4 h-4" />;
       case "eth":
+      case "etc":
         return <EtcIcon className="w-4 h-4" />;
       case "tether":
       case "usdt":
@@ -50,7 +57,7 @@ const HistoryPage = () => {
       case "sol":
         return <SolIcon className="w-4 h-4" />;
       case "bnb":
-        return <EtcIcon className="w-4 h-4" />; // Using EtcIcon as placeholder for BNB
+        return <BinanceIcon className="w-4 h-4" />;
       default:
         return <BtcIcon className="w-4 h-4" />;
     }
@@ -94,8 +101,12 @@ const HistoryPage = () => {
     );
   }
 
+  const pageTitle = cryptoParam
+    ? `${cryptoParam.toUpperCase()} Wallet History`
+    : "Wallet History";
+
   return (
-    <PageLayout title="Wallet History">
+    <PageLayout title={pageTitle}>
       <div className="mt-4">
         <Filters
           onClick={setSelectedFilter}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Helper function to generate random data
-function generateRandomHistory(filter?: string) {
+function generateRandomHistory(filter?: string, crypto?: string | null) {
   const weekdays = [
     "Monday",
     "Tuesday",
@@ -72,20 +72,57 @@ function generateRandomHistory(filter?: string) {
           transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
       }
 
-      // Choose currency based on type
+      // Choose currency based on type and crypto filter
       let selectedCurrency;
       if (type === "cpg") {
         // If type is cpg, use a crypto currency for name and icon, but keep category as cpg
-        const cryptoCurrency =
-          cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
-        selectedCurrency = {
-          ...cryptoCurrency,
-          category: "cpg", // Override category to cpg
-        };
+        const availableCurrencies = crypto
+          ? cryptoCurrencies.filter(
+              (c) => c.name.toUpperCase() === crypto.toUpperCase()
+            )
+          : cryptoCurrencies;
+        // If no matching currency found when filtering, use the first currency from the list
+        if (availableCurrencies.length === 0) {
+          selectedCurrency = {
+            ...cryptoCurrencies[0],
+            category: "cpg",
+          };
+        } else {
+          const cryptoCurrency =
+            availableCurrencies[
+              Math.floor(Math.random() * availableCurrencies.length)
+            ];
+          selectedCurrency = {
+            ...cryptoCurrency,
+            category: "cpg", // Override category to cpg
+          };
+        }
       } else {
         // For "up" or "down" types, use crypto currencies
-        selectedCurrency =
-          cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
+        // If crypto filter is specified, only use that crypto
+        const availableCurrencies = crypto
+          ? cryptoCurrencies.filter(
+              (c) => c.name.toUpperCase() === crypto.toUpperCase()
+            )
+          : cryptoCurrencies;
+
+        // If filtering by crypto and no matching currency found, use first currency as fallback
+        if (crypto && availableCurrencies.length === 0) {
+          selectedCurrency = cryptoCurrencies[0];
+        } else {
+          selectedCurrency =
+            availableCurrencies[
+              Math.floor(Math.random() * availableCurrencies.length)
+            ];
+        }
+      }
+
+      // Skip transaction only if crypto filter doesn't match (for strict filtering)
+      if (
+        crypto &&
+        selectedCurrency.name.toUpperCase() !== crypto.toUpperCase()
+      ) {
+        continue;
       }
       const amount = (Math.random() * 10 + 0.1).toFixed(2);
       const price = (Math.random() * 100000 + 1000).toFixed(2);
@@ -132,8 +169,9 @@ function generateRandomHistory(filter?: string) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const filter = searchParams.get("filter") || "all";
+  const crypto = searchParams.get("crypto"); // Filter by specific crypto type
 
-  const data = generateRandomHistory(filter);
+  const data = generateRandomHistory(filter, crypto);
 
   return NextResponse.json({
     success: true,

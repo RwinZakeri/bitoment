@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import PageLayout from "@/components/layout/page/pageLayout";
 import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescription";
 import { Button } from "@/components/UI/button";
@@ -16,6 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import useGoogleOAuth from "@/hooks/useGoogleOAuth";
 
 const SignIn = () => {
   const router = useRouter();
@@ -51,10 +53,55 @@ const SignIn = () => {
     },
   });
 
+  // Google OAuth configuration
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+  const googleScope = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+
+  const { signInWithGoogle, isLoading: isGoogleLoading } = useGoogleOAuth(
+    {
+      clientId: googleClientId,
+      scope: googleScope,
+      redirectUri: typeof window !== "undefined" ? window.location.origin : "",
+    },
+    {
+      onSuccess: (data) => {
+        toast.success(data.message || "Signed in successfully with Google");
+        setCookie("token", data.token || "");
+        router.push("/dashboard");
+      },
+      onError: (error) => {
+        toast.error(error || "Google sign-in failed");
+      },
+    }
+  );
+
   const handleGoogleSignIn = async () => {
-    // TODO: Implement Google OAuth without NextAuth
-    console.log("Google sign-in not implemented yet");
+    if (!googleClientId) {
+      toast.error("Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID");
+      return;
+    }
+    await signInWithGoogle();
   };
+
+  // Load Google Sign-In script
+  useEffect(() => {
+    if (!googleClientId || typeof window === "undefined") return;
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    return () => {
+      const existingScript = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]'
+      );
+      if (existingScript) {
+        document.body.removeChild(existingScript);
+      }
+    };
+  }, [googleClientId]);
 
   return (
     <PageLayout>
@@ -125,8 +172,10 @@ const SignIn = () => {
           icon={<GoogleIcon fill="black" className="size-6" />}
           className="w-full"
           onClick={handleGoogleSignIn}
+          disabled={isGoogleLoading || !googleClientId}
+          loading={isGoogleLoading}
         >
-          Sign with Google
+          {isGoogleLoading ? "Signing in..." : "Sign with Google"}
         </Button>
 
         <p className="text-gray-500 text-center text-sm font-normal">

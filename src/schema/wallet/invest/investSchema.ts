@@ -164,6 +164,42 @@ export const receiveCryptoSchema = z.object({
   blockchainNetwork: z.string().optional(),
 });
 
+export const linkCpgSchema = z.object({
+  selectedCrypto: z
+    .object({
+      name: z.string(),
+      shortName: z.string(),
+      icon: z.string(),
+      price: z.string(),
+      percentage: z.string(),
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "Please select a cryptocurrency",
+    }),
+  blockchainNetwork: z.string().optional(),
+  price: z
+    .string()
+    .optional()
+    .refine((val) => {
+      if (!val || val.trim() === "") return true; // Optional field
+      const num = parseFloat(val);
+      return !isNaN(num) && num > 0 && num <= 1000000;
+    }, "Please enter a valid amount (0.01 - 1,000,000)"),
+  orderDescription: z.string().optional(),
+  orderId: z.string().optional(),
+});
+
 export type PayFromWalletFormData = z.infer<typeof payFromWalletSchema>;
 export type SendCryptoFormData = z.infer<typeof sendCryptoSchema>;
 export type ReceiveCryptoFormData = z.infer<typeof receiveCryptoSchema>;
+export type LinkCpgFormData = z.infer<typeof linkCpgSchema>;
+
+
+
+
+const signinSchema = z.object({
+  phoneNumber : z.refine(()=>{}) ,
+  isAccepted : z.boolean("please accept out policiy") 
+
+})

@@ -231,3 +231,65 @@ export interface GetWalletHistoryResponse {
   success: boolean;
   data: HistoryDay[];
 }
+
+// CPG Links related types
+export interface CpgLink {
+  id: number;
+  user_id: number;
+  link_id: string;
+  order_id?: string;
+  price: number;
+  currency: string;
+  url: string;
+  status: "active" | "inactive" | "completed" | "expired";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateCpgLinkRequest {
+  order_id?: string;
+  price: number;
+  currency: string;
+  status?: "active" | "inactive" | "completed" | "expired";
+}
+
+export interface CreateCpgLinkResponse {
+  success: boolean;
+  message: string;
+  link?: CpgLink;
+}
+
+export interface GetCpgLinksResponse {
+  success: boolean;
+  message: string;
+  links?: CpgLink[];
+}
+
+export interface DeleteCpgLinkResponse {
+  success: boolean;
+  message: string;
+}
+
+// Google OAuth related types
+export interface GoogleOAuthRequest {
+  accessToken: string;
+}
+
+export interface GoogleOAuthResponse {
+  success: boolean;
+  message: string;
+  user?: {
+    id: number;
+    email: string;
+    fullName?: string;
+  };
+  token?: string;
+  isNewUser?: boolean;
+}
+
+export interface GoogleUserInfo {
+  email: string;
+  name: string;
+  picture?: string;
+  id: string;
+}

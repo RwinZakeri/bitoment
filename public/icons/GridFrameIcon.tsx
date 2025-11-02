@@ -12,7 +12,7 @@ export const GridFrameIcon: React.FC<GridFrameIconProps> = ({
   width = 24,
   height = 24,
   className,
-  fill = "#15E0CC",
+  fill ,
   stroke = "black",
 }) => {
   return (

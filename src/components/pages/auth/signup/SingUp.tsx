@@ -1,11 +1,12 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
+import GoogleOAuth from "@/components/module/oAuth/googleOauth";
 import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescription";
 import { Button } from "@/components/UI/button";
 import Input from "@/components/UI/input";
+import useGoogleOAuth from "@/hooks/useGoogleOAuth";
 import { setCookie } from "@/lib/utils";
 import EmailIcon from "@/public/icons/EmailIcon";
-import GoogleIcon from "@/public/icons/GoogleIcon";
 import UserIcon from "@/public/icons/UserIcon";
 import { SignUpFormData, singUpSchema } from "@/schema/auth/authSchema";
 import { SignUpResponse } from "@/types/auth";
@@ -15,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -45,7 +47,7 @@ const SignUp = () => {
     onSuccess: (data) => {
       toast.success("Account created successfully");
       setCookie("token", data.data.token || "");
-      router.push("/");
+      router.push("/dashboard");
     },
     onError: (error: unknown) => {
       const errorMessage =
@@ -55,10 +57,61 @@ const SignUp = () => {
     },
   });
 
-  const handleGoogleSignIn = async () => {
-    // TODO: Implement Google OAuth without NextAuth
-    console.log("Google sign-in not implemented yet");
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+  const googleScope =
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
+
+  const { signInWithGoogle, isLoading: isGoogleLoading } = useGoogleOAuth(
+    {
+      clientId: googleClientId,
+      scope: googleScope,
+      redirectUri: typeof window !== "undefined" ? window.location.origin : "",
+    },
+    {
+      onSuccess: (data) => {
+        // const message = data.isNewUser
+        //   ? "Account created successfully with Google"
+        //   : "Signed in successfully with Google";
+        // toast.success(data.message || message);
+        // setCookie("token", data.token || "");
+        // router.push("/dashboard");
+        console.log(data);
+      },
+      onError: (error) => {
+        toast.error(error || "Google sign-up failed");
+      },
+    }
+  );
+
+  const handleGoogleSignUp = async () => {
+    if (!googleClientId) {
+      toast.error(
+        "Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID"
+      );
+      return;
+    }
+    await signInWithGoogle();
   };
+
+  // Load Google Sign-In script
+  useEffect(() => {
+    if (!googleClientId || typeof window === "undefined") return;
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    return () => {
+      const existingScript = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]'
+      );
+      if (existingScript) {
+        document.body.removeChild(existingScript);
+      }
+    };
+  }, [googleClientId]);
 
   return (
     <PageLayout>
@@ -124,15 +177,11 @@ const SignUp = () => {
         </div>
       </form>
       <div className="mt-8 flex flex-col gap-4">
-        <Button
-          variant="outline-dark"
-          size="sm"
-          icon={<GoogleIcon fill="black" className="size-6" />}
-          className="w-full"
-          onClick={handleGoogleSignIn}
-        >
-          Sign with Google{" "}
-        </Button>
+        <GoogleOAuth
+          onClick={handleGoogleSignUp}
+          isLoading={isGoogleLoading}
+          disabled={!googleClientId}
+        />
 
         <p className="text-gray-500 text-center text-sm font-normal">
           You have an account ?{" "}

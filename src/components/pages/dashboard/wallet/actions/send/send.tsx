@@ -125,18 +125,14 @@ const Send = () => {
   const onSubmit = async (data: SendCryptoFormData) => {
     try {
       console.log("Form submitted:", data);
-      // Add your submission logic here (API call, etc.)
-      // After successful submission, show success modal
       setIsSuccessModalOpen(true);
     } catch (error) {
       console.error("Submission error:", error);
-      // Handle error here (show error toast, etc.)
     }
   };
 
   const handleCloseSuccessModal = () => {
     setIsSuccessModalOpen(false);
-    // Optionally reset form or redirect
   };
 
   const handleOpenScreener = () => {

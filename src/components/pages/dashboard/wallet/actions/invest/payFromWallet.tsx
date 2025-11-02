@@ -144,26 +144,30 @@ const PayFromWallet = ({
         {isSubmitting ? "Processing..." : buttonText}
       </Button>
 
-      <SelectAssetModal
-        isOpen={isSelectModalOpen}
-        onClose={() => setIsSelectModalOpen(false)}
-        onClick={handleAssetSelect}
-      />
+      {isSelectModalOpen && (
+        <SelectAssetModal
+          isOpen={isSelectModalOpen}
+          onClose={() => setIsSelectModalOpen(false)}
+          onClick={handleAssetSelect}
+        />
+      )}
 
-      <Modal isOpen={isSuccessModalOpen} onClose={handleCloseSuccessModal}>
-        <div className="flex flex-col items-center text-center space-y-4">
-          <SuccessTickIcon className="w-16 h-16 text-green-500" />
-          <h2 className="text-2xl font-semibold">Invest Successfully</h2>
-          <Button
-            variant="secondary"
-            size="lg"
-            onClick={handleCloseSuccessModal}
-            className="mt-4 w-full"
-          >
-            Back
-          </Button>
-        </div>
-      </Modal>
+      {isSuccessModalOpen && (
+        <Modal isOpen={isSuccessModalOpen} onClose={handleCloseSuccessModal}>
+          <div className="flex flex-col items-center text-center space-y-4">
+            <SuccessTickIcon className="w-16 h-16 text-green-500" />
+            <h2 className="text-2xl font-semibold">Invest Successfully</h2>
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={handleCloseSuccessModal}
+              className="mt-4 w-full"
+            >
+              Back
+            </Button>
+          </div>
+        </Modal>
+      )}
     </form>
   );
 };

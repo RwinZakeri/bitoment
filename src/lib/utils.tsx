@@ -1,10 +1,10 @@
 import BinanceIcon from "@/public/icons/BinanceIcon";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
-import LinkIcon from "@/public/icons/LinkIcon";
 import SolIcon from "@/public/icons/SolIcon";
 import TetherIcon from "@/public/icons/TetherIcon";
 import { type ClassValue, clsx } from "clsx";
+import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -71,3 +71,41 @@ export function formatCurrency(value: number): string {
     return value.toFixed(2);
   }
 }
+
+export const aliasMap: Record<string, string> = {
+  TETHER: "USDT",
+  USDT: "TETHER",
+  ETC: "ETH",
+  ETH: "ETC",
+};
+
+export const getAssetIcon = (currentAssets: { name: string; icon: string }) => {
+  if (!currentAssets) return <BtcIcon className="w-7 h-7" />;
+
+  const assetName = currentAssets.name.toUpperCase();
+  switch (assetName) {
+    case "BTC":
+      return <BtcIcon className="w-7 h-7" />;
+    case "ETH":
+    case "ETC":
+      return <EtcIcon className="w-7 h-7" />;
+    case "USDT":
+    case "TETHER":
+      return <TetherIcon className="w-7 h-7" />;
+    case "SOL":
+      return <SolIcon className="w-7 h-7" />;
+    case "BNB":
+      return <BinanceIcon className="w-7 h-7" />;
+    default:
+      return currentAssets.icon ? (
+        <Image
+          src={currentAssets.icon}
+          alt={currentAssets.name}
+          width={28}
+          height={28}
+        />
+      ) : (
+        <BtcIcon className="w-7 h-7" />
+      );
+  }
+};

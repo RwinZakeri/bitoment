@@ -50,7 +50,7 @@ const AutoComplete = ({
         )}
         <div className={`${cn(className, "relative flex items-center")} `}>
           {icon && (
-            <div className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
               {icon}
             </div>
           )}
