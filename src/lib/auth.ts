@@ -1,15 +1,20 @@
 import { passwordRegex } from "@/schema/regex/regex";
 import { JWTPayload } from "@/types/auth";
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
 import jwt, { Secret } from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
-// Load environment variables
-dotenv.config();
-
-// JWT secret - in production, use environment variable
+// JWT secret - Next.js automatically loads .env files
+// Use environment variable or fallback to default
+// IMPORTANT: Make sure SECRET_KEY is set in .env and there's only ONE definition
 const JWT_SECRET = process.env.SECRET_KEY || "golbargegolamgoletoyebaghche";
+
+// Validate that JWT_SECRET is set properly
+if (!JWT_SECRET || JWT_SECRET === "your-secret-key-here") {
+  console.warn(
+    "⚠️  WARNING: JWT_SECRET is not properly configured. Using fallback secret."
+  );
+}
 
 /**
  * Hash a password using bcrypt
