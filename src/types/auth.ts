@@ -44,7 +44,7 @@ export interface User {
   id: number;
   email: string;
   name?: string;
-  phoneNumber?: number;
+  phoneNumber?: string | number; // Can be string (TEXT) or number (for backward compatibility)
   nationalInsuranceNumber?: string;
   birthDate?: string;
   created_at: string;

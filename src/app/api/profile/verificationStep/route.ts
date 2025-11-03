@@ -64,7 +64,13 @@ export async function GET(request: NextRequest) {
 
   console.log(user);
 
-  if (user.phoneNumber) {
+  // phoneNumber can be string or number (handle both for backward compatibility)
+  if (
+    user.phoneNumber &&
+    (typeof user.phoneNumber === "string"
+      ? user.phoneNumber.length > 0
+      : user.phoneNumber > 0)
+  ) {
     verificationStep.steps[1].passSteps[0].isPassed = true;
   }
 
