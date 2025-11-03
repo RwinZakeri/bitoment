@@ -4,7 +4,7 @@ import axios, { InternalAxiosRequestConfig } from "axios";
 const baseURL = process.env.BASE_URL;
 
 const instance = axios.create({
-  baseURL,
+  baseURL: "https://bitoment.vercel.app/api/",
   timeout: 1000,
   headers: { "X-Custom-Header": "foobar" },
 });
