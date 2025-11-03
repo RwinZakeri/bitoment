@@ -92,7 +92,7 @@ export const profileUpdateSchema = z.object({
     .min(1, "Email is required")
     .email("Please enter a valid email address"),
 
-  phoneNumber: z
+  phone: z
     .string()
     .min(1, "Phone number is required")
     .min(10, "Phone number must be at least 10 digits")
@@ -118,7 +118,7 @@ export const optionalProfileUpdateSchema = z.object({
     ])
     .optional(),
 
-  phoneNumber: z
+  phone: z
     .union([
       z
         .string()

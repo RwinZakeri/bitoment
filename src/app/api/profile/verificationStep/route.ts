@@ -78,10 +78,8 @@ export async function GET(request: NextRequest) {
   // ========== Intermediate Level (Step 2) ==========
   // Check Phone Number Verification
   if (
-    user.phoneNumber &&
-    (typeof user.phoneNumber === "string"
-      ? user.phoneNumber.length > 0
-      : user.phoneNumber > 0)
+    user.phone &&
+    (typeof user.phone === "string" ? user.phone.length > 0 : user.phone > 0)
   ) {
     verificationStep.steps[1].passSteps[0].isPassed = true;
   }

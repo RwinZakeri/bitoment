@@ -31,7 +31,7 @@ const IdentityVerification = () => {
     resolver: zodResolver(optionalProfileUpdateSchema),
     mode: "onChange",
     defaultValues: {
-      phoneNumber: "",
+      phone: "",
       nationalInsuranceNumber: "",
       birthDate: "",
     },
@@ -50,11 +50,11 @@ const IdentityVerification = () => {
   useEffect(() => {
     if (profileData?.user) {
       reset({
-        // Ensure phoneNumber is converted to string (handles both string and number types)
-        phoneNumber: profileData.user.phoneNumber
-          ? typeof profileData.user.phoneNumber === "string"
-            ? profileData.user.phoneNumber
-            : profileData.user.phoneNumber.toString()
+        // Ensure phone is converted to string (handles both string and number types)
+        phone: profileData.user.phone
+          ? typeof profileData.user.phone === "string"
+            ? profileData.user.phone
+            : profileData.user.phone.toString()
           : "",
         nationalInsuranceNumber: profileData.user.nationalInsuranceNumber || "",
         birthDate: profileData.user.birthDate || "",
@@ -109,14 +109,14 @@ const IdentityVerification = () => {
             placeholder="+1 (555) 000-0000"
             label="Phone Number"
             type="tel"
-            {...register("phoneNumber")}
+            {...register("phone")}
           />
-          {errors.phoneNumber && (
+          {errors.phone && (
             <span className="text-red-500 text-sm mt-1 block">
-              {errors.phoneNumber.message}
+              {errors.phone.message}
             </span>
           )}
-          {watchedFields.phoneNumber && !errors.phoneNumber && (
+          {watchedFields.phone && !errors.phone && (
             <span className="text-green-500 text-sm mt-1 block">
               ✓ Valid phone number
             </span>
