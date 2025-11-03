@@ -14,14 +14,13 @@ const sql = postgres(connectionString, {
 async function initializeDatabase() {
   try {
     // Create users table
-    // phoneNumber is TEXT to support long phone numbers (exceeding INTEGER max: 2,147,483,647)
     await sql`
   CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
         password TEXT,
         name TEXT,
-        phoneNumber TEXT,
+        phoneNumber INTEGER,
         nationalInsuranceNumber TEXT,
         birthDate TEXT,
         oauth_provider TEXT,
@@ -32,6 +31,7 @@ async function initializeDatabase() {
 
     // Migrate phoneNumber from INTEGER to TEXT if needed (for large phone numbers)
     // This allows phone numbers that exceed INTEGER max value (2,147,483,647)
+<<<<<<< HEAD
     try {
       // First check the current type
       const columnInfo = await sql`
@@ -85,6 +85,21 @@ async function initializeDatabase() {
         }
       }
     }
+=======
+    await sql`
+      DO $$ 
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'users' AND column_name = 'phoneNumber' AND data_type = 'integer'
+        ) THEN
+          -- Check if we need to migrate (only if column is still INTEGER)
+          -- Convert existing integer values to text before changing type
+          ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT;
+        END IF;
+      END $$;
+    `;
+>>>>>>> parent of 3d0729b (fix)
 
     // Add oauth_provider column if it doesn't exist
     await sql`

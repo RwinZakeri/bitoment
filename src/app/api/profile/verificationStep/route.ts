@@ -71,6 +71,7 @@ export async function GET(
 
   console.log(user);
 
+<<<<<<< HEAD
   if (!user) {
     return NextResponse.json({
       status: 404,
@@ -91,6 +92,9 @@ export async function GET(
       ? user.phoneNumber.length > 0
       : user.phoneNumber > 0)
   ) {
+=======
+  if (user.phoneNumber) {
+>>>>>>> parent of 3d0729b (fix)
     verificationStep.steps[1].passSteps[0].isPassed = true;
   }
 

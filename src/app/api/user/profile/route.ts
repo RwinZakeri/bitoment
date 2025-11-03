@@ -40,19 +40,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
-    const formattedUser = {
-      ...user,
-      phoneNumber: user.phoneNumber
-        ? typeof user.phoneNumber === "string"
-          ? user.phoneNumber
-          : user.phoneNumber.toString()
-        : undefined,
-    };
-
     return NextResponse.json({
       success: true,
-      user: formattedUser,
+      user: user,
     });
   } catch (error) {
     console.error("Profile fetch error:", error);
@@ -103,7 +93,7 @@ export async function PUT(request: NextRequest) {
       validationResult.data;
 
     // Get current user data to preserve existing values for optional fields
-    // Note: phoneNumber is now TEXT in database
+    // Note: phoneNumber is now TEXT in database (may still be INTEGER in some cases during migration)
     const currentUser = (await db
       .prepare(
         `SELECT name, email, phoneNumber, nationalInsuranceNumber, birthDate 
@@ -114,7 +104,7 @@ export async function PUT(request: NextRequest) {
       | {
           name: string;
           email: string;
-          phoneNumber: string | number | null; // TEXT in DB, but may be number during migration
+          phoneNumber: number | string | null;
           nationalInsuranceNumber: string | null;
           birthDate: string | null;
         }
@@ -183,18 +173,8 @@ export async function PUT(request: NextRequest) {
       // If empty string is explicitly provided, set to null
       updatedPhoneNumber = null;
     } else {
-      // Keep existing phone number (convert to string if it's a number)
-      if (
-        currentUser.phoneNumber !== null &&
-        currentUser.phoneNumber !== undefined
-      ) {
-        updatedPhoneNumber =
-          typeof currentUser.phoneNumber === "string"
-            ? currentUser.phoneNumber
-            : currentUser.phoneNumber.toString();
-      } else {
-        updatedPhoneNumber = null;
-      }
+      // Keep existing phone number
+      updatedPhoneNumber = currentUser.phoneNumber?.toString() || null;
     }
 
     // Handle optional fields - convert empty strings to null for database
@@ -261,20 +241,10 @@ export async function PUT(request: NextRequest) {
       )
       .get(tokenPayload.data.userId)) as User;
 
-    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
-    const formattedUser = {
-      ...user,
-      phoneNumber: user.phoneNumber
-        ? typeof user.phoneNumber === "string"
-          ? user.phoneNumber
-          : user.phoneNumber.toString()
-        : undefined,
-    };
-
     return NextResponse.json({
       success: true,
       message: "Profile updated successfully",
-      user: formattedUser,
+      user: user,
     });
   } catch (error) {
     console.error("Profile update error:", error);
