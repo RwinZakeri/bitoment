@@ -293,3 +293,25 @@ export interface GoogleUserInfo {
   picture?: string;
   id: string;
 }
+
+// Verification Step related types
+export interface VerificationSubStep {
+  subStepName: string;
+  isPassed: boolean;
+}
+
+export interface VerificationStepLevel {
+  stepName: string;
+  passSteps: VerificationSubStep[];
+}
+
+export interface VerificationStepData {
+  verificationStep: number; // 1 = Basic, 2 = Intermediate, 3 = Advanced
+  steps: VerificationStepLevel[];
+}
+
+export interface GetVerificationStepResponse {
+  status: number;
+  message?: string;
+  verificationStep: VerificationStepData;
+}

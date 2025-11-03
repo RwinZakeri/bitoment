@@ -1,7 +1,6 @@
 interface stepsType {
-  title: string;
+  subStepName: string;
   isPassed: boolean;
-  subStepName?: string;
 }
 export interface verifyCardPropsType {
   steps: stepsType[];

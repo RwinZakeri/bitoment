@@ -1,19 +1,26 @@
 import db from "@/lib/db";
 import { verifyAuthToken } from "@/lib/middleware";
-import { User } from "@/types/auth";
+import {
+  GetVerificationStepResponse,
+  User,
+  VerificationStepData,
+} from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<GetVerificationStepResponse>> {
   const tokenPayload = verifyAuthToken(request);
 
   if (!tokenPayload) {
     return NextResponse.json({
       status: 401,
       message: "Unauthorized",
+      verificationStep: {} as VerificationStepData,
     });
   }
 
-  const verificationStep = {
+  const verificationStep: VerificationStepData = {
     verificationStep: 1,
     steps: [
       {
@@ -60,7 +67,7 @@ export async function GET(request: NextRequest) {
       SELECT * FROM users WHERE id = ?
     `
     )
-    .get(tokenPayload.data.userId)) as User;
+    .get(tokenPayload.data.userId)) as User | undefined;
 
   console.log(user);
 
@@ -68,6 +75,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       status: 404,
       message: "User not found",
+      verificationStep: {} as VerificationStepData,
     });
   }
 
