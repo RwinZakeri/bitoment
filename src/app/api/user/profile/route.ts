@@ -219,22 +219,28 @@ export async function PUT(request: NextRequest) {
       birthDate: updatedBirthDate,
     });
 
-    // Update query - phoneNumber is now TEXT
+    // Update query - phoneNumber must be TEXT
+    // Ensure we're passing phoneNumber as string explicitly
+    // The CAST ensures PostgreSQL treats it as TEXT even if column type is wrong
     const updateUser = db.prepare(`
       UPDATE users 
       SET name = ?, 
           email = ?, 
-          phoneNumber = ?, 
+          phoneNumber = ?::TEXT, 
           nationalInsuranceNumber = ?, 
           birthDate = ?
       WHERE id = ?
       RETURNING *
     `);
 
+    // Ensure phoneNumber is definitely a string (not number)
+    const phoneNumberAsString =
+      updatedPhoneNumber !== null ? String(updatedPhoneNumber) : null;
+
     const result = await updateUser.run(
       updatedName,
       updatedEmail,
-      updatedPhoneNumber,
+      phoneNumberAsString, // Use explicitly converted string
       updatedNationalInsuranceNumber,
       updatedBirthDate,
       tokenPayload.data.userId
@@ -284,8 +290,29 @@ export async function PUT(request: NextRequest) {
       console.error("Error stack:", error.stack);
     }
 
-    // Check for duplicate email error (Postgres unique constraint violation)
     const errorMessage = error instanceof Error ? error.message : String(error);
+
+    // Check for integer out of range error (phoneNumber column still INTEGER)
+    if (
+      errorMessage.includes("out of range for type integer") ||
+      errorMessage.includes("integer out of range")
+    ) {
+      console.error(
+        "CRITICAL: phoneNumber column is still INTEGER! Migration may have failed."
+      );
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Phone number column migration is required. Please restart the server to run the migration, or contact support.",
+          error:
+            "Database schema migration needed - phoneNumber column must be TEXT",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Check for duplicate email error (Postgres unique constraint violation)
     if (
       errorMessage.includes("unique") ||
       errorMessage.includes("duplicate") ||

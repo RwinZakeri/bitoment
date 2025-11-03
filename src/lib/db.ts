@@ -32,18 +32,55 @@ async function initializeDatabase() {
 
     // Migrate phoneNumber from INTEGER to TEXT if needed (for large phone numbers)
     // This allows phone numbers that exceed INTEGER max value (2,147,483,647)
-    await sql`
-      DO $$ 
-      BEGIN
-        IF EXISTS (
-          SELECT 1 FROM information_schema.columns 
-          WHERE table_name = 'users' AND column_name = 'phoneNumber' AND data_type = 'integer'
-        ) THEN
-          -- Convert existing integer values to text before changing type
-          ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT;
-        END IF;
-      END $$;
-    `;
+    try {
+      // First check the current type
+      const columnInfo = await sql`
+        SELECT data_type 
+        FROM information_schema.columns 
+        WHERE table_name = 'users' 
+          AND column_name = 'phoneNumber'
+        LIMIT 1
+      `;
+
+      if (columnInfo && columnInfo.length > 0) {
+        const currentType = columnInfo[0].data_type;
+        console.log(`Current phoneNumber column type: ${currentType}`);
+
+        // If it's INTEGER or int4, migrate it
+        if (currentType === "integer" || currentType === "int4") {
+          console.log("Migrating phoneNumber from INTEGER to TEXT...");
+          await sql`
+            ALTER TABLE users 
+            ALTER COLUMN phoneNumber TYPE TEXT 
+            USING phoneNumber::TEXT
+          `;
+          console.log("✓ phoneNumber successfully migrated to TEXT");
+        } else {
+          console.log("✓ phoneNumber is already TEXT");
+        }
+      } else {
+        console.log(
+          "phoneNumber column doesn't exist yet (will be created as TEXT)"
+        );
+      }
+    } catch (error) {
+      console.error("Error during phoneNumber migration:", error);
+      // Try direct migration as fallback (ignore errors if column doesn't exist or is already TEXT)
+      try {
+        await sql`ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT`;
+        console.log("✓ phoneNumber migration completed (fallback)");
+      } catch (directError: any) {
+        // Column might already be TEXT or not exist, that's okay
+        if (
+          directError?.message?.includes("does not exist") ||
+          directError?.message?.includes("already")
+        ) {
+          console.log("✓ phoneNumber column is already TEXT or doesn't exist");
+        } else {
+          console.error("Failed to migrate phoneNumber:", directError);
+        }
+      }
+    }
 
     // Add oauth_provider column if it doesn't exist
     await sql`
@@ -215,10 +252,112 @@ async function initializeDatabase() {
   }
 }
 
+// Force phoneNumber migration immediately - runs on every server start
+async function forcePhoneNumberMigration() {
+  try {
+    console.log("🔍 Checking phoneNumber column type...");
+
+    // Try to get column info
+    const columnInfo = await sql`
+      SELECT data_type, udt_name
+      FROM information_schema.columns 
+      WHERE table_name = 'users' 
+        AND column_name = 'phoneNumber'
+      LIMIT 1
+    `;
+
+    if (columnInfo && columnInfo.length > 0) {
+      const currentType = columnInfo[0].data_type || columnInfo[0].udt_name;
+      console.log(`📊 Current phoneNumber column type: ${currentType}`);
+
+      // Check if it's any integer type
+      if (
+        currentType === "integer" ||
+        currentType === "int4" ||
+        currentType === "int" ||
+        currentType === "int32" ||
+        columnInfo[0].udt_name === "int4"
+      ) {
+        console.log("⚠️  phoneNumber is INTEGER - migrating to TEXT NOW...");
+
+        // Force migration - convert all existing values and change type
+        await sql.unsafe(`
+          ALTER TABLE users 
+          ALTER COLUMN phoneNumber TYPE TEXT 
+          USING phoneNumber::TEXT
+        `);
+
+        console.log("✅ SUCCESS: phoneNumber migrated from INTEGER to TEXT!");
+      } else if (
+        currentType === "text" ||
+        currentType === "character varying" ||
+        currentType === "varchar" ||
+        columnInfo[0].udt_name === "text"
+      ) {
+        console.log("✅ phoneNumber is already TEXT - ready to use");
+      } else {
+        console.log(
+          `⚠️  phoneNumber type is: ${currentType} - ensuring it's TEXT...`
+        );
+        // Try to migrate anyway if it's not TEXT
+        try {
+          await sql.unsafe(`
+            ALTER TABLE users 
+            ALTER COLUMN phoneNumber TYPE TEXT 
+            USING COALESCE(phoneNumber::TEXT, '')
+          `);
+          console.log("✅ phoneNumber forced to TEXT");
+        } catch (e) {
+          console.log(
+            "⚠️  Could not force migration (may already be correct):",
+            e
+          );
+        }
+      }
+    } else {
+      console.log(
+        "ℹ️  phoneNumber column doesn't exist yet (will be created as TEXT)"
+      );
+    }
+  } catch (error: any) {
+    console.error(
+      "❌ Error during phoneNumber migration:",
+      error?.message || error
+    );
+    // Try one more time with direct SQL
+    try {
+      await sql.unsafe(
+        `ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT`
+      );
+      console.log("✅ phoneNumber migration succeeded (fallback method)");
+    } catch (fallbackError: any) {
+      if (
+        fallbackError?.message?.includes("does not exist") ||
+        fallbackError?.message?.includes("already") ||
+        fallbackError?.code === "42704"
+      ) {
+        console.log("ℹ️  phoneNumber column doesn't exist or is already TEXT");
+      } else {
+        console.error(
+          "❌ Failed to migrate phoneNumber:",
+          fallbackError?.message || fallbackError
+        );
+      }
+    }
+  }
+}
+
 // Initialize database on module load
-initializeDatabase().catch((error) => {
-  console.error("Failed to initialize database:", error);
-});
+initializeDatabase()
+  .then(async () => {
+    // Force phoneNumber migration immediately after initialization
+    await forcePhoneNumberMigration();
+  })
+  .catch((error) => {
+    console.error("Failed to initialize database:", error);
+    // Try migration anyway
+    forcePhoneNumberMigration().catch(console.error);
+  });
 
 // Helper to convert ? placeholders to $1, $2, etc. for Postgres
 function convertQuery(
