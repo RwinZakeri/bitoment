@@ -50,7 +50,12 @@ const IdentityVerification = () => {
   useEffect(() => {
     if (profileData?.user) {
       reset({
-        phoneNumber: profileData.user.phoneNumber?.toString() || "",
+        // Ensure phoneNumber is converted to string (handles both string and number types)
+        phoneNumber: profileData.user.phoneNumber
+          ? typeof profileData.user.phoneNumber === "string"
+            ? profileData.user.phoneNumber
+            : profileData.user.phoneNumber.toString()
+          : "",
         nationalInsuranceNumber: profileData.user.nationalInsuranceNumber || "",
         birthDate: profileData.user.birthDate || "",
       });

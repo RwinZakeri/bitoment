@@ -40,14 +40,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
-    const formattedUser = {
+    // Ensure phoneNumber is always returned as string (handles both string and number types from DB)
+    const formattedUser: User = {
       ...user,
-      phoneNumber: user.phoneNumber
-        ? typeof user.phoneNumber === "string"
-          ? user.phoneNumber
-          : user.phoneNumber.toString()
-        : undefined,
+      phoneNumber:
+        user.phoneNumber !== null && user.phoneNumber !== undefined
+          ? typeof user.phoneNumber === "string"
+            ? user.phoneNumber
+            : String(user.phoneNumber)
+          : undefined,
     };
 
     return NextResponse.json({
@@ -266,14 +267,15 @@ export async function PUT(request: NextRequest) {
       )
       .get(tokenPayload.data.userId)) as User;
 
-    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
-    const formattedUser = {
+    // Ensure phoneNumber is always returned as string (handles both string and number types from DB)
+    const formattedUser: User = {
       ...user,
-      phoneNumber: user.phoneNumber
-        ? typeof user.phoneNumber === "string"
-          ? user.phoneNumber
-          : user.phoneNumber.toString()
-        : undefined,
+      phoneNumber:
+        user.phoneNumber !== null && user.phoneNumber !== undefined
+          ? typeof user.phoneNumber === "string"
+            ? user.phoneNumber
+            : String(user.phoneNumber)
+          : undefined,
     };
 
     return NextResponse.json({

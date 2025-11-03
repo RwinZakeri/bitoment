@@ -53,7 +53,12 @@ const ProfileInformation = () => {
       reset({
         fullName: profileData.user.name || "",
         email: profileData.user.email || "",
-        phoneNumber: profileData.user.phoneNumber || "",
+        // Ensure phoneNumber is converted to string (handles both string and number types)
+        phoneNumber: profileData.user.phoneNumber
+          ? typeof profileData.user.phoneNumber === "string"
+            ? profileData.user.phoneNumber
+            : profileData.user.phoneNumber.toString()
+          : "",
       });
     }
   }, [profileData, reset]);
