@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const user = (await db
       .prepare(
         `
-      SELECT id, email, phone, name, nationalInsuranceNumber, birthDate, created_at 
+      SELECT id, email, phoneNumber, name, nationalInsuranceNumber, birthDate, created_at 
       FROM users 
       WHERE id = ?
     `
@@ -40,13 +40,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Ensure phone is converted to string if it's a number (backward compatibility)
+    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
     const formattedUser = {
       ...user,
-      phone: user.phone
-        ? typeof user.phone === "string"
-          ? user.phone
-          : user.phone.toString()
+      phoneNumber: user.phoneNumber
+        ? typeof user.phoneNumber === "string"
+          ? user.phoneNumber
+          : user.phoneNumber.toString()
         : undefined,
     };
 
@@ -99,14 +99,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { fullName, email, phone, nationalInsuranceNumber, birthDate } =
+    const { fullName, email, phoneNumber, nationalInsuranceNumber, birthDate } =
       validationResult.data;
 
     // Get current user data to preserve existing values for optional fields
-    // Note: phone is now TEXT in database
+    // Note: phoneNumber is now TEXT in database
     const currentUser = (await db
       .prepare(
-        `SELECT name, email, phone, nationalInsuranceNumber, birthDate 
+        `SELECT name, email, phoneNumber, nationalInsuranceNumber, birthDate 
          FROM users 
          WHERE id = ?`
       )
@@ -114,7 +114,7 @@ export async function PUT(request: NextRequest) {
       | {
           name: string;
           email: string;
-          phone: string | number | null; // TEXT in DB, but may be number during migration
+          phoneNumber: string | number | null; // TEXT in DB, but may be number during migration
           nationalInsuranceNumber: string | null;
           birthDate: string | null;
         }
@@ -151,19 +151,23 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Handle phone - now stored as TEXT in database (migrated from INTEGER)
+    // Handle phoneNumber - now stored as TEXT in database (migrated from INTEGER)
     // Clean and validate the phone number
-    let updatedPhone: string | null = null;
-    if (phone !== undefined && phone !== null && phone !== "") {
+    let updatedPhoneNumber: string | null = null;
+    if (
+      phoneNumber !== undefined &&
+      phoneNumber !== null &&
+      phoneNumber !== ""
+    ) {
       // Clean phone number (remove non-digits but keep for validation)
       const cleanedPhone =
-        typeof phone === "string"
-          ? phone.replace(/\D/g, "")
-          : String(phone).replace(/\D/g, "");
+        typeof phoneNumber === "string"
+          ? phoneNumber.replace(/\D/g, "")
+          : String(phoneNumber).replace(/\D/g, "");
 
       if (cleanedPhone && cleanedPhone.length >= 10) {
         // Store cleaned phone number as text
-        updatedPhone = cleanedPhone;
+        updatedPhoneNumber = cleanedPhone;
       } else if (cleanedPhone) {
         return NextResponse.json(
           {
@@ -173,20 +177,23 @@ export async function PUT(request: NextRequest) {
           { status: 400 }
         );
       } else {
-        updatedPhone = null;
+        updatedPhoneNumber = null;
       }
-    } else if (phone === "") {
+    } else if (phoneNumber === "") {
       // If empty string is explicitly provided, set to null
-      updatedPhone = null;
+      updatedPhoneNumber = null;
     } else {
       // Keep existing phone number (convert to string if it's a number)
-      if (currentUser.phone !== null && currentUser.phone !== undefined) {
-        updatedPhone =
-          typeof currentUser.phone === "string"
-            ? currentUser.phone
-            : currentUser.phone.toString();
+      if (
+        currentUser.phoneNumber !== null &&
+        currentUser.phoneNumber !== undefined
+      ) {
+        updatedPhoneNumber =
+          typeof currentUser.phoneNumber === "string"
+            ? currentUser.phoneNumber
+            : currentUser.phoneNumber.toString();
       } else {
-        updatedPhone = null;
+        updatedPhoneNumber = null;
       }
     }
 
@@ -207,18 +214,18 @@ export async function PUT(request: NextRequest) {
     console.log("Updating profile with:", {
       fullName: updatedName,
       email: updatedEmail,
-      phone: updatedPhone,
+      phoneNumber: updatedPhoneNumber,
       nationalInsuranceNumber: updatedNationalInsuranceNumber,
       birthDate: updatedBirthDate,
     });
 
-    // Update query - phone is TEXT, explicitly cast to ensure type safety
-    // Use CAST to ensure phone is treated as TEXT, not INTEGER
+    // Update query - phoneNumber is TEXT, explicitly cast to ensure type safety
+    // Use CAST to ensure phoneNumber is treated as TEXT, not INTEGER
     const updateUser = db.prepare(`
       UPDATE users 
       SET name = ?, 
           email = ?, 
-          phone = CAST(? AS TEXT), 
+          phoneNumber = CAST(? AS TEXT), 
           nationalInsuranceNumber = ?, 
           birthDate = ?
       WHERE id = ?
@@ -228,7 +235,7 @@ export async function PUT(request: NextRequest) {
     const result = await updateUser.run(
       updatedName,
       updatedEmail,
-      updatedPhone,
+      updatedPhoneNumber,
       updatedNationalInsuranceNumber,
       updatedBirthDate,
       tokenPayload.data.userId
@@ -248,19 +255,19 @@ export async function PUT(request: NextRequest) {
 
     const user = (await db
       .prepare(
-        `SELECT id, email, name, phone, nationalInsuranceNumber, birthDate, created_at 
+        `SELECT id, email, name, phoneNumber, nationalInsuranceNumber, birthDate, created_at 
          FROM users 
          WHERE id = ?`
       )
       .get(tokenPayload.data.userId)) as User;
 
-    // Ensure phone is converted to string if it's a number (backward compatibility)
+    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
     const formattedUser = {
       ...user,
-      phone: user.phone
-        ? typeof user.phone === "string"
-          ? user.phone
-          : user.phone.toString()
+      phoneNumber: user.phoneNumber
+        ? typeof user.phoneNumber === "string"
+          ? user.phoneNumber
+          : user.phoneNumber.toString()
         : undefined,
     };
 
@@ -280,20 +287,21 @@ export async function PUT(request: NextRequest) {
 
     const errorMessage = error instanceof Error ? error.message : String(error);
 
-    // Check for integer out of range error (phone column still INTEGER)
+    // Check for integer out of range error (phoneNumber column still INTEGER)
     if (
       errorMessage.includes("out of range for type integer") ||
       errorMessage.includes("integer out of range")
     ) {
       console.error(
-        "CRITICAL: phone column is still INTEGER! Migration may have failed."
+        "CRITICAL: phoneNumber column is still INTEGER! Migration may have failed."
       );
       return NextResponse.json(
         {
           success: false,
           message:
             "Phone number column migration is required. Please restart the server to run the migration, or contact support.",
-          error: "Database schema migration needed - phone column must be TEXT",
+          error:
+            "Database schema migration needed - phoneNumber column must be TEXT",
         },
         { status: 500 }
       );
