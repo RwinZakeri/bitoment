@@ -40,15 +40,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Ensure phoneNumber is always returned as string (handles both string and number types from DB)
-    const formattedUser: User = {
+    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
+    const formattedUser = {
       ...user,
-      phoneNumber:
-        user.phoneNumber !== null && user.phoneNumber !== undefined
-          ? typeof user.phoneNumber === "string"
-            ? user.phoneNumber
-            : String(user.phoneNumber)
-          : undefined,
+      phoneNumber: user.phoneNumber
+        ? typeof user.phoneNumber === "string"
+          ? user.phoneNumber
+          : user.phoneNumber.toString()
+        : undefined,
     };
 
     return NextResponse.json({
@@ -220,28 +219,23 @@ export async function PUT(request: NextRequest) {
       birthDate: updatedBirthDate,
     });
 
-    // Update query - phoneNumber must be TEXT
-    // Ensure we're passing phoneNumber as string explicitly
-    // The CAST ensures PostgreSQL treats it as TEXT even if column type is wrong
+    // Update query - phoneNumber is TEXT, explicitly cast to ensure type safety
+    // Use CAST to ensure phoneNumber is treated as TEXT, not INTEGER
     const updateUser = db.prepare(`
       UPDATE users 
       SET name = ?, 
           email = ?, 
-          phoneNumber = ?::TEXT, 
+          phoneNumber = CAST(? AS TEXT), 
           nationalInsuranceNumber = ?, 
           birthDate = ?
       WHERE id = ?
       RETURNING *
     `);
 
-    // Ensure phoneNumber is definitely a string (not number)
-    const phoneNumberAsString =
-      updatedPhoneNumber !== null ? String(updatedPhoneNumber) : null;
-
     const result = await updateUser.run(
       updatedName,
       updatedEmail,
-      phoneNumberAsString, // Use explicitly converted string
+      updatedPhoneNumber,
       updatedNationalInsuranceNumber,
       updatedBirthDate,
       tokenPayload.data.userId
@@ -267,15 +261,14 @@ export async function PUT(request: NextRequest) {
       )
       .get(tokenPayload.data.userId)) as User;
 
-    // Ensure phoneNumber is always returned as string (handles both string and number types from DB)
-    const formattedUser: User = {
+    // Ensure phoneNumber is converted to string if it's a number (backward compatibility)
+    const formattedUser = {
       ...user,
-      phoneNumber:
-        user.phoneNumber !== null && user.phoneNumber !== undefined
-          ? typeof user.phoneNumber === "string"
-            ? user.phoneNumber
-            : String(user.phoneNumber)
-          : undefined,
+      phoneNumber: user.phoneNumber
+        ? typeof user.phoneNumber === "string"
+          ? user.phoneNumber
+          : user.phoneNumber.toString()
+        : undefined,
     };
 
     return NextResponse.json({
