@@ -13,7 +13,7 @@ const WelcomePage = () => {
   const router = useRouter();
 
   // Google OAuth configuration
-  const googleClientId = "47927692045-n3k4gsded2e4u5l266gs47nn48kubp7e.apps.googleusercontent.c";
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
   const googleScope =
     "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
 
