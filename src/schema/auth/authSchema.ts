@@ -102,37 +102,58 @@ export const profileUpdateSchema = z.object({
 
 export const optionalProfileUpdateSchema = z.object({
   fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name must be less than 50 characters")
+    .union([
+      z
+        .string()
+        .min(2, "Full name must be at least 2 characters")
+        .max(50, "Full name must be less than 50 characters"),
+      z.literal(""),
+    ])
     .optional(),
 
-  email: z.string().email("Please enter a valid email address").optional(),
+  email: z
+    .union([
+      z.string().email("Please enter a valid email address"),
+      z.literal(""),
+    ])
+    .optional(),
 
   phoneNumber: z
-    .string()
-    .min(10, "Phone number must be at least 10 digits")
-    .max(15, "Phone number must be less than 15 digits")
-    .regex(/^[\+]?[0-9\s\-\(\)]+$/, "Please enter a valid phone number")
+    .union([
+      z
+        .string()
+        .min(10, "Phone number must be at least 10 digits")
+        .max(15, "Phone number must be less than 15 digits")
+        .regex(/^[\+]?[0-9\s\-\(\)]+$/, "Please enter a valid phone number"),
+      z.literal(""),
+    ])
     .optional(),
 
   nationalInsuranceNumber: z
-    .string()
-    .min(1, "National Insurance Number cannot be empty")
-    .max(20, "National Insurance Number must be less than 20 characters")
-    .regex(
-      /^[A-Z]{2}[0-9]{6}[A-Z]$/,
-      "Please enter a valid National Insurance Number format (e.g., AB123456C)"
-    )
+    .union([
+      z
+        .string()
+        .min(1, "National Insurance Number cannot be empty")
+        .max(20, "National Insurance Number must be less than 20 characters")
+        .regex(
+          /^[A-Z]{2}[0-9]{6}[A-Z]$/,
+          "Please enter a valid National Insurance Number format (e.g., AB123456C)"
+        ),
+      z.literal(""),
+    ])
     .optional(),
 
   birthDate: z
-    .string()
-    .min(1, "Birth date cannot be empty")
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      "Please enter a valid birth date format (YYYY-MM-DD)"
-    )
+    .union([
+      z
+        .string()
+        .min(1, "Birth date cannot be empty")
+        .regex(
+          /^\d{4}-\d{2}-\d{2}$/,
+          "Please enter a valid birth date format (YYYY-MM-DD)"
+        ),
+      z.literal(""),
+    ])
     .optional(),
 });
 

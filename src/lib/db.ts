@@ -29,6 +29,22 @@ async function initializeDatabase() {
       )
     `;
 
+    // Migrate phoneNumber from INTEGER to TEXT if needed (for large phone numbers)
+    // This allows phone numbers that exceed INTEGER max value (2,147,483,647)
+    await sql`
+      DO $$ 
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'users' AND column_name = 'phoneNumber' AND data_type = 'integer'
+        ) THEN
+          -- Check if we need to migrate (only if column is still INTEGER)
+          -- Convert existing integer values to text before changing type
+          ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT;
+        END IF;
+      END $$;
+    `;
+
     // Add oauth_provider column if it doesn't exist
     await sql`
       DO $$ 

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       )
       .get(tokenPayload.data.userId)) as User | undefined;
 
-      console.log(user)
+    console.log(user);
 
     if (!user) {
       return NextResponse.json(
@@ -73,9 +73,12 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
 
+    console.log("Profile update request body:", body);
+
     // Validate the request body
     const validationResult = optionalProfileUpdateSchema.safeParse(body);
     if (!validationResult.success) {
+      console.error("Validation errors:", validationResult.error.issues);
       return NextResponse.json(
         {
           success: false,
@@ -90,6 +93,7 @@ export async function PUT(request: NextRequest) {
       validationResult.data;
 
     // Get current user data to preserve existing values for optional fields
+    // Note: phoneNumber is now TEXT in database (may still be INTEGER in some cases during migration)
     const currentUser = (await db
       .prepare(
         `SELECT name, email, phoneNumber, nationalInsuranceNumber, birthDate 
@@ -100,7 +104,7 @@ export async function PUT(request: NextRequest) {
       | {
           name: string;
           email: string;
-          phoneNumber: number | null;
+          phoneNumber: number | string | null;
           nationalInsuranceNumber: string | null;
           birthDate: string | null;
         }
@@ -119,14 +123,73 @@ export async function PUT(request: NextRequest) {
     // Use provided values or keep existing ones
     const updatedName = fullName !== undefined ? fullName : currentUser.name;
     const updatedEmail = email !== undefined ? email : currentUser.email;
-    const updatedPhoneNumber =
-      phoneNumber !== undefined ? phoneNumber : currentUser.phoneNumber;
+
+    // Check if email is being changed and if it already exists for another user
+    if (email !== undefined && email !== currentUser.email) {
+      const existingUser = (await db
+        .prepare("SELECT id FROM users WHERE email = ? AND id != ?")
+        .get(email, tokenPayload.data.userId)) as { id: number } | undefined;
+
+      if (existingUser) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "An account with this email already exists",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Handle phoneNumber - now stored as TEXT in database (migrated from INTEGER)
+    // Clean and validate the phone number
+    let updatedPhoneNumber: string | null = null;
+    if (
+      phoneNumber !== undefined &&
+      phoneNumber !== null &&
+      phoneNumber !== ""
+    ) {
+      // Clean phone number (remove non-digits but keep for validation)
+      const cleanedPhone =
+        typeof phoneNumber === "string"
+          ? phoneNumber.replace(/\D/g, "")
+          : String(phoneNumber).replace(/\D/g, "");
+
+      if (cleanedPhone && cleanedPhone.length >= 10) {
+        // Store cleaned phone number as text
+        updatedPhoneNumber = cleanedPhone;
+      } else if (cleanedPhone) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Phone number must be at least 10 digits",
+          },
+          { status: 400 }
+        );
+      } else {
+        updatedPhoneNumber = null;
+      }
+    } else if (phoneNumber === "") {
+      // If empty string is explicitly provided, set to null
+      updatedPhoneNumber = null;
+    } else {
+      // Keep existing phone number
+      updatedPhoneNumber = currentUser.phoneNumber?.toString() || null;
+    }
+
+    // Handle optional fields - convert empty strings to null for database
     const updatedNationalInsuranceNumber =
       nationalInsuranceNumber !== undefined
-        ? nationalInsuranceNumber
+        ? nationalInsuranceNumber === ""
+          ? null
+          : nationalInsuranceNumber
         : currentUser.nationalInsuranceNumber;
     const updatedBirthDate =
-      birthDate !== undefined ? birthDate : currentUser.birthDate;
+      birthDate !== undefined
+        ? birthDate === ""
+          ? null
+          : birthDate
+        : currentUser.birthDate;
 
     console.log("Updating profile with:", {
       fullName: updatedName,
@@ -136,6 +199,7 @@ export async function PUT(request: NextRequest) {
       birthDate: updatedBirthDate,
     });
 
+    // Update query - phoneNumber is now TEXT
     const updateUser = db.prepare(`
       UPDATE users 
       SET name = ?, 
@@ -144,6 +208,7 @@ export async function PUT(request: NextRequest) {
           nationalInsuranceNumber = ?, 
           birthDate = ?
       WHERE id = ?
+      RETURNING *
     `);
 
     const result = await updateUser.run(
@@ -154,6 +219,8 @@ export async function PUT(request: NextRequest) {
       updatedBirthDate,
       tokenPayload.data.userId
     );
+
+    console.log("Profile update result:", result);
 
     if (result.changes === 0) {
       return NextResponse.json(
@@ -181,10 +248,33 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("Profile update error:", error);
 
+    // Log more detailed error information
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
+
+    // Check for duplicate email error (Postgres unique constraint violation)
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (
+      errorMessage.includes("unique") ||
+      errorMessage.includes("duplicate") ||
+      errorMessage.includes("already exists")
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "An account with this email already exists",
+        },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
         message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
