@@ -69,11 +69,15 @@ async function initializeDatabase() {
       try {
         await sql`ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT`;
         console.log("✓ phoneNumber migration completed (fallback)");
-      } catch (directError: any) {
+      } catch (directError: unknown) {
         // Column might already be TEXT or not exist, that's okay
+        const errorMessage =
+          directError instanceof Error
+            ? directError.message
+            : String(directError);
         if (
-          directError?.message?.includes("does not exist") ||
-          directError?.message?.includes("already")
+          errorMessage.includes("does not exist") ||
+          errorMessage.includes("already")
         ) {
           console.log("✓ phoneNumber column is already TEXT or doesn't exist");
         } else {
@@ -319,29 +323,34 @@ async function forcePhoneNumberMigration() {
         "ℹ️  phoneNumber column doesn't exist yet (will be created as TEXT)"
       );
     }
-  } catch (error: any) {
-    console.error(
-      "❌ Error during phoneNumber migration:",
-      error?.message || error
-    );
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("❌ Error during phoneNumber migration:", errorMessage);
     // Try one more time with direct SQL
     try {
       await sql.unsafe(
         `ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT`
       );
       console.log("✅ phoneNumber migration succeeded (fallback method)");
-    } catch (fallbackError: any) {
+    } catch (fallbackError: unknown) {
+      const fallbackMessage =
+        fallbackError instanceof Error
+          ? fallbackError.message
+          : String(fallbackError);
+      const fallbackCode =
+        fallbackError &&
+        typeof fallbackError === "object" &&
+        "code" in fallbackError
+          ? String(fallbackError.code)
+          : "";
       if (
-        fallbackError?.message?.includes("does not exist") ||
-        fallbackError?.message?.includes("already") ||
-        fallbackError?.code === "42704"
+        fallbackMessage.includes("does not exist") ||
+        fallbackMessage.includes("already") ||
+        fallbackCode === "42704"
       ) {
         console.log("ℹ️  phoneNumber column doesn't exist or is already TEXT");
       } else {
-        console.error(
-          "❌ Failed to migrate phoneNumber:",
-          fallbackError?.message || fallbackError
-        );
+        console.error("❌ Failed to migrate phoneNumber:", fallbackMessage);
       }
     }
   }
