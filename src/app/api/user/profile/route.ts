@@ -93,7 +93,7 @@ export async function PUT(request: NextRequest) {
       validationResult.data;
 
     // Get current user data to preserve existing values for optional fields
-    // Note: phoneNumber is now TEXT in database (may still be INTEGER in some cases during migration)
+    // Note: phoneNumber is now TEXT in database
     const currentUser = (await db
       .prepare(
         `SELECT name, email, phoneNumber, nationalInsuranceNumber, birthDate 
@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
       | {
           name: string;
           email: string;
-          phoneNumber: number | string | null;
+          phoneNumber: string | null;
           nationalInsuranceNumber: string | null;
           birthDate: string | null;
         }

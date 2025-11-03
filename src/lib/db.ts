@@ -20,7 +20,7 @@ async function initializeDatabase() {
         email TEXT NOT NULL UNIQUE,
         password TEXT,
         name TEXT,
-        phoneNumber INTEGER,
+        phoneNumber TEXT,
         nationalInsuranceNumber TEXT,
         birthDate TEXT,
         oauth_provider TEXT,
@@ -29,63 +29,8 @@ async function initializeDatabase() {
       )
     `;
 
-    // Migrate phoneNumber from INTEGER to TEXT if needed (for large phone numbers)
+    // Migrate phoneNumber from INTEGER to TEXT if needed (for existing databases)
     // This allows phone numbers that exceed INTEGER max value (2,147,483,647)
-<<<<<<< HEAD
-    try {
-      // First check the current type
-      const columnInfo = await sql`
-        SELECT data_type 
-        FROM information_schema.columns 
-        WHERE table_name = 'users' 
-          AND column_name = 'phoneNumber'
-        LIMIT 1
-      `;
-
-      if (columnInfo && columnInfo.length > 0) {
-        const currentType = columnInfo[0].data_type;
-        console.log(`Current phoneNumber column type: ${currentType}`);
-
-        // If it's INTEGER or int4, migrate it
-        if (currentType === "integer" || currentType === "int4") {
-          console.log("Migrating phoneNumber from INTEGER to TEXT...");
-          await sql`
-            ALTER TABLE users 
-            ALTER COLUMN phoneNumber TYPE TEXT 
-            USING phoneNumber::TEXT
-          `;
-          console.log("✓ phoneNumber successfully migrated to TEXT");
-        } else {
-          console.log("✓ phoneNumber is already TEXT");
-        }
-      } else {
-        console.log(
-          "phoneNumber column doesn't exist yet (will be created as TEXT)"
-        );
-      }
-    } catch (error) {
-      console.error("Error during phoneNumber migration:", error);
-      // Try direct migration as fallback (ignore errors if column doesn't exist or is already TEXT)
-      try {
-        await sql`ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT`;
-        console.log("✓ phoneNumber migration completed (fallback)");
-      } catch (directError: unknown) {
-        // Column might already be TEXT or not exist, that's okay
-        const errorMessage =
-          directError instanceof Error
-            ? directError.message
-            : String(directError);
-        if (
-          errorMessage.includes("does not exist") ||
-          errorMessage.includes("already")
-        ) {
-          console.log("✓ phoneNumber column is already TEXT or doesn't exist");
-        } else {
-          console.error("Failed to migrate phoneNumber:", directError);
-        }
-      }
-    }
-=======
     await sql`
       DO $$ 
       BEGIN
@@ -93,13 +38,10 @@ async function initializeDatabase() {
           SELECT 1 FROM information_schema.columns 
           WHERE table_name = 'users' AND column_name = 'phoneNumber' AND data_type = 'integer'
         ) THEN
-          -- Check if we need to migrate (only if column is still INTEGER)
-          -- Convert existing integer values to text before changing type
           ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT;
         END IF;
       END $$;
     `;
->>>>>>> parent of 3d0729b (fix)
 
     // Add oauth_provider column if it doesn't exist
     await sql`
