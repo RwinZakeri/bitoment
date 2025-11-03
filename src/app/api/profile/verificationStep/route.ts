@@ -71,7 +71,6 @@ export async function GET(
 
   console.log(user);
 
-<<<<<<< HEAD
   if (!user) {
     return NextResponse.json({
       status: 404,
@@ -85,16 +84,12 @@ export async function GET(
   verificationStep.steps[0].passSteps[0].isPassed = true;
 
   // ========== Intermediate Level (Step 2) ==========
-  // Check Phone Number Verification
+  // Check Phone Number Verification (phoneNumber is now TEXT/string in database)
   if (
     user.phoneNumber &&
-    (typeof user.phoneNumber === "string"
-      ? user.phoneNumber.length > 0
-      : user.phoneNumber > 0)
+    typeof user.phoneNumber === "string" &&
+    user.phoneNumber.length > 0
   ) {
-=======
-  if (user.phoneNumber) {
->>>>>>> parent of 3d0729b (fix)
     verificationStep.steps[1].passSteps[0].isPassed = true;
   }
 
