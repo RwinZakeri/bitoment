@@ -1,8 +1,10 @@
 import { getToken } from "@/lib/utils";
 import axios, { InternalAxiosRequestConfig } from "axios";
 
+const baseURL = process.env.BASE_URL;
+
 const instance = axios.create({
-  baseURL: "http://localhost:3000/api/",
+  baseURL,
   timeout: 1000,
   headers: { "X-Custom-Header": "foobar" },
 });
