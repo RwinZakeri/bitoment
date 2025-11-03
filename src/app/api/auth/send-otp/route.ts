@@ -4,10 +4,10 @@ import {
   getContentType,
   isValidEmail,
 } from "@/lib/auth";
-import { Resend } from 'resend';
 import db from "@/lib/db";
 import { OTPState, SendOTPRequest, SendOTPResponse } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 
 export async function POST(
   request: NextRequest
@@ -77,23 +77,55 @@ export async function POST(
 
     const otp = generateOTP(4);
     const expiresAt = generateOTPExpiration(1);
-    db.prepare("DELETE FROM password_reset_otps WHERE email = ?").run(email);
+    const createdAt = new Date().toISOString();
 
-    db.prepare(
-      "INSERT INTO password_reset_otps (email, otp, expires_at, state , created_at) VALUES (?, ?, ?, ? , ?)"
-    ).run(email, otp, expiresAt, OTPState.EMAIL_SENT , new Date().getTime());
+    // Use a transaction to ensure atomicity
+    const transaction = db.transaction(() => {
+      // Delete any existing OTPs for this email
+      db.prepare("DELETE FROM password_reset_otps WHERE email = ?").run(email);
 
+      // Insert new OTP
+      db.prepare(
+        "INSERT INTO password_reset_otps (email, otp, expires_at, state, created_at) VALUES (?, ?, ?, ?, ?)"
+      ).run(email, otp, expiresAt, OTPState.EMAIL_SENT, createdAt);
+    });
+
+    transaction();
 
     const resend = new Resend("re_d6MrqPK8_8McYpLp1rxoLf7D3FhkoJKAz");
 
-    await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
-      to: [email],
-      subject: `OTP code : ${otp}`,
-      html: "<p>back to website please</p>",
-    });
+    try {
+      const emailResult = await resend.emails.send({
+        from: "Acme <onboarding@resend.dev>",
+        to: [email],
+        subject: `OTP code : ${otp}`,
+        html: "<p>back to website please</p>",
+      });
 
-    if (!resend) {
+      // Check if email was sent successfully
+      if (!emailResult || emailResult.error) {
+        // Rollback: delete the OTP record if email failed
+        db.prepare(
+          "DELETE FROM password_reset_otps WHERE email = ? AND created_at = ?"
+        ).run(email, createdAt);
+
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              emailResult?.error?.message ||
+              "Failed to send OTP email. Please try again.",
+          },
+          { status: 500 }
+        );
+      }
+    } catch (emailError: unknown) {
+      // Rollback: delete the OTP record if email failed
+      db.prepare(
+        "DELETE FROM password_reset_otps WHERE email = ? AND created_at = ?"
+      ).run(email, createdAt);
+
+      console.error("Email send error:", emailError);
       return NextResponse.json(
         {
           success: false,

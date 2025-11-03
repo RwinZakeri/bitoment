@@ -108,20 +108,27 @@ export async function POST(
 
     const hashedPassword = await hashPassword(password);
 
-    const insertUser = db.prepare(`
-      INSERT INTO users (email, password, name, created_at)
-      VALUES (?, ?, ?, datetime('now'))
-    `);
+    // Use a transaction to ensure atomicity
+    const transaction = db.transaction(() => {
+      const insertUser = db.prepare(`
+        INSERT INTO users (email, password, name, created_at)
+        VALUES (?, ?, ?, datetime('now'))
+      `);
 
-    const result = insertUser.run(email, hashedPassword, fullName);
-    const userId = result.lastInsertRowid as number;
+      const result = insertUser.run(email, hashedPassword, fullName);
+      const userId = result.lastInsertRowid as number;
 
-    // Create wallet for the new user
-    const insertWallet = db.prepare(`
-      INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
-      VALUES (?, ?, ?, datetime('now'), datetime('now'))
-    `);
-    insertWallet.run(userId, 0.0, "USD");
+      // Create wallet for the new user
+      const insertWallet = db.prepare(`
+        INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
+        VALUES (?, ?, ?, datetime('now'), datetime('now'))
+      `);
+      insertWallet.run(userId, 0.0, "USD");
+
+      return userId;
+    });
+
+    const userId = transaction();
 
     const token = generateToken({
       userId: userId,

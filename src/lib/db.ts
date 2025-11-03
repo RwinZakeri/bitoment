@@ -4,11 +4,57 @@ import path from "path";
 
 const dataDir = path.resolve(process.cwd(), "data");
 if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+  fs.mkdirSync(dataDir, { recursive: true, mode: 0o755 });
 }
 
 const dbPath = path.resolve(dataDir, "database.sqlite");
-const db = new Database(dbPath);
+
+// Ensure the database file has write permissions if it exists
+try {
+  if (fs.existsSync(dbPath)) {
+    fs.chmodSync(dbPath, 0o644);
+  }
+  // Ensure directory is writable
+  fs.chmodSync(dataDir, 0o755);
+} catch (error) {
+  console.warn("Could not set database file/directory permissions:", error);
+}
+
+// Open database with explicit write mode
+let db: Database.Database;
+try {
+  db = new Database(dbPath, {
+    verbose: process.env.NODE_ENV === "development" ? console.log : undefined,
+  });
+
+  // Test write access immediately by setting WAL mode
+  db.pragma("journal_mode = WAL");
+} catch (error: any) {
+  if (
+    error?.code === "SQLITE_READONLY" ||
+    error?.code === "SQLITE_READONLY_DBMOVED"
+  ) {
+    console.error(
+      "Database is readonly. Please check file permissions:",
+      dbPath
+    );
+    // Try to fix permissions and retry once
+    try {
+      if (fs.existsSync(dbPath)) {
+        fs.chmodSync(dbPath, 0o644);
+      }
+      fs.chmodSync(dataDir, 0o755);
+      db = new Database(dbPath);
+      db.pragma("journal_mode = WAL");
+    } catch (retryError) {
+      throw new Error(
+        `Database file is readonly. Path: ${dbPath}. Please ensure the file and directory have write permissions.`
+      );
+    }
+  } else {
+    throw error;
+  }
+}
 
 db.prepare(
   `

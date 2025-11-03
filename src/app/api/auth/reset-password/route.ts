@@ -131,7 +131,7 @@ export async function POST(
 
     const user = db
       .prepare("SELECT id, password FROM users WHERE email = ?")
-      .get(email) as { id: number; password: string } | undefined;
+      .get(email) as { id: number; password: string | null } | undefined;
 
     if (!user) {
       return NextResponse.json(
@@ -143,15 +143,19 @@ export async function POST(
       );
     }
 
-    const isSamePassword = await comparePassword(newPassword, user.password);
-    if (isSamePassword) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "New password must be different from your current password",
-        },
-        { status: 400 }
-      );
+    // Only compare passwords if user has a password (not OAuth user)
+    if (user.password) {
+      const isSamePassword = await comparePassword(newPassword, user.password);
+      if (isSamePassword) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "New password must be different from your current password",
+          },
+          { status: 400 }
+        );
+      }
     }
 
     const hashedPassword = await hashPassword(newPassword);
