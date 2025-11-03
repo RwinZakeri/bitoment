@@ -77,6 +77,20 @@ const useGoogleOAuth = (
           },
           error_callback: (error: GoogleAccountsOAuth2Error) => {
             setIsLoading(false);
+
+            // Handle popup closure gracefully - don't show error if user just closed the popup
+            const isPopupClosed =
+              error.type === "popup_closed" ||
+              error.message?.toLowerCase().includes("popup window closed") ||
+              error.message?.toLowerCase().includes("popup closed");
+
+            if (isPopupClosed) {
+              // User closed the popup - this is not really an error, just silently resolve
+              resolve();
+              return;
+            }
+
+            // For other errors, show the error message
             const errorMessage =
               error.message || "Google authentication failed";
             options?.onError?.(errorMessage);
