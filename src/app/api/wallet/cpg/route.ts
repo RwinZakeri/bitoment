@@ -54,9 +54,9 @@ export async function GET(
 
     if (linkId) {
       // Get specific link
-      const link = db
+      const link = (await db
         .prepare("SELECT * FROM cpg_links WHERE link_id = ? AND user_id = ?")
-        .get(linkId, userId) as CpgLink | undefined;
+        .get(linkId, userId)) as CpgLink | undefined;
 
       if (!link) {
         return NextResponse.json(
@@ -76,11 +76,11 @@ export async function GET(
     }
 
     // Get all links for user
-    const links = db
+    const links = (await db
       .prepare(
         "SELECT * FROM cpg_links WHERE user_id = ? ORDER BY created_at DESC"
       )
-      .all(userId) as CpgLink[];
+      .all(userId)) as CpgLink[];
 
     return NextResponse.json({
       success: true,
@@ -164,10 +164,10 @@ export async function POST(
         status,
         created_at,
         updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     `);
 
-    insertLink.run(
+    await insertLink.run(
       userId,
       linkId,
       validatedData.order_id || null,
@@ -178,9 +178,9 @@ export async function POST(
     );
 
     // Get the created link
-    const createdLink = db
+    const createdLink = (await db
       .prepare("SELECT * FROM cpg_links WHERE link_id = ?")
-      .get(linkId) as CpgLink;
+      .get(linkId)) as CpgLink;
 
     return NextResponse.json(
       {
@@ -239,9 +239,9 @@ export async function DELETE(
     const userId = tokenPayload.data.userId;
 
     // Check if link exists and belongs to user
-    const link = db
+    const link = (await db
       .prepare("SELECT * FROM cpg_links WHERE link_id = ? AND user_id = ?")
-      .get(linkId, userId) as CpgLink | undefined;
+      .get(linkId, userId)) as CpgLink | undefined;
 
     if (!link) {
       return NextResponse.json(
@@ -254,10 +254,9 @@ export async function DELETE(
     }
 
     // Delete the link
-    db.prepare("DELETE FROM cpg_links WHERE link_id = ? AND user_id = ?").run(
-      linkId,
-      userId
-    );
+    await db
+      .prepare("DELETE FROM cpg_links WHERE link_id = ? AND user_id = ?")
+      .run(linkId, userId);
 
     return NextResponse.json(
       {

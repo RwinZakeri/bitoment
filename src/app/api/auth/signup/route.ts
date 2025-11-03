@@ -90,7 +90,7 @@ export async function POST(
       );
     }
 
-    const existingUser = db
+    const existingUser = await db
       .prepare("SELECT id FROM users WHERE email = ?")
       .get(email);
 
@@ -109,26 +109,24 @@ export async function POST(
     const hashedPassword = await hashPassword(password);
 
     // Use a transaction to ensure atomicity
-    const transaction = db.transaction(() => {
-      const insertUser = db.prepare(`
+    const userId = await db.transactionAsync(async (txDb) => {
+      const insertUser = txDb.prepare(`
         INSERT INTO users (email, password, name, created_at)
-        VALUES (?, ?, ?, datetime('now'))
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
       `);
 
-      const result = insertUser.run(email, hashedPassword, fullName);
+      const result = await insertUser.run(email, hashedPassword, fullName);
       const userId = result.lastInsertRowid as number;
 
       // Create wallet for the new user
-      const insertWallet = db.prepare(`
+      const insertWallet = txDb.prepare(`
         INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
-        VALUES (?, ?, ?, datetime('now'), datetime('now'))
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `);
-      insertWallet.run(userId, 0.0, "USD");
+      await insertWallet.run(userId, 0.0, "USD");
 
       return userId;
     });
-
-    const userId = transaction();
 
     const token = generateToken({
       userId: userId,

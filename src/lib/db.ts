@@ -1,108 +1,22 @@
-import Database from "better-sqlite3";
-import fs from "fs";
-import path from "path";
+import postgres from "postgres";
 
-const dataDir = path.resolve(process.cwd(), "data");
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true, mode: 0o755 });
-}
+// Get connection string from environment variable
+const connectionString =
+  process.env.DATABASE_URL ||
+  "postgresql://neondb_owner:npg_RYID5P6aZfzn@ep-empty-bush-ahhgx8s7-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
 
-const dbPath = path.resolve(dataDir, "database.sqlite");
+// Create Postgres database client
+const sql = postgres(connectionString, {
+  ssl: "require",
+});
 
-// Ensure the database file has write permissions if it exists
-try {
-  if (fs.existsSync(dbPath)) {
-    fs.chmodSync(dbPath, 0o644);
-  }
-  // Ensure directory is writable
-  fs.chmodSync(dataDir, 0o755);
-} catch (error) {
-  console.warn("Could not set database file/directory permissions:", error);
-}
-
-// Open database with explicit write mode
-let db: Database.Database;
-try {
-  db = new Database(dbPath, {
-    verbose: process.env.NODE_ENV === "development" ? console.log : undefined,
-  });
-
-  // Test write access immediately by setting WAL mode
-  db.pragma("journal_mode = WAL");
-} catch (error: any) {
-  if (
-    error?.code === "SQLITE_READONLY" ||
-    error?.code === "SQLITE_READONLY_DBMOVED"
-  ) {
-    console.error(
-      "Database is readonly. Please check file permissions:",
-      dbPath
-    );
-    // Try to fix permissions and retry once
-    try {
-      if (fs.existsSync(dbPath)) {
-        fs.chmodSync(dbPath, 0o644);
-      }
-      fs.chmodSync(dataDir, 0o755);
-      db = new Database(dbPath);
-      db.pragma("journal_mode = WAL");
-    } catch (retryError) {
-      throw new Error(
-        `Database file is readonly. Path: ${dbPath}. Please ensure the file and directory have write permissions.`
-      );
-    }
-  } else {
-    throw error;
-  }
-}
-
-db.prepare(
-  `
+// Initialize database schema
+async function initializeDatabase() {
+  try {
+    // Create users table
+    await sql`
   CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT,
-    name TEXT,
-    phoneNumber INTEGER,
-    nationalInsuranceNumber TEXT,
-    birthDate TEXT,
-    oauth_provider TEXT,
-    oauth_id TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  )
-`
-).run();
-
-// Ensure password column allows NULL for OAuth users
-// SQLite doesn't support dropping NOT NULL constraints directly
-// We need to recreate the table to remove the constraint
-try {
-  // Check table info to see if password column has NOT NULL constraint
-  const tableInfo = db.prepare("PRAGMA table_info(users)").all() as Array<{
-    cid: number;
-    name: string;
-    type: string;
-    notnull: number;
-    dflt_value: string | null;
-    pk: number;
-  }>;
-
-  const passwordColumn = tableInfo.find((col) => col.name === "password");
-
-  // If password column has NOT NULL constraint (notnull = 1), migrate the table
-  if (passwordColumn && passwordColumn.notnull === 1) {
-    console.log(
-      "Migrating users table to allow NULL passwords for OAuth users..."
-    );
-
-    // Disable foreign key constraints temporarily for migration
-    db.prepare("PRAGMA foreign_keys = OFF").run();
-
-    // Create a new table with the correct schema (password nullable)
-    db.prepare(
-      `
-      CREATE TABLE users_migration (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
         password TEXT,
         name TEXT,
@@ -111,96 +25,80 @@ try {
         birthDate TEXT,
         oauth_provider TEXT,
         oauth_id TEXT,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `
-    ).run();
+    `;
 
-    // Copy data from old table to new table
-    db.prepare(
-      `
-      INSERT INTO users_migration 
-      SELECT id, email, password, name, phoneNumber, nationalInsuranceNumber, 
-             birthDate, oauth_provider, oauth_id, created_at
-      FROM users
-    `
-    ).run();
+    // Add oauth_provider column if it doesn't exist
+    await sql`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'users' AND column_name = 'oauth_provider'
+        ) THEN
+          ALTER TABLE users ADD COLUMN oauth_provider TEXT;
+        END IF;
+      END $$;
+    `;
 
-    // Drop old table
-    db.prepare("DROP TABLE users").run();
+    // Add oauth_id column if it doesn't exist
+    await sql`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'users' AND column_name = 'oauth_id'
+        ) THEN
+          ALTER TABLE users ADD COLUMN oauth_id TEXT;
+        END IF;
+      END $$;
+    `;
 
-    // Rename new table to original name
-    db.prepare("ALTER TABLE users_migration RENAME TO users").run();
-
-    // Re-enable foreign key constraints
-    db.prepare("PRAGMA foreign_keys = ON").run();
-
-    console.log(
-      "Migration completed successfully - password column now allows NULL."
-    );
-  }
-} catch (error) {
-  // If migration fails, log but don't crash - the INSERT with explicit NULL should still work
-  console.error("Error during password column migration:", error);
-  // Re-enable foreign keys in case of error
-  try {
-    db.prepare("PRAGMA foreign_keys = ON").run();
-  } catch {
-    // Ignore
-  }
-}
-
-try {
-  db.prepare(`ALTER TABLE users ADD COLUMN oauth_provider TEXT`).run();
-} catch {
-  // Column already exists, ignore error
-}
-
-try {
-  db.prepare(`ALTER TABLE users ADD COLUMN oauth_id TEXT`).run();
-} catch {
-  // Column already exists, ignore error
-}
-
-// Create OTP table for password reset
-db.prepare(
-  `
+    // Create password_reset_otps table
+    await sql`
   CREATE TABLE IF NOT EXISTS password_reset_otps (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
     email TEXT NOT NULL,
     otp TEXT NOT NULL,
     expires_at TEXT NOT NULL,
     used BOOLEAN DEFAULT FALSE,
     state INTEGER DEFAULT 0,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     verified_at TEXT
   )
-`
-).run();
+    `;
 
-// Add state column to existing table if it doesn't exist
-try {
-  db.prepare(
-    `ALTER TABLE password_reset_otps ADD COLUMN state INTEGER DEFAULT 0`
-  ).run();
-} catch {
-  // Column already exists, ignore error
-}
+    // Add state column if it doesn't exist
+    await sql`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'password_reset_otps' AND column_name = 'state'
+        ) THEN
+          ALTER TABLE password_reset_otps ADD COLUMN state INTEGER DEFAULT 0;
+        END IF;
+      END $$;
+    `;
 
-// Add verified_at column to existing table if it doesn't exist
-try {
-  db.prepare(
-    `ALTER TABLE password_reset_otps ADD COLUMN verified_at TEXT`
-  ).run();
-} catch {
-  // Column already exists, ignore error
-}
+    // Add verified_at column if it doesn't exist
+    await sql`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'password_reset_otps' AND column_name = 'verified_at'
+        ) THEN
+          ALTER TABLE password_reset_otps ADD COLUMN verified_at TEXT;
+        END IF;
+      END $$;
+    `;
 
-// Create user_devices table for tracking user device information
-db.prepare(
-  `
+    // Create user_devices table
+    await sql`
   CREATE TABLE IF NOT EXISTS user_devices (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     device_id TEXT NOT NULL,
     device_name TEXT,
@@ -212,93 +110,299 @@ db.prepare(
     ip_address TEXT,
     location TEXT,
     is_active BOOLEAN DEFAULT TRUE,
-    last_seen TEXT DEFAULT CURRENT_TIMESTAMP,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     UNIQUE(user_id, device_id)
   )
-`
-).run();
+    `;
 
-// Create index for better performance
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_user_devices_user_id ON user_devices (user_id)`
-).run();
+    // Create indexes for user_devices
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_user_devices_user_id ON user_devices (user_id)
+    `;
 
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_user_devices_device_id ON user_devices (device_id)`
-).run();
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_user_devices_device_id ON user_devices (device_id)
+    `;
 
-// Create login_sessions table for tracking login sessions
-db.prepare(
-  `
+    // Create login_sessions table
+    await sql`
   CREATE TABLE IF NOT EXISTS login_sessions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
     user_email TEXT NOT NULL,
     device_name TEXT,
     os TEXT,
     browser TEXT,
     ip TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`
-).run();
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
 
-// Create index for better performance on login_sessions
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_login_sessions_user_email ON login_sessions (user_email)`
-).run();
+    // Create indexes for login_sessions
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_login_sessions_user_email ON login_sessions (user_email)
+    `;
 
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_login_sessions_created_at ON login_sessions (created_at)`
-).run();
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_login_sessions_created_at ON login_sessions (created_at)
+    `;
 
-// Create wallets table for user wallet balances
-db.prepare(
-  `
+    // Create wallets table
+    await sql`
   CREATE TABLE IF NOT EXISTS wallets (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL UNIQUE,
-    balance REAL DEFAULT 0.0,
+        balance NUMERIC(20, 8) DEFAULT 0.0,
     currency TEXT DEFAULT 'USD',
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
   )
-`
-).run();
+    `;
 
-// Create index for better performance on wallets
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_wallets_user_id ON wallets (user_id)`
-).run();
+    // Create index for wallets
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_wallets_user_id ON wallets (user_id)
+    `;
 
-// Create cpg_links table for payment links
-db.prepare(
-  `
+    // Create cpg_links table
+    await sql`
   CREATE TABLE IF NOT EXISTS cpg_links (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     link_id TEXT NOT NULL UNIQUE,
     order_id TEXT,
-    price REAL NOT NULL,
+        price NUMERIC(20, 8) NOT NULL,
     currency TEXT NOT NULL DEFAULT 'USDT',
     url TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'active',
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
   )
-`
-).run();
+    `;
 
-// Create index for better performance on cpg_links
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_cpg_links_user_id ON cpg_links (user_id)`
-).run();
+    // Create indexes for cpg_links
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_cpg_links_user_id ON cpg_links (user_id)
+    `;
 
-db.prepare(
-  `CREATE INDEX IF NOT EXISTS idx_cpg_links_link_id ON cpg_links (link_id)`
-).run();
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_cpg_links_link_id ON cpg_links (link_id)
+    `;
+
+    console.log("Database schema initialized successfully");
+  } catch (error) {
+    console.error("Error initializing database schema:", error);
+    // Don't throw - let the app start, but log the error
+  }
+}
+
+// Initialize database on module load
+initializeDatabase().catch((error) => {
+  console.error("Failed to initialize database:", error);
+});
+
+// Helper to convert ? placeholders to $1, $2, etc. for Postgres
+function convertQuery(
+  query: string,
+  params: unknown[]
+): { query: string; values: unknown[] } {
+  let paramIndex = 0;
+  const convertedQuery = query.replace(/\?/g, () => `$${++paramIndex}`);
+  return { query: convertedQuery, values: params };
+}
+
+// Type for database interface
+type DbInterface = {
+  prepare(query: string): {
+    get<T = unknown>(...params: unknown[]): Promise<T | undefined>;
+    all<T = unknown>(...params: unknown[]): Promise<T[]>;
+    run(
+      ...params: unknown[]
+    ): Promise<{ lastInsertRowid?: number; changes?: number }>;
+  };
+  transaction<T>(callback: () => T): T;
+  transactionAsync<T>(callback: (db: DbInterface) => Promise<T>): Promise<T>;
+};
+
+// Database interface that mimics better-sqlite3 API for easier migration
+const db: DbInterface = {
+  // Prepare a statement (returns an object with get, all, run methods)
+  prepare(query: string) {
+    return {
+      // Get single row (like SQLite's .get())
+      async get<T = unknown>(...params: unknown[]): Promise<T | undefined> {
+        const { query: convertedQuery, values } = convertQuery(query, params);
+        const result = await sql.unsafe(convertedQuery, values as never[]);
+        return (result[0] as unknown as T) || undefined;
+      },
+
+      // Get all rows (like SQLite's .all())
+      async all<T = unknown>(...params: unknown[]): Promise<T[]> {
+        const { query: convertedQuery, values } = convertQuery(query, params);
+        const result = await sql.unsafe(convertedQuery, values as never[]);
+        return result as unknown[] as T[];
+      },
+
+      // Execute query (like SQLite's .run())
+      async run(
+        ...params: unknown[]
+      ): Promise<{ lastInsertRowid?: number; changes?: number }> {
+        // For INSERT queries, try to get the inserted ID using RETURNING
+        if (query.trim().toUpperCase().startsWith("INSERT")) {
+          const insertMatch = query.match(/INSERT\s+INTO\s+(\w+)/i);
+          if (insertMatch) {
+            // Try to add RETURNING id to get the inserted ID
+            let queryWithReturning = query;
+            if (!query.includes("RETURNING")) {
+              queryWithReturning =
+                query.replace(/;?\s*$/, "") + " RETURNING id";
+            }
+
+            try {
+              const { query: convertedQuery, values } = convertQuery(
+                queryWithReturning,
+                params
+              );
+              const result = await sql.unsafe(
+                convertedQuery,
+                values as never[]
+              );
+              return {
+                lastInsertRowid: (result[0] as unknown as { id: number })?.id,
+                changes: result.length > 0 ? 1 : 0,
+              };
+            } catch {
+              // If RETURNING fails, just execute the query
+              const { query: convertedQuery, values } = convertQuery(
+                query,
+                params
+              );
+              await sql.unsafe(convertedQuery, values as never[]);
+              return { changes: 1 };
+            }
+          }
+        }
+
+        // For UPDATE/DELETE queries, execute and return changes
+        const { query: convertedQuery, values } = convertQuery(query, params);
+        const result = await sql.unsafe(convertedQuery, values as never[]);
+        return { changes: result.length || 1 };
+      },
+    };
+  },
+
+  // Transaction helper - synchronous version throws error
+  transaction<T>(callback?: () => T): T {
+    if (callback) {
+      // Unreachable - just here to match interface signature
+    }
+    throw new Error(
+      "Transaction must be called asynchronously. Use db.transactionAsync() instead."
+    );
+  },
+
+  // Async transaction helper
+  async transactionAsync<T>(
+    callback: (transactionDb: DbInterface) => Promise<T>
+  ): Promise<T> {
+    return (await sql.begin(async (transactionSql) => {
+      // Create a transaction-specific db instance
+      const transactionDb: DbInterface = {
+        prepare(query: string) {
+          return {
+            async get<T = unknown>(
+              ...params: unknown[]
+            ): Promise<T | undefined> {
+              const { query: convertedQuery, values } = convertQuery(
+                query,
+                params
+              );
+              const result = await transactionSql.unsafe(
+                convertedQuery,
+                values as never[]
+              );
+              return (result[0] as unknown as T) || undefined;
+            },
+            async all<T = unknown>(...params: unknown[]): Promise<T[]> {
+              const { query: convertedQuery, values } = convertQuery(
+                query,
+                params
+              );
+              const result = await transactionSql.unsafe(
+                convertedQuery,
+                values as never[]
+              );
+              return result as unknown[] as T[];
+            },
+            async run(
+              ...params: unknown[]
+            ): Promise<{ lastInsertRowid?: number; changes?: number }> {
+              if (query.trim().toUpperCase().startsWith("INSERT")) {
+                const insertMatch = query.match(/INSERT\s+INTO\s+(\w+)/i);
+                if (insertMatch && !query.includes("RETURNING")) {
+                  const queryWithReturning =
+                    query.replace(/;?\s*$/, "") + " RETURNING id";
+                  try {
+                    const { query: convertedQuery, values } = convertQuery(
+                      queryWithReturning,
+                      params
+                    );
+                    const result = await transactionSql.unsafe(
+                      convertedQuery,
+                      values as never[]
+                    );
+                    return {
+                      lastInsertRowid: (result[0] as unknown as { id: number })
+                        ?.id,
+                      changes: result.length > 0 ? 1 : 0,
+                    };
+                  } catch {
+                    const { query: convertedQuery, values } = convertQuery(
+                      query,
+                      params
+                    );
+                    await transactionSql.unsafe(
+                      convertedQuery,
+                      values as never[]
+                    );
+                    return { changes: 1 };
+                  }
+                }
+              }
+              const { query: convertedQuery, values } = convertQuery(
+                query,
+                params
+              );
+              const result = await transactionSql.unsafe(
+                convertedQuery,
+                values as never[]
+              );
+              return { changes: result.length || 1 };
+            },
+          };
+        },
+        transaction<T>(callback?: () => T): T {
+          if (callback) {
+            // Unreachable - just here to match interface signature
+          }
+          throw new Error("Nested transactions not supported");
+        },
+        transactionAsync<T>(
+          callback?: (db: DbInterface) => Promise<T>
+        ): Promise<T> {
+          if (callback) {
+            // Unreachable - just here to match interface signature
+          }
+          throw new Error("Nested transactions not supported");
+        },
+      };
+      return await callback(transactionDb);
+    })) as T;
+  },
+};
 
 export default db;
+export { sql };

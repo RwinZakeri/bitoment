@@ -45,9 +45,9 @@ export async function POST(
       );
     }
 
-    const user = db
+    const user = (await db
       .prepare("SELECT id, email, password, name FROM users WHERE email = ?")
-      .get(email) as
+      .get(email)) as
       | {
           id: number;
           email: string;
@@ -96,15 +96,17 @@ export async function POST(
 
     // Store login session
     try {
-      db.prepare(
-        `INSERT INTO login_sessions (user_email, device_name, os, browser, ip) VALUES (?, ?, ?, ?, ?)`
-      ).run(
-        user.email,
-        result.device.model || result.device.type || "Unknown Device",
-        result.os.name || "Unknown OS",
-        result.browser.name || "Unknown Browser",
-        ip
-      );
+      await db
+        .prepare(
+          `INSERT INTO login_sessions (user_email, device_name, os, browser, ip) VALUES (?, ?, ?, ?, ?)`
+        )
+        .run(
+          user.email,
+          result.device.model || result.device.type || "Unknown Device",
+          result.os.name || "Unknown OS",
+          result.browser.name || "Unknown Browser",
+          ip
+        );
     } catch (sessionError) {
       console.error("Error storing login session:", sessionError);
       // Don't fail the login if session tracking fails
@@ -117,8 +119,7 @@ export async function POST(
         user: {
           id: user.id,
           email: user.email,
-          fullName: user.name || undefined, 
-          
+          fullName: user.name || undefined,
         },
         token: token,
       },

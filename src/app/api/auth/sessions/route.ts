@@ -9,9 +9,9 @@ export async function GET(
 ): Promise<NextResponse<LoginSessionResponse>> {
   try {
     const tokenPayload = verifyAuthToken(request);
-    
-    console.log(tokenPayload)
-    
+
+    console.log(tokenPayload);
+
     if (!tokenPayload) {
       return NextResponse.json(
         {
@@ -45,11 +45,11 @@ export async function GET(
     }
 
     // Check if user exists
-    const user = db
+    const user = await db
       .prepare("SELECT id FROM users WHERE email = ?")
-      .get(email)
+      .get(email);
 
-      console.log(user , email)
+    console.log(user, email);
 
     if (!user) {
       return NextResponse.json(
@@ -62,14 +62,14 @@ export async function GET(
     }
 
     // Fetch all login sessions for the user, sorted by most recent first
-    const sessions = db
+    const sessions = (await db
       .prepare(
         `SELECT id, user_email, device_name, os, browser, ip, created_at 
          FROM login_sessions 
          WHERE user_email = ? 
          ORDER BY created_at DESC`
       )
-      .all(email) as Array<{
+      .all(email)) as Array<{
       id: number;
       user_email: string;
       device_name?: string;

@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const user = db
+    const user = (await db
       .prepare(
         `
       SELECT id, email, phoneNumber, name, nationalInsuranceNumber, birthDate, created_at 
@@ -26,7 +26,9 @@ export async function GET(request: NextRequest) {
       WHERE id = ?
     `
       )
-      .get(tokenPayload.data.userId) as User | undefined;
+      .get(tokenPayload.data.userId)) as User | undefined;
+
+      console.log(user)
 
     if (!user) {
       return NextResponse.json(
@@ -88,13 +90,13 @@ export async function PUT(request: NextRequest) {
       validationResult.data;
 
     // Get current user data to preserve existing values for optional fields
-    const currentUser = db
+    const currentUser = (await db
       .prepare(
         `SELECT name, email, phoneNumber, nationalInsuranceNumber, birthDate 
          FROM users 
          WHERE id = ?`
       )
-      .get(tokenPayload.data.userId) as
+      .get(tokenPayload.data.userId)) as
       | {
           name: string;
           email: string;
@@ -144,7 +146,7 @@ export async function PUT(request: NextRequest) {
       WHERE id = ?
     `);
 
-    const result = updateUser.run(
+    const result = await updateUser.run(
       updatedName,
       updatedEmail,
       updatedPhoneNumber,
@@ -163,13 +165,13 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const user = db
+    const user = (await db
       .prepare(
         `SELECT id, email, name, phoneNumber, nationalInsuranceNumber, birthDate, created_at 
          FROM users 
          WHERE id = ?`
       )
-      .get(tokenPayload.data.userId) as User;
+      .get(tokenPayload.data.userId)) as User;
 
     return NextResponse.json({
       success: true,

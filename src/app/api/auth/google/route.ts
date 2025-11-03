@@ -186,11 +186,11 @@ export async function POST(
     }
 
     // Check if user exists
-    const existingUser = db
+    const existingUser = (await db
       .prepare(
         "SELECT id, email, name, password, oauth_provider FROM users WHERE email = ?"
       )
-      .get(googleUser.email) as
+      .get(googleUser.email)) as
       | {
           id: number;
           email: string;
@@ -212,7 +212,7 @@ export async function POST(
         const updateOAuth = db.prepare(
           "UPDATE users SET oauth_provider = ?, oauth_id = ?, name = COALESCE(name, ?) WHERE id = ?"
         );
-        updateOAuth.run(
+        await updateOAuth.run(
           "google",
           googleUser.id,
           googleUser.name || existingUser.name,
@@ -220,27 +220,28 @@ export async function POST(
         );
       } else {
         // Ensure oauth_id is set even if provider is already google
-        db.prepare(
-          "UPDATE users SET oauth_id = ? WHERE id = ? AND (oauth_id IS NULL OR oauth_id = '')"
-        ).run(googleUser.id, userId);
+        await db
+          .prepare(
+            "UPDATE users SET oauth_id = ? WHERE id = ? AND (oauth_id IS NULL OR oauth_id = '')"
+          )
+          .run(googleUser.id, userId);
       }
 
       // Update name if it changed and is not null
       if (googleUser.name && googleUser.name !== existingUser.name) {
-        db.prepare("UPDATE users SET name = ? WHERE id = ?").run(
-          googleUser.name,
-          userId
-        );
+        await db
+          .prepare("UPDATE users SET name = ? WHERE id = ?")
+          .run(googleUser.name, userId);
       }
     } else {
       // New user - sign up
       isNewUser = true;
       const insertUser = db.prepare(`
         INSERT INTO users (email, name, password, oauth_provider, oauth_id, created_at)
-        VALUES (?, ?, ?, ?, ?, datetime('now'))
+        VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       `);
 
-      const result = insertUser.run(
+      const result = await insertUser.run(
         googleUser.email,
         googleUser.name,
         null, // Explicitly set password to NULL for OAuth users
@@ -252,9 +253,9 @@ export async function POST(
       // Create wallet for the new user
       const insertWallet = db.prepare(`
         INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
-        VALUES (?, ?, ?, datetime('now'), datetime('now'))
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `);
-      insertWallet.run(userId, 0.0, "USD");
+      await insertWallet.run(userId, 0.0, "USD");
     }
 
     // Generate JWT token
@@ -276,24 +277,26 @@ export async function POST(
 
     // Store login session
     try {
-      db.prepare(
-        `INSERT INTO login_sessions (user_email, device_name, os, browser, ip) VALUES (?, ?, ?, ?, ?)`
-      ).run(
-        googleUser.email,
-        result.device.model || result.device.type || "Unknown Device",
-        result.os.name || "Unknown OS",
-        result.browser.name || "Unknown Browser",
-        ip
-      );
+      await db
+        .prepare(
+          `INSERT INTO login_sessions (user_email, device_name, os, browser, ip) VALUES (?, ?, ?, ?, ?)`
+        )
+        .run(
+          googleUser.email,
+          result.device.model || result.device.type || "Unknown Device",
+          result.os.name || "Unknown OS",
+          result.browser.name || "Unknown Browser",
+          ip
+        );
     } catch (sessionError) {
       console.error("Error storing login session:", sessionError);
       // Don't fail the login if session tracking fails
     }
 
     // Get updated user info
-    const user = db
+    const user = (await db
       .prepare("SELECT id, email, name FROM users WHERE id = ?")
-      .get(userId) as {
+      .get(userId)) as {
       id: number;
       email: string;
       name?: string;

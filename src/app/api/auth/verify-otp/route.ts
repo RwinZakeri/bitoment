@@ -57,7 +57,7 @@ export async function POST(
     }
 
     // ✅ Fetch latest OTP record for the email
-    const otpRecord = db
+    const otpRecord = (await db
       .prepare(
         `SELECT id, otp, expires_at, used, state, created_at, verified_at
          FROM password_reset_otps
@@ -65,7 +65,7 @@ export async function POST(
          ORDER BY created_at DESC
          LIMIT 1`
       )
-      .get(email) as
+      .get(email)) as
       | {
           id: number;
           otp: string;
@@ -142,11 +142,13 @@ export async function POST(
 
     // ✅ Mark OTP as verified
     const verifiedAt = new Date().toISOString();
-    db.prepare(
-      `UPDATE password_reset_otps
+    await db
+      .prepare(
+        `UPDATE password_reset_otps
        SET state = ?, verified_at = ?
        WHERE id = ?`
-    ).run(OTPState.SENT_AND_USED, verifiedAt, otpRecord.id);
+      )
+      .run(OTPState.SENT_AND_USED, verifiedAt, otpRecord.id);
 
     return NextResponse.json(
       {

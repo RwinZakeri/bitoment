@@ -23,7 +23,7 @@ export async function GET(
       );
     }
 
-    const desktopDevices = db
+    const desktopDevices = (await db
       .prepare(
         `
         SELECT id, user_id, device_id, device_name, device_type, 
@@ -35,7 +35,7 @@ export async function GET(
         ORDER BY last_seen DESC
         `
       )
-      .all(tokenPayload.data.userId) as DeviceInfo[];
+      .all(tokenPayload.data.userId)) as DeviceInfo[];
 
     return NextResponse.json({
       success: true,

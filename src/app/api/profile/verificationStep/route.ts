@@ -3,7 +3,7 @@ import { verifyAuthToken } from "@/lib/middleware";
 import { User } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const tokenPayload = verifyAuthToken(request);
 
   if (!tokenPayload) {
@@ -54,13 +54,13 @@ export function GET(request: NextRequest) {
     ],
   };
 
-  const user = db
+  const user = (await db
     .prepare(
       `
       SELECT * FROM users WHERE id = ?
     `
     )
-    .get(tokenPayload.data.userId) as User;
+    .get(tokenPayload.data.userId)) as User;
 
   console.log(user);
 
@@ -68,10 +68,9 @@ export function GET(request: NextRequest) {
     verificationStep.steps[1].passSteps[0].isPassed = true;
   }
 
-  if (user.nationalInsuranceNumber && user.birthDate ) {
+  if (user.nationalInsuranceNumber && user.birthDate) {
     verificationStep.steps[1].passSteps[1].isPassed = true;
   }
-
 
   if (
     verificationStep.steps[1].passSteps[0].isPassed &&
@@ -79,7 +78,6 @@ export function GET(request: NextRequest) {
   ) {
     verificationStep.verificationStep = 2;
   }
-
 
   return NextResponse.json({
     status: 200,

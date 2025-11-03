@@ -29,16 +29,12 @@ export async function GET(
         { status: 401 }
       );
     }
-    
-
 
     const userId = tokenPayload.data.userId;
 
-
-    const wallet = db
+    const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet | undefined;
-
+      .get(userId)) as Wallet | undefined;
 
     if (!wallet) {
       return NextResponse.json(
@@ -104,9 +100,9 @@ export async function POST(
     const userId = tokenPayload.data.userId;
 
     // Get current wallet
-    const wallet = db
+    const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet | undefined;
+      .get(userId)) as Wallet | undefined;
 
     if (!wallet) {
       return NextResponse.json(
@@ -122,16 +118,16 @@ export async function POST(
     const newBalance = wallet.balance + amount;
     const updateWallet = db.prepare(`
       UPDATE wallets 
-      SET balance = ?, updated_at = datetime('now')
+      SET balance = ?, updated_at = CURRENT_TIMESTAMP
       WHERE user_id = ?
     `);
 
-    updateWallet.run(newBalance, userId);
+    await updateWallet.run(newBalance, userId);
 
     // Get updated wallet
-    const updatedWallet = db
+    const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet;
+      .get(userId)) as Wallet;
 
     return NextResponse.json(
       {
@@ -190,9 +186,9 @@ export async function PUT(
     const userId = tokenPayload.data.userId;
 
     // Get current wallet
-    const wallet = db
+    const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet | undefined;
+      .get(userId)) as Wallet | undefined;
 
     if (!wallet) {
       return NextResponse.json(
@@ -219,16 +215,16 @@ export async function PUT(
     const newBalance = wallet.balance - amount;
     const updateWallet = db.prepare(`
       UPDATE wallets 
-      SET balance = ?, updated_at = datetime('now')
+      SET balance = ?, updated_at = CURRENT_TIMESTAMP
       WHERE user_id = ?
     `);
 
-    updateWallet.run(newBalance, userId);
+    await updateWallet.run(newBalance, userId);
 
     // Get updated wallet
-    const updatedWallet = db
+    const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet;
+      .get(userId)) as Wallet;
 
     return NextResponse.json(
       {
@@ -274,9 +270,9 @@ export async function DELETE(
     const userId = tokenPayload.data.userId;
 
     // Get current wallet
-    const wallet = db
+    const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet | undefined;
+      .get(userId)) as Wallet | undefined;
 
     if (!wallet) {
       return NextResponse.json(
@@ -291,16 +287,16 @@ export async function DELETE(
     // Reset wallet balance to 0
     const updateWallet = db.prepare(`
       UPDATE wallets 
-      SET balance = 0, updated_at = datetime('now')
+      SET balance = 0, updated_at = CURRENT_TIMESTAMP
       WHERE user_id = ?
     `);
 
-    updateWallet.run(userId);
+    await updateWallet.run(userId);
 
     // Get updated wallet
-    const updatedWallet = db
+    const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
-      .get(userId) as Wallet;
+      .get(userId)) as Wallet;
 
     return NextResponse.json(
       {

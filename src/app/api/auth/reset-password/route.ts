@@ -40,11 +40,11 @@ export async function POST(
       );
     }
 
-    const otpRecord = db
+    const otpRecord = (await db
       .prepare(
         "SELECT id, otp, expires_at, used, state, created_at, verified_at FROM password_reset_otps WHERE email = ? ORDER BY created_at DESC LIMIT 1"
       )
-      .get(email) as
+      .get(email)) as
       | {
           id: number;
           otp: string;
@@ -129,9 +129,9 @@ export async function POST(
       );
     }
 
-    const user = db
+    const user = (await db
       .prepare("SELECT id, password FROM users WHERE email = ?")
-      .get(email) as { id: number; password: string | null } | undefined;
+      .get(email)) as { id: number; password: string | null } | undefined;
 
     if (!user) {
       return NextResponse.json(
@@ -160,15 +160,16 @@ export async function POST(
 
     const hashedPassword = await hashPassword(newPassword);
 
-    db.prepare("UPDATE users SET password = ? WHERE email = ?").run(
-      hashedPassword,
-      email
-    );
+    await db
+      .prepare("UPDATE users SET password = ? WHERE email = ?")
+      .run(hashedPassword, email);
 
     // Update OTP state to PASSWORD_RESET (2) and mark as used
-    db.prepare(
-      "UPDATE password_reset_otps SET used = TRUE, state = ? WHERE id = ?"
-    ).run(OTPState.PASSWORD_RESET, otpRecord.id);
+    await db
+      .prepare(
+        "UPDATE password_reset_otps SET used = TRUE, state = ? WHERE id = ?"
+      )
+      .run(OTPState.PASSWORD_RESET, otpRecord.id);
 
     return NextResponse.json(
       {
