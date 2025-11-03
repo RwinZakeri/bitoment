@@ -115,19 +115,53 @@ export async function POST(
     }
 
     // Update wallet balance
-    const newBalance = wallet.balance + amount;
+    // Convert balance to number since Postgres NUMERIC returns as string
+    const currentBalance =
+      typeof wallet.balance === "string"
+        ? parseFloat(wallet.balance)
+        : wallet.balance;
+    const newBalance = currentBalance + amount;
+
+    console.log("Wallet update debug:", {
+      currentBalance,
+      amount,
+      newBalance,
+      userId,
+      balanceType: typeof wallet.balance,
+      newBalanceType: typeof newBalance,
+    });
+
     const updateWallet = db.prepare(`
       UPDATE wallets 
       SET balance = ?, updated_at = CURRENT_TIMESTAMP
       WHERE user_id = ?
+      RETURNING *
     `);
 
-    await updateWallet.run(newBalance, userId);
+    const result = await updateWallet.run(newBalance, userId);
 
-    // Get updated wallet
+    console.log("Update result:", result);
+
+    // Verify update was successful
+    if (result.changes === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to update wallet balance",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Get updated wallet (ensure balance is converted to number if it comes as string)
     const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet;
+
+    // Convert balance to number if it's a string (Postgres NUMERIC returns as string)
+    if (typeof updatedWallet.balance === "string") {
+      updatedWallet.balance = parseFloat(updatedWallet.balance);
+    }
 
     return NextResponse.json(
       {
@@ -200,8 +234,14 @@ export async function PUT(
       );
     }
 
+    // Convert balance to number since Postgres NUMERIC returns as string
+    const currentBalance =
+      typeof wallet.balance === "string"
+        ? parseFloat(wallet.balance)
+        : wallet.balance;
+
     // Check if user has sufficient balance
-    if (wallet.balance < amount) {
+    if (currentBalance < amount) {
       return NextResponse.json(
         {
           success: false,
@@ -212,19 +252,36 @@ export async function PUT(
     }
 
     // Update wallet balance
-    const newBalance = wallet.balance - amount;
+    const newBalance = currentBalance - amount;
     const updateWallet = db.prepare(`
       UPDATE wallets 
       SET balance = ?, updated_at = CURRENT_TIMESTAMP
       WHERE user_id = ?
+      RETURNING *
     `);
 
-    await updateWallet.run(newBalance, userId);
+    const result = await updateWallet.run(newBalance, userId);
 
-    // Get updated wallet
+    // Verify update was successful
+    if (result.changes === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to update wallet balance",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Get updated wallet (ensure balance is converted to number if it comes as string)
     const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet;
+
+    // Convert balance to number if it's a string (Postgres NUMERIC returns as string)
+    if (typeof updatedWallet.balance === "string") {
+      updatedWallet.balance = parseFloat(updatedWallet.balance);
+    }
 
     return NextResponse.json(
       {
@@ -289,14 +346,31 @@ export async function DELETE(
       UPDATE wallets 
       SET balance = 0, updated_at = CURRENT_TIMESTAMP
       WHERE user_id = ?
+      RETURNING *
     `);
 
-    await updateWallet.run(userId);
+    const result = await updateWallet.run(userId);
 
-    // Get updated wallet
+    // Verify update was successful
+    if (result.changes === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to update wallet balance",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Get updated wallet (ensure balance is converted to number if it comes as string)
     const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet;
+
+    // Convert balance to number if it's a string (Postgres NUMERIC returns as string)
+    if (typeof updatedWallet.balance === "string") {
+      updatedWallet.balance = parseFloat(updatedWallet.balance);
+    }
 
     return NextResponse.json(
       {

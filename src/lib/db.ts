@@ -289,7 +289,11 @@ const db: DbInterface = {
         // For UPDATE/DELETE queries, execute and return changes
         const { query: convertedQuery, values } = convertQuery(query, params);
         const result = await sql.unsafe(convertedQuery, values as never[]);
-        return { changes: result.length || 1 };
+        // If RETURNING is present, result.length is the number of affected rows
+        // If RETURNING is not present, result will be empty array, so we can't know the count
+        // In that case, we assume 1 (for backward compatibility) but it's not accurate
+        const hasReturning = query.toUpperCase().includes("RETURNING");
+        return { changes: hasReturning ? result.length : result.length || 1 };
       },
     };
   },
@@ -380,7 +384,12 @@ const db: DbInterface = {
                 convertedQuery,
                 values as never[]
               );
-              return { changes: result.length || 1 };
+              // If RETURNING is present, result.length is the number of affected rows
+              // If RETURNING is not present, result will be empty array, so we can't know the count
+              const hasReturning = query.toUpperCase().includes("RETURNING");
+              return {
+                changes: hasReturning ? result.length : result.length || 1,
+              };
             },
           };
         },

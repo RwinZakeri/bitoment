@@ -1,11 +1,9 @@
 import { getToken } from "@/lib/utils";
 import axios, { InternalAxiosRequestConfig } from "axios";
 
-const baseURL = process.env.BASE_URL;
-
 const instance = axios.create({
   baseURL: "https://bitoment.vercel.app/api/",
-  timeout: 1000,
+  timeout: 5000 ,
   headers: { "X-Custom-Header": "foobar" },
 });
 
