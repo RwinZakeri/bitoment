@@ -15,4 +15,6 @@ export interface ModalPropsType {
   showBackdrop?: boolean;
   backdropOpacity?: number;
   backdropBlur?: boolean;
+  modalPadding?: number;
+  modalMargin?: number;
 }

@@ -7,6 +7,7 @@ import Paper from "@/components/UI/paper";
 import Rank from "@/components/UI/rank";
 import Stepper from "@/components/UI/stepper";
 import TransformButton from "@/components/UI/transform-button";
+import { chartData } from "@/lib/utils";
 import AwardIcon from "@/public/icons/AwardIcon";
 import ChartFrameIcon from "@/public/icons/ChartFrameIcon";
 import DocumentIcon from "@/public/icons/DocumentIcon";
@@ -17,36 +18,6 @@ import Image from "next/image";
 import { palnFeatures } from "./type";
 
 const PerformanceTab = () => {
-  const chartData = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    datasets: [
-      {
-        label: "Portfolio Value",
-        data: [
-          45000, 52000, 48000, 61000, 55000, 67000, 72000, 68000, 75000, 82000,
-          78000, 16000,
-        ],
-        borderColor: "#15E0CC",
-        backgroundColor: "rgba(21, 224, 204, 0.1)",
-        fill: true,
-        tension: 0.4,
-      },
-    ],
-  };
-
   const assetAllocationData = {
     labels: ["Bitcoin", "Ethereum", "Solana", "Tether", "Others"],
     datasets: [
@@ -201,7 +172,11 @@ const PerformanceTab = () => {
           </p>
         </div>
 
-        <Button size="sm" variant="outline-dark" className="w-9/12 w-full mx-auto">
+        <Button
+          size="sm"
+          variant="outline-dark"
+          className="w-9/12 w-full mx-auto"
+        >
           <p>Learn More</p>
         </Button>
       </Paper>

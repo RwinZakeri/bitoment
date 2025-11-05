@@ -39,11 +39,10 @@ const Receive = () => {
 
   const blockchainNetworks = ["TRC20", "ERC20", "BEP20", "SOL"];
 
-  // Generate random wallet address on mount
   useEffect(() => {
     const generateRandomAddress = () => {
       const chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        "`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`";
       let address = "";
       // Generate a random address between 26-35 characters (typical crypto address length)
       const length = Math.floor(Math.random() * 10) + 26;

@@ -20,6 +20,8 @@ const Modal = ({
   showBackdrop = true,
   backdropOpacity = 0.5,
   backdropBlur = true,
+  modalPadding = 6,
+  modalMargin = 12
 }: ModalPropsType) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -103,13 +105,15 @@ const Modal = ({
       <div
         ref={modalRef}
         className={cn(
-          "relative bg-white w-full rounded-xl p-6 mx-4 shadow-xl focus:outline-none",
+          "relative bg-white w-full rounded-xlF shadow-xl focus:outline-none",
           size !== "auto" && sizeClasses[size],
           className
         )}
         style={{
           ...(maxWidth && { maxWidth }),
           ...(maxHeight && { maxHeight }),
+          padding: modalPadding,
+          margin: modalMargin,
         }}
         tabIndex={-1}
         role="dialog"

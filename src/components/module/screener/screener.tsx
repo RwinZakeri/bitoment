@@ -128,6 +128,8 @@ const ScreenerModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       close={true}
+      modalMargin={0}
+      modalPadding={0}
     >
       <PageLayout backHidden title="Screener">
         <div className="flex flex-col items-center justify-center w-full h-screen p-4">

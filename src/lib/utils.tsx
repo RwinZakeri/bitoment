@@ -36,12 +36,6 @@ export const deleteCookie = (name: string) => {
   document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 };
 
-export const generateRandomPercentage = () => {
-  const isNegative = Math.random() < 0.4;
-  const randomValue = Math.random() * 20;
-  return isNegative ? -randomValue : randomValue;
-};
-
 export const getCryptoIcon = (name: string) => {
   switch (name.toLowerCase()) {
     case "btc":
@@ -108,4 +102,59 @@ export const getAssetIcon = (currentAssets: { name: string; icon: string }) => {
         <BtcIcon className="w-7 h-7" />
       );
   }
+};
+
+export const generateRandomPercentage = () => {
+  const isNegative = Math.random() < 0.4;
+  const randomValue = Math.random() * 20;
+  return isNegative ? -randomValue : randomValue;
+};
+
+const generateChartData = (percentageChange: number): number[] => {
+  const months = 12;
+  const data: number[] = [];
+
+  const baseValue = Math.random() * 100 * (0.7 + Math.random() * 0.1);
+  data.push(baseValue);
+
+  for (let i = 1; i < months - 1; i++) {
+    const previousValue: number = data[i - 1];
+    const volatility = 0.05 + Math.random() * 0.1;
+    const trend = (percentageChange / 100) * (i / months);
+    const randomChange = (Math.random() - 0.5) * volatility;
+
+    const newValue: number = previousValue * (1 + trend + randomChange);
+    data.push(Math.max(0, newValue));
+  }
+
+  data.push(Math.max(0, Math.random() * 100));
+
+  return data;
+};
+
+export const chartData = {
+  labels: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+  datasets: [
+    {
+      label: "Portfolio Value",
+      data: generateChartData(Math.random() * Math.random() * 100),
+      borderColor: "#15E0CC",
+      backgroundColor: "rgba(21, 224, 204, 0.1)",
+      fill: true,
+      tension: 0.4,
+    },
+  ],
 };

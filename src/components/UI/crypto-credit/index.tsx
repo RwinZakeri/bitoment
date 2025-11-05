@@ -8,9 +8,12 @@ const CryptoCredit = ({
   icon,
   amount,
   color = "#C4E4D3",
+  type,
+  clickHandler,
 }: CryptoCreditPropsType) => {
   return (
     <div
+      onClick={() => type === "link" && clickHandler && clickHandler()}
       className="rounded-2xl p-6 flex justify-between pb-15 shadow-[0px_2px_4px_rgba(0,0,0,0.25)]"
       style={{ backgroundColor: color }}
     >

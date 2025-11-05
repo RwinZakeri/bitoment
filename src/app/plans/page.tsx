@@ -1,10 +1,6 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import {
-  DocumentationTab,
-  OperationTab,
-  PerformanceTab,
-} from "@/components/pages/plans/plan-tabs-content/tabsContent";
+import { PerformanceTab } from "@/components/pages/plans/plan-tabs-content/tabsContent";
 import { FeaturesTab } from "@/components/pages/plans/plan-tabs-content/tabsFeature";
 import Tabs from "@/components/UI/tabs";
 import { TabItem } from "@/components/UI/tabs/type";
@@ -23,16 +19,6 @@ const PlanPage = () => {
       id: "features",
       label: "Features",
       content: <FeaturesTab />,
-    },
-    {
-      id: "operation",
-      label: "Operation",
-      content: <OperationTab />,
-    },
-    {
-      id: "documentation",
-      label: "Documentation",
-      content: <DocumentationTab />,
     },
   ];
 

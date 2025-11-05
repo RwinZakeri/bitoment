@@ -276,7 +276,7 @@ const Send = () => {
         </Button>
 
         <Modal isOpen={isSuccessModalOpen} onClose={handleCloseSuccessModal}>
-          <div className="flex flex-col items-center text-center space-y-4">
+          <div className="flex flex-col items-center text-center space-y-4 p-6">
             <SuccessTickIcon className="w-16 h-16 text-green-500" />
             <h2 className="text-2xl font-semibold">Send Successfully</h2>
             <Button

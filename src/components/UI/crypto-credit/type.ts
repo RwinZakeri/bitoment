@@ -7,4 +7,6 @@ export interface CryptoCreditPropsType {
   icon: ReactNode;
   amount?: string | number;
   color?: string;
+  type?: "link";
+  clickHandler?: () => void;
 }

@@ -77,11 +77,11 @@ const Wallet = () => {
           button={
             <Button
               onClick={() => router.push("/wallet/cpg")}
-              size="lg"
+              size="sm"
               className="bg-cyan-200 px-2"
               icon={<LinkIcon />}
             >
-              CGP
+              CPG
             </Button>
           }
           percentageColor={

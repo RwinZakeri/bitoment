@@ -49,7 +49,7 @@ const TotalPrice = ({
                 )}
               >
                 {amount > 0 ? "+" : ""}
-                {amount}%
+                {String(amount).split(".")[0]  }.{String(amount).split(".")[1].substring(0,1)} %
               </span>
             </>
           )}
