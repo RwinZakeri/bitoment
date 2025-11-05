@@ -14,6 +14,7 @@ import TetherIcon from "@/public/icons/TetherIcon";
 import type { GetRiskReportResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { Suspense, useState } from "react";
 
 const RiskReportContent = () => {
@@ -127,16 +128,20 @@ const RiskReportContent = () => {
           >
             <div className="flex flex-col gap-3">
               {day.transactions.map((transaction, transactionIndex) => (
-                <RiskReportCard
+                <Link
                   key={transactionIndex}
-                  riskLevel={transaction.riskLevel}
-                  amount={transaction.amount}
-                  price={transaction.price}
-                  assetAmount={transaction.assetAmount}
-                  title={transaction.title}
-                  icon={getCryptoIcon(transaction.title)}
-                  type={transaction.type}
-                />
+                  href={`/wallet/risk/${transaction.riskLevel}`}
+                >
+                  <RiskReportCard
+                    riskLevel={transaction.riskLevel}
+                    amount={transaction.amount}
+                    price={transaction.price}
+                    assetAmount={transaction.assetAmount}
+                    title={transaction.title}
+                    icon={getCryptoIcon(transaction.title)}
+                    type={transaction.type}
+                  />
+                </Link>
               ))}
             </div>
           </TitleLink>

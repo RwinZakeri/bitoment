@@ -2,7 +2,9 @@ import { getToken } from "@/lib/utils";
 import axios, { InternalAxiosRequestConfig } from "axios";
 
 const instance = axios.create({
-  baseURL: "https://bitoment.vercel.app/api/",
+  baseURL:
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/` ||
+    "https://bitoment.vercel.app/api/",
   timeout: 5000,
   headers: { "X-Custom-Header": "foobar" },
 });

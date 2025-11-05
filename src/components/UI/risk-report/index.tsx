@@ -71,8 +71,8 @@ const RiskReportCard = ({
         </div>
       </div>
 
-      <div className="flex items-center flex-col gap-2 text-sm">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-center flex-col gap-2 text-sm">
+        <div className="w-full flex items-center gap-1">
           Risk Level :
           <span
             className={cn("px-3 w-[100px] text-center border rounded-sm")}
