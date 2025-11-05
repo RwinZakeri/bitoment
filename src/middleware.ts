@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = [
   "/auth/reset-password",
   "/auth/check-email",
   "/plans",
+  "/payment"
 ];
 
 const PROTECTED_ROUTES = ["/dashboard", "/wallet", "/profile", "/swap", "/cpg"];

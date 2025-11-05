@@ -3,8 +3,7 @@ import ShareIcon from "@/public/icons/ShareIcon";
 import TrashIcon from "@/public/icons/TrashIcon";
 import LinkIcon from "@/public/svgs/blackLink.svg";
 import Image from "next/image";
-import { useState } from "react";
-import Modal from "../modal";
+import Link from "next/link";
 import { CpgCardPropsType } from "./type";
 
 const CpgCard = ({
@@ -15,17 +14,8 @@ const CpgCard = ({
   url,
   status,
   onDelete,
+  shareHandler,
 }: CpgCardPropsType) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleShareClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleDelete = () => {
     if (onDelete) {
       onDelete(id, id);
@@ -62,7 +52,7 @@ const CpgCard = ({
           </div>
           <div className="flex items-center gap-2">
             <div
-              onClick={handleShareClick}
+              onClick={() => shareHandler && shareHandler()}
               className="cursor-pointer hover:opacity-70 transition-opacity"
             >
               <ShareIcon />
@@ -80,24 +70,31 @@ const CpgCard = ({
         <div>
           <div className="mt-4 flex-col flex gap-4">
             {orderId && (
-              <div className="flex justify-between border-b-[1px] border-gray-300 ">
+              <div className="flex justify-between border-b border-gray-300 ">
                 <p className="text-xs">Order ID :</p>{" "}
                 <p className="text-gray-400 text-xs">{orderId}</p>
               </div>
             )}
-            <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <div className="flex justify-between border-b border-gray-300 ">
               <p className="text-xs">Price :</p>{" "}
               <p className="text-gray-400 text-xs">{price}</p>
             </div>
-            <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <div className="flex justify-between border-b border-gray-300 ">
               <p className="text-xs">Currency :</p>{" "}
               <p className="text-gray-400 text-xs">{currency}</p>
             </div>
-            <div className="flex justify-between border-b-[1px] border-gray-300 ">
-              <p className="text-xs">Url :</p>{" "}
-              <p className="text-gray-400 text-xs">{url}</p>
+            <div className="flex justify-between border-b border-gray-300 ">
+              <p className="text-xs w-fit shrink-0">Url :</p>{" "}
+              <p className="text-gray-400 text-xs text-right w-fit">
+                <Link
+                  href={`/payment/${url.split("payment")[1]}`}
+                  className="text-blue-500"
+                >
+                  {url}
+                </Link>
+              </p>
             </div>
-            <div className="flex justify-between border-b-[1px] border-gray-300 ">
+            <div className="flex justify-between border-b border-gray-300 ">
               <p className="text-xs">Status :</p>{" "}
               <p className={`${statusDisplay.color} text-xs`}>
                 {statusDisplay.text}
@@ -106,28 +103,6 @@ const CpgCard = ({
           </div>
         </div>
       </div>
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div className="text-center">
-          <h3 className="text-lg font-semibold mb-4">Share Payment Link</h3>
-          <div className="bg-gray-100 p-3 rounded-lg mb-4">
-            <p className="text-sm text-gray-600 break-all">{url}</p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => navigator.clipboard.writeText(url)}
-              className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              Copy Link
-            </button>
-            <button
-              onClick={handleCloseModal}
-              className="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

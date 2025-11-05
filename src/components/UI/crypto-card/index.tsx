@@ -71,13 +71,13 @@ const CryptoCard = ({
           <div className="flex flex-col text-sm gap-1">
             <div className="flex items-center gap-1">
               <p className="w-full ">Risk Level : </p>
-              <div className="rounded-lg w-full text-center text-[10px] border-[1px] border-border-gray py-1">
+              <div className="rounded-lg w-full text-center text-[10px] border border-border-gray py-1">
                 {riskLevel?.text}
               </div>
             </div>
             <div className="flex w-full items-center gap-1">
               <p>Risk Level : </p>
-              <div className="rounded-lg text-[10px] border-[1px] border-border-gray py-1 flex items-center justify-center px-7.5">
+              <div className="rounded-lg text-[10px] border border-border-gray py-1 flex items-center justify-center px-7.5">
                 <p>{riskLevel?.level}</p>
               </div>
             </div>

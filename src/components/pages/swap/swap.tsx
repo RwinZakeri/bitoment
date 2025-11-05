@@ -196,7 +196,7 @@ const Swap = () => {
       </Button>
 
       {/* Confirmation Modal */}
-      <Modal isOpen={isConfirmModalOpen} onClose={handleCloseConfirmModal}>
+      <Modal className="rounded-xl" isOpen={isConfirmModalOpen} onClose={handleCloseConfirmModal}>
         <div className="flex flex-col space-y-6 p-2">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Confirm Swap</h2>

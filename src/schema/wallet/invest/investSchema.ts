@@ -95,18 +95,6 @@ export const formatRoutingNumber = (value: string): string => {
 };
 
 export const payFromWalletSchema = z.object({
-  selectedCrypto: z
-    .object({
-      name: z.string(),
-      shortName: z.string(),
-      icon: z.string(),
-      price: z.string(),
-      percentage: z.string(),
-    })
-    .nullable()
-    .refine((val) => val !== null, {
-      message: "Please select a cryptocurrency",
-    }),
   amount: z
     .string()
     .min(1, "Amount is required")

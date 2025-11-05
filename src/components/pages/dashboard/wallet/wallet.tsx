@@ -14,7 +14,7 @@ import {
   generateRandomPercentage,
   getCryptoIcon,
 } from "@/lib/utils";
-import LinkIcon from "@/public/icons/LinkIcon";
+import CpgIcon from "@/public/icons/CpgIcon";
 import { AssetData, AssetDistributionResponse } from "@/types";
 import type { GetWalletHistoryResponse, GetWalletResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
@@ -68,7 +68,8 @@ const Wallet = () => {
 
   return (
     <PageLayout title="My Wallet" className="px-5">
-      <Paper className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-white">
+
+      <Paper className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-gray-100">
         <TotalPrice
           labelPosition="top"
           className="flex-col"
@@ -78,8 +79,8 @@ const Wallet = () => {
             <Button
               onClick={() => router.push("/wallet/cpg")}
               size="sm"
-              className="bg-cyan-200 px-2"
-              icon={<LinkIcon />}
+              className="px-2"
+              icon={<CpgIcon />}
             >
               CPG
             </Button>

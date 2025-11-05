@@ -13,6 +13,7 @@ const ReactQueryKey = {
   walletHistory: "walletHistory",
   walletAssetDistribution: "walletAssetDistribution",
   walletCpgLinks: "walletCpgLinks",
+  walletRiskReport: "walletRiskReport",
 
   // Session related
   sessions: "sessions",

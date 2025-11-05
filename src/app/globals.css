@@ -8,6 +8,7 @@
   --primary-cyan-300: #00ead6;
   --primary-cyan-400: #15e0cc;
   --primary-cyan-500: #13bcab;
+  --gray-100: #f6f6f6;
   --gray-200: #eeeeee;
   --gray-250: #dddddd;
   --gray-300: #ddd;
@@ -43,6 +44,7 @@
   --color-cyan-300: var(--primary-cyan-300);
   --color-cyan-400: var(--primary-cyan-400);
   --color-cyan-500: var(--primary-cyan-500);
+  --color-gray-100: var(--gray-100);
   --color-gray-200: var(--gray-200);
   --color-gray-250: var(--gray-250);
   --color-gray-300: var(--gray-300);

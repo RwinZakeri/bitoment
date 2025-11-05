@@ -5,6 +5,7 @@ import SolIcon from "@/public/icons/SolIcon";
 import TetherIcon from "@/public/icons/TetherIcon";
 import { type ClassValue, clsx } from "clsx";
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -158,3 +159,38 @@ export const chartData = {
     },
   ],
 };
+
+export const returnPercentages: Record<number, number> = {
+  0: 10,
+  1: 15,
+  2: 20,
+  3: 30,
+};
+
+export const durationLabels: Record<number, string> = {
+  0: "1 Month",
+  1: "3 Months",
+  2: "6 Months",
+  3: "1 Year",
+};
+
+export const steps = ["1m", "3m", "6m", "1y"];
+
+export const assetAllocationData = {
+  labels: ["Bitcoin", "Ethereum", "Solana", "Tether", "Others"],
+  datasets: [
+    {
+      data: [35, 25, 20, 15, 5],
+      backgroundColor: [
+        "#F7931A", // Bitcoin orange
+        "#627EEA", // Ethereum blue
+        "#9945FF", // Solana purple
+        "#26A17B", // Tether green
+        "#6B7280", // Others gray
+      ],
+      borderColor: ["#F7931A", "#627EEA", "#9945FF", "#26A17B", "#6B7280"],
+      borderWidth: 2,
+    },
+  ],
+};
+

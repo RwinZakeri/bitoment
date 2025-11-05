@@ -53,20 +53,20 @@ const SwapCard = ({
       </div>
       <div className="flex items-center gap-3">
         {crypto?.icon ? (
-          <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
-            <Image src={crypto.icon} alt={crypto.name} width={20} height={20} />
+          <div className="w-8 h-8 rounded-full shrink-0  bg-gray-250 flex items-center justify-center">
+            <Image src={crypto.icon} alt={crypto.name} width={12} height={12} />
           </div>
         ) : icon ? (
-          <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
+          <div className="w-8 h-8 shrink-0  rounded-full bg-gray-250 flex items-center justify-center">
             {icon}
           </div>
         ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
+          <div className="w-8 h-8 shrink-0 rounded-full bg-gray-250 flex items-center justify-center">
             <BtcIcon />
           </div>
         )}
         <div className="flex flex-col">
-          <p className="text-sm text-gray-500">{label || "Select a coin"}</p>
+          <p className="text-xs text-gray-500">{label || "Select a coin"}</p>
           <p className="text-base font-semibold">
             {crypto?.shortName || "BTC"}
           </p>

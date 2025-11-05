@@ -69,7 +69,7 @@ const Dashboard = () => {
               Add
             </Button>
           }
-          totalPrice={formatCurrency(data?.wallet?.balance as number)}
+          totalPrice={formatCurrency((data?.wallet?.balance as number) || 0)}
           className="flex-col-reverse"
           percentageColor={
             percentageChange < 0 ? "text-red-500" : "text-cyan-600"

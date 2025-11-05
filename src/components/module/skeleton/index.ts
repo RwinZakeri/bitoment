@@ -6,6 +6,7 @@ export { default as HistorySkeleton } from "./HistorySkeleton";
 export { default as LinkedCardSkeleton } from "./LinkedCardSkeleton";
 export { default as PlanCardSkeleton } from "./PlanCardSkeleton";
 export { default as ProfileSkeleton } from "./ProfileSkeleton";
+export { default as RiskReportSkeleton } from "./RiskReportSkeleton";
 export { default as SkeletonThemeWrapper } from "./SkeletonTheme";
 export { default as VerificationSkeleton } from "./VerificationSkeleton";
 export { default as WalletSkeleton } from "./WalletSkeleton";

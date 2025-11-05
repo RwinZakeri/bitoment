@@ -1,10 +1,9 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
-import { HistorySkeleton } from "@/components/module/skeleton";
-import Button from "@/components/UI/button";
-import CryptoCard from "@/components/UI/crypto-card";
+import { RiskReportSkeleton } from "@/components/module/skeleton";
 import Filters from "@/components/UI/filters";
 import { filters } from "@/components/UI/filters/type";
+import RiskReportCard from "@/components/UI/risk-report";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
 import BinanceIcon from "@/public/icons/BinanceIcon";
@@ -12,33 +11,27 @@ import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
 import SolIcon from "@/public/icons/SolIcon";
 import TetherIcon from "@/public/icons/TetherIcon";
-import type { GetWalletHistoryResponse } from "@/types/auth";
+import type { GetRiskReportResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 
-const HistoryPageContent = () => {
-  const searchParams = useSearchParams();
-  const cryptoParam = searchParams.get("crypto");
+const RiskReportContent = () => {
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const router = useRouter();
+
   const {
-    data: historyData,
+    data: riskReportData,
     isLoading,
     isError,
   } = useQuery({
     queryKey: [
       ReactQueryKey.wallet,
-      ReactQueryKey.walletHistory,
+      ReactQueryKey.walletRiskReport,
       selectedFilter,
-      cryptoParam,
     ],
     queryFn: async () => {
-      const cryptoQuery = cryptoParam ? `&crypto=${cryptoParam}` : "";
-      const response = await axios.get<GetWalletHistoryResponse>(
-        `/wallet/history?filter=${selectedFilter}${cryptoQuery}`
+      const response = await axios.get<GetRiskReportResponse>(
+        `/wallet/risk?filter=${selectedFilter}`
       );
       return response.data;
     },
@@ -46,7 +39,6 @@ const HistoryPageContent = () => {
   });
 
   const getCryptoIcon = (name: string) => {
-    // Both crypto and CPG transactions use their respective crypto icons
     switch (name.toLowerCase()) {
       case "btc":
         return <BtcIcon className="w-4 h-4" />;
@@ -67,15 +59,15 @@ const HistoryPageContent = () => {
 
   if (isLoading) {
     return (
-      <PageLayout title="Wallet History">
-        <HistorySkeleton />
+      <PageLayout title="Risk Report">
+        <RiskReportSkeleton />
       </PageLayout>
     );
   }
 
   if (isError) {
     return (
-      <PageLayout title="Wallet History">
+      <PageLayout title="Risk Report">
         <div className="mt-4">
           <Filters
             onClick={setSelectedFilter}
@@ -86,10 +78,10 @@ const HistoryPageContent = () => {
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Unable to load history
+              Unable to load risk report
             </h3>
             <p className="text-gray-500 mb-4">
-              There was an error loading your wallet history. Please try again.
+              There was an error loading your risk report. Please try again.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -103,12 +95,8 @@ const HistoryPageContent = () => {
     );
   }
 
-  const pageTitle = cryptoParam
-    ? `${cryptoParam.toUpperCase()} Wallet History`
-    : "Wallet History";
-
   return (
-    <PageLayout title={pageTitle}>
+    <PageLayout title="Risk Report">
       <div className="mt-4">
         <Filters
           onClick={setSelectedFilter}
@@ -116,22 +104,20 @@ const HistoryPageContent = () => {
           FiltersItems={filters}
         />
       </div>
-      <Button onClick={()=> router.push("/wallet/risk")} size="md" className="w-full mt-4">Risk Report</Button>
 
-      {!historyData?.data || historyData.data.length === 0 ? (
+      {!riskReportData?.data || riskReportData.data.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No transaction history
+              No risk report data
             </h3>
             <p className="text-gray-500">
-              You don&apos;t have any transactions yet. Start by making your
-              first transaction.
+              You don&apos;t have any risk report data yet.
             </p>
           </div>
         </div>
       ) : (
-        historyData.data.map((day, dayIndex) => (
+        riskReportData.data.map((day, dayIndex) => (
           <TitleLink
             key={dayIndex}
             margin={28}
@@ -141,14 +127,15 @@ const HistoryPageContent = () => {
           >
             <div className="flex flex-col gap-3">
               {day.transactions.map((transaction, transactionIndex) => (
-                <CryptoCard
+                <RiskReportCard
                   key={transactionIndex}
+                  riskLevel={transaction.riskLevel}
                   amount={transaction.amount}
+                  price={transaction.price}
+                  assetAmount={transaction.assetAmount}
                   title={transaction.title}
-                  label={`${day.dateAsName} - ${transaction.hour}`}
                   icon={getCryptoIcon(transaction.title)}
                   type={transaction.type}
-                  price={transaction.price}
                 />
               ))}
             </div>
@@ -159,18 +146,18 @@ const HistoryPageContent = () => {
   );
 };
 
-const HistoryPage = () => {
+const RiskReport = () => {
   return (
     <Suspense
       fallback={
-        <PageLayout title="Wallet History">
-          <HistorySkeleton />
+        <PageLayout title="Risk Report">
+          <RiskReportSkeleton />
         </PageLayout>
       }
     >
-      <HistoryPageContent />
+      <RiskReportContent />
     </Suspense>
   );
 };
 
-export default HistoryPage;
+export default RiskReport;

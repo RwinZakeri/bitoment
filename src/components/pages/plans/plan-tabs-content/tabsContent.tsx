@@ -7,7 +7,13 @@ import Paper from "@/components/UI/paper";
 import Rank from "@/components/UI/rank";
 import Stepper from "@/components/UI/stepper";
 import TransformButton from "@/components/UI/transform-button";
-import { chartData } from "@/lib/utils";
+import {
+  assetAllocationData,
+  chartData,
+  durationLabels,
+  returnPercentages,
+  steps,
+} from "@/lib/utils";
 import AwardIcon from "@/public/icons/AwardIcon";
 import ChartFrameIcon from "@/public/icons/ChartFrameIcon";
 import DocumentIcon from "@/public/icons/DocumentIcon";
@@ -15,26 +21,52 @@ import LineChartIcon from "@/public/icons/LineChartIcon";
 import WindowIcon from "@/public/icons/WindowIcon";
 import womenBtc from "@/public/svgs/women-btc.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import { palnFeatures } from "./type";
 
 const PerformanceTab = () => {
-  const assetAllocationData = {
-    labels: ["Bitcoin", "Ethereum", "Solana", "Tether", "Others"],
-    datasets: [
+  const [selectedStep, setSelectedStep] = useState<number>(0);
+  const [price, setPrice] = useState<string>("");
+  const router = useRouter();
+  const calculatedAmount = useMemo(() => {
+    const priceValue = parseFloat(price) || 0;
+    if (priceValue <= 0) return 0;
+
+    const percentage = returnPercentages[selectedStep] || 10;
+    const amount = priceValue * (1 + percentage / 100);
+    return Math.round(amount * 100) / 100;
+  }, [price, selectedStep]);
+
+  const currentPercentage = returnPercentages[selectedStep] || 10;
+  const currentDurationLabel = durationLabels[selectedStep] || "1 Month";
+
+  const handleInvestClick = () => {
+    if (!price || parseFloat(price) <= 0) {
+      toast.error("Please enter a valid investment amount");
+      return;
+    }
+
+    const priceValue = parseFloat(price);
+    toast.success(
+      `Investment Details:\nAmount: ${priceValue.toFixed(
+        2
+      )} USDT\nDuration: ${currentDurationLabel}\nReturn: ${currentPercentage}%\nFinal Value: ${calculatedAmount.toFixed(
+        2
+      )} USDT`,
       {
-        data: [35, 25, 20, 15, 5],
-        backgroundColor: [
-          "#F7931A", // Bitcoin orange
-          "#627EEA", // Ethereum blue
-          "#9945FF", // Solana purple
-          "#26A17B", // Tether green
-          "#6B7280", // Others gray
-        ],
-        borderColor: ["#F7931A", "#627EEA", "#9945FF", "#26A17B", "#6B7280"],
-        borderWidth: 2,
-      },
-    ],
+        duration: 5000,
+        style: {
+          whiteSpace: "pre-line",
+          maxWidth: "400px",
+        },
+      }
+    );
+
+    router.push("/wallet/invest");
   };
+
   return (
     <div className="p-2 mt-4">
       <div className="w-full flex bg-white rounded-2xl p-4">
@@ -135,19 +167,26 @@ const PerformanceTab = () => {
             label="Price"
             variant="secondary"
             inputType="stroke"
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
           />
         </div>
         <Paper className="mt-4" label="Investment Duration">
           <div className="mt-2 flex items-center justify-center w-full">
-            <Stepper steps={["1m", "3m", "6m", "1y"]} passedSteps={2} />
+            <Stepper
+              steps={steps}
+              passedSteps={selectedStep + 1}
+              onStepClick={setSelectedStep}
+            />
           </div>
           <div className="mt-6">
             <Rank
               icon={<AwardIcon />}
-              percentage={10}
+              percentage={currentPercentage}
               currency={"USDT"}
-              label={"Asset Value After 1 Months:"}
-              amount={16480}
+              label={`Asset Value After ${currentDurationLabel}:`}
+              amount={calculatedAmount}
             />
           </div>
         </Paper>
@@ -172,58 +211,20 @@ const PerformanceTab = () => {
           </p>
         </div>
 
-        <Button
-          size="sm"
-          variant="outline-dark"
-          className="w-9/12 w-full mx-auto"
-        >
+        <Button size="sm" variant="outline-dark" className="w-full mx-auto">
           <p>Learn More</p>
         </Button>
       </Paper>
 
-      <Button size="sm" className="w-full mx-auto my-4">
+      <Button
+        onClick={handleInvestClick}
+        size="sm"
+        className="w-full mx-auto my-4"
+      >
         Invest
       </Button>
     </div>
   );
 };
 
-const FeaturTab = () => {
-  return (
-    <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">Pro Plan</h3>
-      <p className="text-gray-600">Advanced features for serious traders.</p>
-      <ul className="mt-4 space-y-2">
-        <li>• Unlimited transactions</li>
-        <li>• Advanced analytics</li>
-        <li>• Priority support</li>
-        <li>• API access</li>
-      </ul>
-    </div>
-  );
-};
-
-const OperationTab = () => {
-  return (
-    <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">Enterprise Plan</h3>
-      <p className="text-gray-600">Custom solutions for large organizations.</p>
-      <ul className="mt-4 space-y-2">
-        <li>• Custom integrations</li>
-        <li>• Dedicated account manager</li>
-        <li>• 24/7 phone support</li>
-        <li>• White-label options</li>
-      </ul>
-    </div>
-  );
-};
-
-const DocumentationTab = () => {
-  return (
-    <div className="p-4">
-      <h1>hello world</h1>
-    </div>
-  );
-};
-
-export { DocumentationTab, FeaturTab, OperationTab, PerformanceTab };
+export { PerformanceTab };

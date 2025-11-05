@@ -6,4 +6,6 @@ export interface CpgCardPropsType {
   url: string;
   status: "active" | "inactive" | "completed" | "expired" | "wait" | "success";
   onDelete?: (linkId: string, id: string) => void;
+
+  shareHandler?: () => void;
 }

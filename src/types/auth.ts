@@ -232,6 +232,27 @@ export interface GetWalletHistoryResponse {
   data: HistoryDay[];
 }
 
+// Risk Report related types
+export interface RiskReportTransaction {
+  type: "up" | "down" | "cpg" | "link";
+  title: string;
+  amount: string;
+  price: string;
+  assetAmount: string;
+  riskLevel: number;
+}
+
+export interface RiskReportDay {
+  date: string;
+  dateAsName: string;
+  transactions: RiskReportTransaction[];
+}
+
+export interface GetRiskReportResponse {
+  success: boolean;
+  data: RiskReportDay[];
+}
+
 // CPG Links related types
 export interface CpgLink {
   id: number;
