@@ -72,7 +72,7 @@ const PerformanceTab = () => {
   return (
     <div className="p-2 mt-4">
       <div className="w-full flex bg-white dark:bg-gray-200 rounded-2xl p-4">
-        <p className="text-xs">
+        <p className="text-xs text-foreground">
           Low-risk investments focus on well-established cryptocurrencies,
           offering stable returns with lower risk.
         </p>
@@ -138,14 +138,15 @@ const PerformanceTab = () => {
                 alt={item.title}
                 width={50}
                 height={50}
+                className="border border-black/25 dark:border-white/25 rounded-lg p-2"
               />
-              <p>{item.title}</p>{" "}
+              <p className="text-foreground">{item.title}</p>{" "}
             </div>
           ))}
         </div>
       </Paper>
       <Paper
-        icon={<LineChartIcon className="ml-2" />}
+        icon={<LineChartIcon className="ml-2 text-foreground" />}
         className="bg-white dark:bg-gray-200 p-2 rounded-2xl mt-4"
         label="Fund Performance Chart"
       >
@@ -153,7 +154,7 @@ const PerformanceTab = () => {
       </Paper>
 
       <Paper
-        icon={<WindowIcon />}
+        icon={<WindowIcon className="text-foreground" />}
         className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
         label="Asset Allocation"
       >
@@ -162,9 +163,9 @@ const PerformanceTab = () => {
         </div>
       </Paper>
       <Paper
-        className="mt-4 bg-white rounded-2xl p-4"
+        className="mt-4 bg-white dark:bg-gray-200 rounded-2xl p-4"
         label="Capital Growth Estimate"
-        icon={<ChartFrameIcon />}
+        icon={<ChartFrameIcon className="text-foreground" />}
       >
         <div className="mt-4">
           <CustomeInput
@@ -187,7 +188,7 @@ const PerformanceTab = () => {
           </div>
           <div className="mt-6">
             <Rank
-              icon={<AwardIcon />}
+              icon={<AwardIcon className="text-foreground" />}
               percentage={currentPercentage}
               currency={currency}
               label={`Asset Value After ${currentDurationLabel}:`}
@@ -199,18 +200,18 @@ const PerformanceTab = () => {
       <Paper
         label="Documentation"
         className="bg-white dark:bg-gray-200 rounded-2xl p-4 mt-4"
-        icon={<DocumentIcon />}
+        icon={<DocumentIcon className="text-foreground" />}
       >
         <div className="flex flex-col gap-4">
-          <p className="my-6 text-gray-500">
+          <p className="my-6 text-gray-500 dark:text-gray-400">
             Investments in cryptocurrencies with high market value and strong
             history.
           </p>
-          <p className="mb-6 text-gray-500">
+          <p className="mb-6 text-gray-500 dark:text-gray-400">
             More stable returns, though generally lower compared to high-risk
             options.
           </p>
-          <p className="mb-6 text-gray-500">
+          <p className="mb-6 text-gray-500 dark:text-gray-400">
             Lower interest rates but carry less risk than other
             cryptocurrencies.
           </p>

@@ -184,7 +184,7 @@ const SignIn = () => {
         <Button
           variant="outline-dark"
           size="sm"
-          icon={<GoogleIcon fill="black" className="size-6" />}
+          icon={<GoogleIcon className="size-6 text-foreground" />}
           className="w-full"
           onClick={handleGoogleSignIn}
           disabled={isGoogleLoading || !googleClientId}

@@ -49,7 +49,7 @@ export const getCryptoIcon = (name: string) => {
     case "sol":
       return <SolIcon className="w-4 h-4" />;
     case "bnb":
-      return <BinanceIcon className="w-4 h-4" />; 
+      return <BinanceIcon className="w-4 h-4" />;
     default:
       return <BtcIcon className="w-4 h-4" />;
   }
@@ -83,22 +83,22 @@ export const aliasMap: Record<string, string> = {
 };
 
 export const getAssetIcon = (currentAssets: { name: string; icon: string }) => {
-  if (!currentAssets) return <BtcIcon className="w-7 h-7" />;
+  if (!currentAssets) return <BtcIcon className="w-7 h-7 text-foreground" />;
 
   const assetName = currentAssets.name.toUpperCase();
   switch (assetName) {
     case "BTC":
-      return <BtcIcon className="w-7 h-7" />;
+      return <BtcIcon className="w-7 h-7 text-foreground" />;
     case "ETH":
     case "ETC":
-      return <EtcIcon className="w-7 h-7" />;
+      return <EtcIcon className="w-7 h-7 text-foreground" />;
     case "USDT":
     case "TETHER":
-      return <TetherIcon className="w-7 h-7" />;
+      return <TetherIcon className="w-7 h-7 text-foreground" />;
     case "SOL":
-      return <SolIcon className="w-7 h-7" />;
+      return <SolIcon className="w-7 h-7 text-foreground" />;
     case "BNB":
-      return <BinanceIcon className="w-7 h-7" />;
+      return <BinanceIcon className="w-7 h-7 text-foreground" />;
     default:
       return currentAssets.icon ? (
         <Image
@@ -108,7 +108,7 @@ export const getAssetIcon = (currentAssets: { name: string; icon: string }) => {
           height={28}
         />
       ) : (
-        <BtcIcon className="w-7 h-7" />
+        <BtcIcon className="w-7 h-7 text-foreground" />
       );
   }
 };
@@ -189,13 +189,7 @@ export const assetAllocationData = {
   datasets: [
     {
       data: [35, 25, 20, 15, 5],
-      backgroundColor: [
-        "#F7931A", 
-        "#627EEA", 
-        "#9945FF", 
-        "#26A17B", 
-        "#6B7280", 
-      ],
+      backgroundColor: ["#F7931A", "#627EEA", "#9945FF", "#26A17B", "#6B7280"],
       borderColor: ["#F7931A", "#627EEA", "#9945FF", "#26A17B", "#6B7280"],
       borderWidth: 2,
     },

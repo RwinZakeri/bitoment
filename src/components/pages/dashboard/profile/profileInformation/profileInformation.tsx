@@ -53,7 +53,7 @@ const ProfileInformation = () => {
       reset({
         fullName: profileData.user.name || "",
         email: profileData.user.email || "",
-        
+
         phoneNumber: profileData.user.phoneNumber
           ? typeof profileData.user.phoneNumber === "string"
             ? profileData.user.phoneNumber
@@ -177,7 +177,7 @@ const ProfileInformation = () => {
             deleteCookie("token");
             router.push("/welcome");
           }}
-          icon={<LogoutIcon />}
+          icon={<LogoutIcon className="text-foreground" />}
           className="w-full mt-12"
           size="lg"
         >

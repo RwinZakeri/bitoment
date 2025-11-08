@@ -30,7 +30,9 @@ const LinkedCard = ({
           </p>
         </div>
         <LeftIcon
-          className={type === "crypto-link" ? "-rotate-90" : "rotate-180"}
+          className={`text-foreground ${
+            type === "crypto-link" ? "-rotate-90" : "rotate-180"
+          }`}
         />
       </Link>
     </div>

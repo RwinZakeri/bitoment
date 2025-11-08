@@ -79,7 +79,7 @@ const Wallet = () => {
               onClick={() => router.push("/wallet/cpg")}
               size="sm"
               className="px-2"
-              icon={<CpgIcon />}
+              icon={<CpgIcon className="text-foreground" />}
             >
               CPG
             </Button>

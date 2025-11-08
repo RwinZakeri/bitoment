@@ -19,37 +19,37 @@ export const profileItems: Array<profileItemsType> = [
     id: uuidv4(),
     text: "Profile Information",
     address: "/profile/profile-information",
-    icon: <UserProfileIcon />,
+    icon: <UserProfileIcon className="text-foreground" />,
   },
 
   {
     id: uuidv4(),
     text: "Verification",
     address: "/profile/verification",
-    icon: <FileCheckIcon />,
+    icon: <FileCheckIcon className="text-foreground" />,
   },
   {
     id: uuidv4(),
     text: "Security",
     address: "/profile/security",
-    icon: <FileLockIcon />,
+    icon: <FileLockIcon className="text-foreground" />,
   },
   {
     id: uuidv4(),
     text: "Settings",
     address: "/profile/setting",
-    icon: <SettingsIcon />,
+    icon: <SettingsIcon className="text-foreground" />,
   },
   {
     id: uuidv4(),
     text: "Help & Support",
     address: "/profile/setting",
-    icon: <HelpIcon />,
+    icon: <HelpIcon className="text-foreground" />,
   },
   {
     id: uuidv4(),
     text: "About Us",
     address: "/profile/about-us",
-    icon: <GridFrameIcon />,
+    icon: <GridFrameIcon className="text-foreground" />,
   },
 ];

@@ -10,7 +10,7 @@ interface LineChartIconProps {
 const LineChartIcon: React.FC<LineChartIconProps> = ({
   width = 24,
   height = 24,
-  color = "#000000",
+  color,
   className = "",
 }) => {
   return (
@@ -24,7 +24,7 @@ const LineChartIcon: React.FC<LineChartIconProps> = ({
     >
       <path
         d="M2.39999 2.40039V21.6004H21.6M7.19999 14.4005L11.4 10.2005L14.4 13.2005L19.8001 7.80039"
-        stroke={color}
+        stroke={color || "currentColor"}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

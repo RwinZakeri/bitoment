@@ -171,7 +171,7 @@ const Send = () => {
                   height={17}
                 />
               ) : (
-                <BtcIcon />
+                <BtcIcon className="text-foreground" />
               )
             }
             label="Select a coin"
@@ -214,7 +214,12 @@ const Send = () => {
 
         <div>
           <CustomeInput
-            icon={<QrIcon onClick={handleOpenScreener} />}
+            icon={
+              <QrIcon
+                onClick={handleOpenScreener}
+                className="text-foreground"
+              />
+            }
             placeholder="13agdGAFDe...3SmkjUYR"
             label="To"
             inputType="stroke"
@@ -238,7 +243,12 @@ const Send = () => {
 
         <div>
           <CustomeInput
-            icon={<CorrosIcon onClick={handleClearAmount} />}
+            icon={
+              <CorrosIcon
+                onClick={handleClearAmount}
+                className="text-foreground"
+              />
+            }
             placeholder="amount"
             label="Amount"
             inputType="stroke"

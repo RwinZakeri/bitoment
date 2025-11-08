@@ -128,7 +128,7 @@ const Receive = () => {
                   height={17}
                 />
               ) : (
-                <BtcIcon />
+                <BtcIcon className="text-foreground" />
               )
             }
             label="Select a coin"

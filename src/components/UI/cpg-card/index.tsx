@@ -53,14 +53,14 @@ const CpgCard = ({
           <div className="flex items-center gap-2">
             <div
               onClick={() => shareHandler && shareHandler()}
-              className="cursor-pointer hover:opacity-70 transition-opacity"
+              className="cursor-pointer hover:opacity-70 transition-opacity text-blue-500 dark:text-blue-400"
             >
               <ShareIcon />
             </div>
             {onDelete && (
               <div
                 onClick={handleDelete}
-                className="cursor-pointer hover:opacity-70 transition-opacity"
+                className="cursor-pointer hover:opacity-70 transition-opacity text-red-500 dark:text-red-400"
               >
                 <TrashIcon />
               </div>

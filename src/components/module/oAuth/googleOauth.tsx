@@ -22,7 +22,7 @@ const GoogleOAuth = ({
     <Button
       variant={variant}
       size={size}
-      icon={<GoogleIcon fill="black" className="size-6" />}
+      icon={<GoogleIcon className="size-6 text-foreground" />}
       className="w-full"
       onClick={onClick}
       disabled={disabled || isLoading}

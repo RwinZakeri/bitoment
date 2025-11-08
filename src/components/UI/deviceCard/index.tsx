@@ -12,9 +12,15 @@ export const titleAndDesc = ({
     <div>
       <p className="text-base font-bold">{title}</p>
       <div className="pt-3">
-        <p className="text-sm"><span className="font-semibold">OS :</span> {deviceName}</p>
-        <p className="text-sm"><span className="font-semibold">IP :</span> {cityConnection}</p>
-        <p className="text-sm"><span className="font-semibold">Broswer :</span> {browser}</p>
+        <p className="text-sm">
+          <span className="font-semibold">OS :</span> {deviceName}
+        </p>
+        <p className="text-sm">
+          <span className="font-semibold">IP :</span> {cityConnection}
+        </p>
+        <p className="text-sm">
+          <span className="font-semibold">Broswer :</span> {browser}
+        </p>
       </div>
 
       {!isLast && (
@@ -42,8 +48,10 @@ const DeviceCard = ({
         })}
 
         <div className="w-full text-center flex justify-center cursor-pointer  h-full items-center gap-2">
-          <XSquareContainedIcon />
-          <p className="text-sm w-fit text-red-500">Remove from other devices</p>
+          <XSquareContainedIcon className="text-red-500 dark:text-red-400" />
+          <p className="text-sm w-fit text-red-500">
+            Remove from other devices
+          </p>
         </div>
       </div>
     </div>

@@ -43,7 +43,7 @@ const FeaturesTab = () => {
   return (
     <div className="p-2 mt-4">
       <div className="w-full flex bg-white dark:bg-gray-200 justify-between rounded-2xl p-4">
-        <p className="text-sm w-64">
+        <p className="text-sm w-64 text-foreground">
           Smart investing in traditional markets and cryptocurrencies with a
           focus on maximizing returns and managing risk.
         </p>
@@ -100,7 +100,7 @@ const FeaturesTab = () => {
         />
       </div>
       <Paper
-        icon={<DocumentWithEyeIcon />}
+        icon={<DocumentWithEyeIcon className="text-foreground" />}
         className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
         label="Asset Allocation"
       >
@@ -111,7 +111,7 @@ const FeaturesTab = () => {
                 key={uuid()}
                 className="w-full text-center py-2 flex flex-col gap-2"
               >
-                <p className="text-base">Last Month</p>
+                <p className="text-base text-foreground">Last Month</p>
                 <p className="text-2xl font-semibold text-teal-500">+22.28%</p>
               </div>
             );
@@ -119,37 +119,43 @@ const FeaturesTab = () => {
         </div>
       </Paper>
       <Paper
-        icon={<LineChartIcon className="ml-2" />}
+        icon={<LineChartIcon className="ml-2 text-foreground" />}
         className="bg-white dark:bg-gray-200 p-2 rounded-2xl mt-4"
         label="Fund Performance Chart"
       >
         <div className="mt-4 flex-col flex gap-4">
-          <div className="flex justify-between border-b-[1px] border-gray-300 ">
-            <p className="text-xs">Fund Type :</p>{" "}
-            <p className="text-gray-400 text-xs">Active</p>
+          <div className="flex justify-between border-b-[1px] border-gray-300 dark:border-gray-600 ">
+            <p className="text-xs text-foreground">Fund Type :</p>{" "}
+            <p className="text-gray-500 dark:text-gray-400 text-xs">Active</p>
           </div>
 
-          <div className="flex justify-between border-b-[1px] border-gray-300 ">
-            <p className="text-xs">Fund Performance Fee :</p>{" "}
-            <p className="text-gray-400 text-xs"> 20%</p>
+          <div className="flex justify-between border-b-[1px] border-gray-300 dark:border-gray-600 ">
+            <p className="text-xs text-foreground">Fund Performance Fee :</p>{" "}
+            <p className="text-gray-500 dark:text-gray-400 text-xs"> 20%</p>
           </div>
-          <div className="flex justify-between border-b-[1px] border-gray-300 ">
-            <p className="text-xs">Risk Level: :</p>{" "}
-            <p className="text-gray-400 text-xs">High Risk</p>
+          <div className="flex justify-between border-b-[1px] border-gray-300 dark:border-gray-600 ">
+            <p className="text-xs text-foreground">Risk Level: :</p>{" "}
+            <p className="text-gray-500 dark:text-gray-400 text-xs">
+              High Risk
+            </p>
           </div>
-          <div className="flex justify-between border-b-[1px] border-gray-300 ">
-            <p className="text-xs">Establishment Date :</p>{" "}
-            <p className="text-gray-400 text-xs">1401/12/20 - 10:00</p>
+          <div className="flex justify-between border-b-[1px] border-gray-300 dark:border-gray-600 ">
+            <p className="text-xs text-foreground">Establishment Date :</p>{" "}
+            <p className="text-gray-500 dark:text-gray-400 text-xs">
+              1401/12/20 - 10:00
+            </p>
           </div>
-          <div className="flex justify-between border-b-[1px] border-gray-300 ">
-            <p className="text-xs">Minimum Investment Amount :</p>{" "}
-            <p className={`text-xs`}>ssss</p>
+          <div className="flex justify-between border-b-[1px] border-gray-300 dark:border-gray-600 ">
+            <p className="text-xs text-foreground">
+              Minimum Investment Amount :
+            </p>{" "}
+            <p className="text-xs text-foreground">ssss</p>
           </div>
         </div>
       </Paper>
 
       <Paper
-        icon={<WindowIcon />}
+        icon={<WindowIcon className="text-foreground" />}
         className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
         label="Asset Allocation"
       >
@@ -158,9 +164,9 @@ const FeaturesTab = () => {
         </div>
       </Paper>
       <Paper
-        className="mt-4 bg-white rounded-2xl p-4"
+        className="mt-4 bg-white dark:bg-gray-200 rounded-2xl p-4"
         label="Capital Growth Estimate"
-        icon={<ChartFrameIcon />}
+        icon={<ChartFrameIcon className="text-foreground" />}
       >
         <div className="mt-4">
           <CustomeInput
@@ -183,7 +189,7 @@ const FeaturesTab = () => {
           </div>
           <div className="mt-6">
             <Rank
-              icon={<AwardIcon />}
+              icon={<AwardIcon className="text-foreground" />}
               percentage={currentPercentage}
               currency={currency}
               label={`Asset Value After ${currentDurationLabel}:`}
@@ -195,18 +201,18 @@ const FeaturesTab = () => {
       <Paper
         label="Documentation"
         className="bg-white dark:bg-gray-200 rounded-2xl p-4 mt-4"
-        icon={<DocumentIcon />}
+        icon={<DocumentIcon className="text-foreground" />}
       >
         <div className="flex flex-col gap-4">
-          <p className="my-6 text-gray-500">
+          <p className="my-6 text-gray-500 dark:text-gray-400">
             Investments in cryptocurrencies with high market value and strong
             history.
           </p>
-          <p className="mb-6 text-gray-500">
+          <p className="mb-6 text-gray-500 dark:text-gray-400">
             More stable returns, though generally lower compared to high-risk
             options.
           </p>
-          <p className="mb-6 text-gray-500">
+          <p className="mb-6 text-gray-500 dark:text-gray-400">
             Lower interest rates but carry less risk than other
             cryptocurrencies.
           </p>
@@ -215,7 +221,7 @@ const FeaturesTab = () => {
         <Button
           size="sm"
           variant="outline-dark"
-          className="w-9/12 w-full mx-auto"
+          className="w-full mx-auto"
         >
           <p>Learn More</p>
         </Button>
