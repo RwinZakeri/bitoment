@@ -9,6 +9,7 @@ import CurrencyProgressCard from "@/components/UI/currency-progress-card";
 import Paper from "@/components/UI/paper";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
+import { useCurrency } from "@/context/currencyContext";
 import {
   formatCurrency,
   generateRandomPercentage,
@@ -22,6 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const Wallet = () => {
+  const { currency } = useCurrency();
   const { data: walletData, isLoading: walletLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletBalance],
     queryFn: async () => {
@@ -68,7 +70,6 @@ const Wallet = () => {
 
   return (
     <PageLayout title="My Wallet" className="px-5">
-
       <Paper className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-gray-100">
         <TotalPrice
           labelPosition="top"

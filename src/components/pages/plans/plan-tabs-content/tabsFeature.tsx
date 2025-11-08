@@ -6,6 +6,7 @@ import Paper from "@/components/UI/paper";
 import Rank from "@/components/UI/rank";
 import Stepper from "@/components/UI/stepper";
 import TransformButton from "@/components/UI/transform-button";
+import { useCurrency } from "@/context/currencyContext";
 import {
   assetAllocationData,
   durationLabels,
@@ -20,10 +21,11 @@ import LineChartIcon from "@/public/icons/LineChartIcon";
 import WindowIcon from "@/public/icons/WindowIcon";
 import twoWomanOneBitcoin from "@/public/svgs/twoWomanOneBitcoin.svg";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { v4 as uuid } from "uuid";
 const FeaturesTab = () => {
+  const { currency } = useCurrency();
   const [selectedStep, setSelectedStep] = useState<number>(0);
   const [price, setPrice] = useState<string>("");
   const router = useRouter();
@@ -183,7 +185,7 @@ const FeaturesTab = () => {
             <Rank
               icon={<AwardIcon />}
               percentage={currentPercentage}
-              currency={"USDT"}
+              currency={currency}
               label={`Asset Value After ${currentDurationLabel}:`}
               amount={calculatedAmount}
             />

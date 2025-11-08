@@ -3,6 +3,7 @@ import CustomeInput from "@/components/UI/CustomeInput";
 import Paper from "@/components/UI/paper";
 import ToggleButton from "@/components/UI/toggle-buttom";
 import axios from "@/config/axios.config";
+import { useCurrency } from "@/context/currencyContext";
 import { handleCopyAddress } from "@/lib/utils";
 import InfoIcon from "@/public/icons/InfoIcon";
 import { GetPublicCpgLinkResponse } from "@/types/auth";
@@ -14,6 +15,7 @@ import { useMemo, useState } from "react";
 import { CpgSinglePropsType } from "./type";
 
 const PaymentSingle = ({ id }: CpgSinglePropsType) => {
+  const { currency } = useCurrency();
   const [selectedOption, setSelectedOption] = useState("Address");
 
   const { data, isLoading, isError } = useQuery({
@@ -28,7 +30,6 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
     enabled: !!id,
   });
 
-  // Generate a random wallet address (you can replace this with actual address from API)
   const walletAddress = useMemo(() => {
     if (!data?.link?.link_id) return "";
     const chars =
@@ -41,25 +42,28 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
     return address;
   }, [data?.link]);
 
-  // Calculate amount with fee (you can adjust this logic)
   const amountWithFee = useMemo(() => {
     if (!data?.link?.price) return "0.00";
     const price = Number(data.link.price);
-    const fee = price * 0.00072; // Example fee calculation
+    const fee = price * 0.00072;
     return (price + fee).toFixed(8);
   }, [data?.link?.price]);
 
-  // QR code value based on selected option
   const qrCodeValue = useMemo(() => {
     if (selectedOption === "Address") {
       return walletAddress;
     } else {
-      // With Value - create a payment URI format
       return `${walletAddress}?amount=${data?.link?.price || 0}&currency=${
-        data?.link?.currency || "USDT"
+        data?.link?.currency || currency
       }`;
     }
-  }, [selectedOption, walletAddress, data?.link?.price, data?.link?.currency]);
+  }, [
+    selectedOption,
+    walletAddress,
+    data?.link?.price,
+    data?.link?.currency,
+    currency,
+  ]);
 
   if (isLoading) {
     return (
@@ -100,7 +104,7 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
   }
 
   const link = data.link;
-  const currency = link.currency || "USDT";
+  const displayCurrency = link.currency || currency;
   const price = Number(link.price).toFixed(2);
 
   return (
@@ -119,21 +123,23 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
             </div>
             <div>
               <p className="text-3xl font-bold">
-                {price} {currency}
+                {price} {displayCurrency}
               </p>
             </div>
           </div>
 
           <div className="px-3 bg-white rounded-b-lg">
             <div className="flex gap-3 flex-col">
-              <p className="text-xl font-semibold">{currency} • (TRC20)</p>
+              <p className="text-xl font-semibold">
+                {displayCurrency} • (TRC20)
+              </p>
               <CustomeInput
                 disabled
                 variant="secondary"
                 label="Amount"
                 inputType="stroke"
                 size={"sm"}
-                value={`${amountWithFee} TRC20_${currency}`}
+                value={`${amountWithFee} TRC20_${displayCurrency}`}
                 icon={
                   <button onClick={() => handleCopyAddress(amountWithFee)}>
                     <Image
@@ -165,7 +171,7 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
                   }
                 />
                 <p className="text-[10px] mt-1.5 font-extralight">
-                  Min Transaction Amount • 10 {currency} (TRC20)
+                  Min Transaction Amount • 10 {displayCurrency} (TRC20)
                 </p>
               </div>
               <div className="flex items-center justify-center py-6">

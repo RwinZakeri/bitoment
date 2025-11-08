@@ -1,3 +1,4 @@
+import { useCurrency } from "@/context/currencyContext";
 import Image from "next/image";
 import Link from "next/link";
 import CircleProgressBar from "../circle-progress-bar";
@@ -10,6 +11,7 @@ const CurrencyProgressCard = ({
   progress,
   vertical,
 }: CurrencyProgressCardPropsType) => {
+  const { currency } = useCurrency();
   console.log(icon);
 
   return (
@@ -42,7 +44,7 @@ const CurrencyProgressCard = ({
         </div>
         <p className="flex items-center gap-1">
           <span className="text-black text-base">{price}</span>
-          <span className="text-gray-800/65 text-sm">USDT</span>
+          <span className="text-gray-800/65 text-sm">{currency}</span>
         </p>
       </div>
       <CircleProgressBar

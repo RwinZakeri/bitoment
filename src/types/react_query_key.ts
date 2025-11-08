@@ -27,6 +27,8 @@ const ReactQueryKey = {
 
   // swap
   swapHistory: "swapHistory",
+
+  currency : "currency"
 } as const;
 
 export default ReactQueryKey;

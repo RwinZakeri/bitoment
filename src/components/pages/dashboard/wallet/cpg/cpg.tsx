@@ -5,6 +5,7 @@ import CpgCard from "@/components/UI/cpg-card";
 import Modal from "@/components/UI/modal";
 import VerifyInput from "@/components/UI/verify-input";
 import axios from "@/config/axios.config";
+import { useCurrency } from "@/context/currencyContext";
 import CopyRightIcon from "@/public/icons/CopyRightIcon";
 import SearchIcon from "@/public/icons/SearchIcon";
 import { CpgLink, GetCpgLinksResponse } from "@/types/auth";
@@ -15,6 +16,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 const Cpg = () => {
+  const { currency } = useCurrency();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,7 +46,6 @@ const Cpg = () => {
         const chars =
           "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let address = "";
-        // Generate a random address between 26-35 characters (typical crypto address length)
         const length = Math.floor(Math.random() * 10) + 26;
         for (let i = 0; i < length; i++) {
           address += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -271,14 +272,14 @@ const Cpg = () => {
                   <p className="text-xs">Price :</p>
                   <p className="text-xs">
                     {share?.price ? Number(share.price).toFixed(1) : "0.0"}{" "}
-                    {share?.currency || "USDT"}
+                    {share?.currency || currency}
                   </p>
                 </div>
                 <div className="flex gap-2">
                   <p className="text-xs">Amount :</p>
                   <p className="text-xs">
                     {share?.price ? Number(share.price).toFixed(1) : "0.0"}{" "}
-                    {share?.currency || "USDT"}
+                    {share?.currency || currency}
                   </p>
                   <span className="px-1 bg-[#BE0000] text-xs text-white rounded-sm">
                     TRX

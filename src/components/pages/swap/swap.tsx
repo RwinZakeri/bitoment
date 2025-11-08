@@ -6,6 +6,7 @@ import Button from "@/components/UI/button";
 import CustomeInput from "@/components/UI/CustomeInput";
 import Modal from "@/components/UI/modal";
 import SwapCard from "@/components/UI/swap-card";
+import { useCurrency } from "@/context/currencyContext";
 import SuccessTickIcon from "@/public/icons/SuccessTickIcon";
 import SwapIcon from "@/public/icons/SwapIcon";
 import Image from "next/image";
@@ -13,6 +14,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const Swap = () => {
+  const { currency } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
@@ -174,7 +176,7 @@ const Swap = () => {
       </div>
       <CustomeInput
         className="mt-7"
-        placeholder="638,532.21 USDT"
+        placeholder={`638,532.21 ${currency}`}
         label="Available Portfolio"
         inputType="stroke"
       />
@@ -196,7 +198,11 @@ const Swap = () => {
       </Button>
 
       {/* Confirmation Modal */}
-      <Modal className="rounded-xl" isOpen={isConfirmModalOpen} onClose={handleCloseConfirmModal}>
+      <Modal
+        className="rounded-xl"
+        isOpen={isConfirmModalOpen}
+        onClose={handleCloseConfirmModal}
+      >
         <div className="flex flex-col space-y-6 p-2">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">Confirm Swap</h2>

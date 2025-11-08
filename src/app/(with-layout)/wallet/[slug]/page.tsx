@@ -6,6 +6,7 @@ import CryptoCard from "@/components/UI/crypto-card";
 import CryptoCredit from "@/components/UI/crypto-credit";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
+import { useCurrency } from "@/context/currencyContext";
 import {
   aliasMap,
   formatCurrency,
@@ -24,6 +25,7 @@ export default function CryptoSlugPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const { currency } = useCurrency();
   const { slug } = use(params);
 
   const { data: assetData, isLoading: assetLoading } = useQuery({
@@ -101,8 +103,8 @@ export default function CryptoSlugPage({
       <div className="mt-6">
         <CryptoCredit
           label={`${currentAsset.name.toUpperCase()} Balance`}
-          price={formatCurrency(walletBalance)}
-          priceLabel={currentAsset.name.toUpperCase()}
+          price={formatCurrency(walletBalance, currency)}
+          priceLabel={currency}
           amount={`${percentageChange.toFixed(2)}%`}
           icon={getAssetIcon(currentAsset)}
         />

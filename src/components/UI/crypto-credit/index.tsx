@@ -1,16 +1,19 @@
+import { useCurrency } from "@/context/currencyContext";
 import UpArrowCreditIcon from "@/public/icons/UpArrowCreditIcon";
 import { CryptoCreditPropsType } from "./type";
 
 const CryptoCredit = ({
   label,
   price,
-  priceLabel = "USDT",
+  priceLabel,
   icon,
   amount,
   color = "#C4E4D3",
   type,
   clickHandler,
 }: CryptoCreditPropsType) => {
+  const { currency } = useCurrency();
+  const displayCurrency = priceLabel || currency;
   return (
     <div
       onClick={() => type === "link" && clickHandler && clickHandler()}
@@ -22,7 +25,7 @@ const CryptoCredit = ({
           <p className="text-gray-500 text-base">{label}</p>
           <div className="flex gap-1">
             <p className="text-4xl">{price}</p>
-            <p className="text-2xl self-end text-gray-500">{priceLabel}</p>
+            <p className="text-2xl self-end text-gray-500">{displayCurrency}</p>
           </div>
         </div>
         <p className="flex items-center gap-1">

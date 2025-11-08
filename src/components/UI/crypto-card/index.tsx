@@ -1,3 +1,5 @@
+import { useCurrency } from "@/context/currencyContext";
+import { formatCurrency } from "@/lib/utils";
 import Down from "@/public/svgs/arrow-down-red.svg";
 import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import Link from "@/public/svgs/link.svg";
@@ -15,6 +17,18 @@ const CryptoCard = ({
   riskLevel,
   cryptoName,
 }: CryptoCardPropsType) => {
+  const { currency } = useCurrency();
+  const formatPrice = (price: number | string) => {
+    if (typeof price === "number") {
+      return formatCurrency(price, currency);
+    }
+    // If price is already a formatted string, try to extract number and format
+    const numPrice = parseFloat(String(price).replace(/[^0-9.-]/g, ""));
+    if (!isNaN(numPrice)) {
+      return formatCurrency(numPrice, currency);
+    }
+    return price;
+  };
   return (
     <div className="w-full cursor-pointer bg-white flex items-center justify-between rounded-lg p-3">
       <div className="flex gap-2.5 items-center">
@@ -57,7 +71,7 @@ const CryptoCard = ({
             <p className="text-gray-500 text-xs">{label}</p>
           ) : cardType !== "asset" ? (
             <div className="flex flex-col items-center gap-1">
-              <p className="text-black text-xs">+${price}</p>
+              <p className="text-black text-xs">+{formatPrice(price)}</p>
               <p className="text-gray-500 text-xs">{amount}</p>
             </div>
           ) : null}
@@ -95,7 +109,7 @@ const CryptoCard = ({
               : type === "cpg"
               ? "+"
               : ""}
-            ${price}
+            {formatPrice(price)}
           </p>
           <p
             className={`text-gray-500 ${

@@ -47,6 +47,9 @@ export interface User {
   phoneNumber?: string;
   nationalInsuranceNumber?: string;
   birthDate?: string;
+  currency?: string;
+  theme?: string;
+  language?: string;
   created_at: string;
 }
 

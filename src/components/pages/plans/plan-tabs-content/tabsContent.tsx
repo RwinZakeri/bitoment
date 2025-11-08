@@ -7,6 +7,7 @@ import Paper from "@/components/UI/paper";
 import Rank from "@/components/UI/rank";
 import Stepper from "@/components/UI/stepper";
 import TransformButton from "@/components/UI/transform-button";
+import { useCurrency } from "@/context/currencyContext";
 import {
   assetAllocationData,
   chartData,
@@ -27,6 +28,7 @@ import toast from "react-hot-toast";
 import { palnFeatures } from "./type";
 
 const PerformanceTab = () => {
+  const { currency } = useCurrency();
   const [selectedStep, setSelectedStep] = useState<number>(0);
   const [price, setPrice] = useState<string>("");
   const router = useRouter();
@@ -52,9 +54,9 @@ const PerformanceTab = () => {
     toast.success(
       `Investment Details:\nAmount: ${priceValue.toFixed(
         2
-      )} USDT\nDuration: ${currentDurationLabel}\nReturn: ${currentPercentage}%\nFinal Value: ${calculatedAmount.toFixed(
+      )} ${currency}\nDuration: ${currentDurationLabel}\nReturn: ${currentPercentage}%\nFinal Value: ${calculatedAmount.toFixed(
         2
-      )} USDT`,
+      )} ${currency}`,
       {
         duration: 5000,
         style: {
@@ -184,7 +186,7 @@ const PerformanceTab = () => {
             <Rank
               icon={<AwardIcon />}
               percentage={currentPercentage}
-              currency={"USDT"}
+              currency={currency}
               label={`Asset Value After ${currentDurationLabel}:`}
               amount={calculatedAmount}
             />

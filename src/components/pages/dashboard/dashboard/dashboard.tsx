@@ -9,7 +9,12 @@ import Paper from "@/components/UI/paper";
 import PlanCard from "@/components/UI/plan-card";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
-import { chartData, generateRandomPercentage } from "@/lib/utils";
+import { useCurrency } from "@/context/currencyContext";
+import {
+  chartData,
+  formatCurrency,
+  generateRandomPercentage,
+} from "@/lib/utils";
 import AddIcon from "@/public/icons/AddIcon";
 import CircularProgressIcon from "@/public/icons/CircularProgressIcon";
 import CylinderIcon from "@/public/icons/CylinderIcon";
@@ -21,19 +26,8 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-function formatCurrency(value: number): string {
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: "decimal",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  } catch {
-    return value.toFixed(2);
-  }
-}
-
 const Dashboard = () => {
+  const { currency } = useCurrency();
   const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletBalance],
@@ -69,7 +63,7 @@ const Dashboard = () => {
               Add
             </Button>
           }
-          totalPrice={formatCurrency((data?.wallet?.balance as number) || 0)}
+          totalPrice={formatCurrency(Number(data?.wallet?.balance))}
           className="flex-col-reverse"
           percentageColor={
             percentageChange < 0 ? "text-red-500" : "text-cyan-600"

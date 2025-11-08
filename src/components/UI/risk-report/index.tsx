@@ -1,4 +1,5 @@
-import { cn } from "@/lib/utils";
+import { useCurrency } from "@/context/currencyContext";
+import { cn, formatCurrency } from "@/lib/utils";
 import Down from "@/public/svgs/arrow-down-red.svg";
 import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import Link from "@/public/svgs/link.svg";
@@ -15,6 +16,18 @@ const RiskReportCard = ({
   riskLevel,
   assetAmount,
 }: RiskReportPropsType) => {
+  const { currency } = useCurrency();
+  const formatPrice = (price: number | string) => {
+    if (typeof price === "number") {
+      return formatCurrency(price, currency);
+    }
+    // If price is already a formatted string, try to extract number and format
+    const numPrice = parseFloat(String(price).replace(/[^0-9.-]/g, ""));
+    if (!isNaN(numPrice)) {
+      return formatCurrency(numPrice, currency);
+    }
+    return price;
+  };
   return (
     <div className="p-3 w-full cursor-pointer bg-white flex items-center justify-between rounded-lg">
       <div className="flex items-center-safe gap-2">
@@ -63,7 +76,7 @@ const RiskReportCard = ({
               : type === "link"
               ? "+"
               : ""}
-            ${price}
+            {formatPrice(price)}
           </p>
           <p className="text-sm text-gray-400 ">
             {assetAmount} {title}

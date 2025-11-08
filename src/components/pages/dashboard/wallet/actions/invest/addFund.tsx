@@ -3,6 +3,7 @@
 import Button from "@/components/UI/button";
 import CustomeInput from "@/components/UI/CustomeInput";
 import axios from "@/config/axios.config";
+import { useCurrency } from "@/context/currencyContext";
 import { AddMoneyRequest, AddMoneyResponse } from "@/types/auth";
 import MutationKey from "@/types/mutation_key";
 import ReactQueryKey from "@/types/react_query_key";
@@ -23,11 +24,13 @@ import {
 const AddFund = ({
   showCardForm = true,
   buttonText = "Pay Now",
-  amountPlaceholder = "100.00 USD",
+  amountPlaceholder,
   amountLabel = "Investment Amount",
   onSuccess,
   onError,
 }: AddFundProps) => {
+  const { currency } = useCurrency();
+  const defaultPlaceholder = amountPlaceholder || `100.00 ${currency}`;
   const queryClient = useQueryClient();
 
   const {
@@ -189,7 +192,7 @@ const AddFund = ({
       )}
 
       <CustomeInput
-        placeholder={amountPlaceholder}
+        placeholder={defaultPlaceholder}
         label={amountLabel}
         inputType="stroke"
         type="number"

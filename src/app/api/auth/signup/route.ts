@@ -111,11 +111,18 @@ export async function POST(
     // Use a transaction to ensure atomicity
     const userId = await db.transactionAsync(async (txDb) => {
       const insertUser = txDb.prepare(`
-        INSERT INTO users (email, password, name, created_at)
-        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+        INSERT INTO users (email, password, name, currency, theme, language, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       `);
 
-      const result = await insertUser.run(email, hashedPassword, fullName);
+      const result = await insertUser.run(
+        email,
+        hashedPassword,
+        fullName,
+        "USD",
+        "light",
+        "en"
+      );
       const userId = result.lastInsertRowid as number;
 
       // Create wallet for the new user with initial balance of 1000

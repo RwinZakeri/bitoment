@@ -1,10 +1,10 @@
+import { useCurrency } from "@/context/currencyContext";
 import { cn } from "@/lib/utils";
 import PositiveFlashIcon from "@/public/icons/PositiveFlashIcon";
 import { totalPriceType } from "./type";
 
 const TotalPrice = ({
   totalPrice,
-  currency = "USDT",
   className,
   button,
   amount,
@@ -14,6 +14,8 @@ const TotalPrice = ({
   iconColor,
   iconRotation,
 }: totalPriceType) => {
+  const { currency } = useCurrency();
+
   return (
     <div className="flex justify-between w-full">
       <div className="flex flex-col gap-2">
@@ -49,7 +51,8 @@ const TotalPrice = ({
                 )}
               >
                 {amount > 0 ? "+" : ""}
-                {String(amount).split(".")[0]  }.{String(amount).split(".")[1].substring(0,1)} %
+                {String(amount).split(".")[0]}.
+                {String(amount).split(".")[1].substring(0, 1)} %
               </span>
             </>
           )}

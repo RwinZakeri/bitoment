@@ -179,9 +179,6 @@ const Popup = ({
             )}
             role="menuitem"
           >
-            {option.icon && (
-              <span className="flex items-center">{option.icon}</span>
-            )}
             <span className="flex items-center gap-2">
               <Image
                 src={option.icon || ""}

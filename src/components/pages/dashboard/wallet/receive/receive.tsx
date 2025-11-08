@@ -6,6 +6,7 @@ import Alert from "@/components/UI/alert";
 import AutoComplete from "@/components/UI/auto-complete";
 import Button from "@/components/UI/button";
 import CryptoAssets from "@/components/UI/crypto-assets";
+import { useCurrency } from "@/context/currencyContext";
 import { handleCopyAddress } from "@/lib/utils";
 import BtcIcon from "@/public/icons/BtcIcon";
 import {
@@ -15,10 +16,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Receive = () => {
+  const { currency } = useCurrency();
   const {
     formState: { errors },
     setValue,
@@ -34,17 +36,48 @@ const Receive = () => {
   });
 
   const watchedCrypto = watch("selectedCrypto");
+  const watchedNetwork = watch("blockchainNetwork");
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
 
   const blockchainNetworks = ["TRC20", "ERC20", "BEP20", "SOL"];
+
+  const networkInfo = useMemo(() => {
+    const network = watchedNetwork || "TRC20";
+    const crypto = watchedCrypto?.shortName || currency;
+
+    const networkNames: Record<string, string> = {
+      TRC20: "TRX (TRC20)",
+      ERC20: "ETH (ERC20)",
+      BEP20: "BNB (BEP20)",
+      SOL: "SOL",
+    };
+
+    const minDeposits: Record<string, Record<string, string>> = {
+      TRC20: { USDT: "0.001", default: "0.001" },
+      ERC20: { USDT: "0.001", ETH: "0.001", default: "0.001" },
+      BEP20: { USDT: "0.001", BNB: "0.001", default: "0.001" },
+      SOL: { SOL: "0.01", USDT: "0.001", default: "0.01" },
+    };
+
+    const networkName = networkNames[network] || network;
+    const minAmount =
+      minDeposits[network]?.[crypto] ||
+      minDeposits[network]?.default ||
+      "0.001";
+
+    return {
+      networkName,
+      minAmount,
+      crypto,
+    };
+  }, [watchedNetwork, watchedCrypto]);
 
   useEffect(() => {
     const generateRandomAddress = () => {
       const chars =
         "`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`";
       let address = "";
-      // Generate a random address between 26-35 characters (typical crypto address length)
       const length = Math.floor(Math.random() * 10) + 26;
       for (let i = 0; i < length; i++) {
         address += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -117,10 +150,16 @@ const Receive = () => {
           list={blockchainNetworks}
           label={"Blockchain Network"}
         />
+        {errors.blockchainNetwork && (
+          <span className="text-red-500 text-sm mt-1 block">
+            {errors.blockchainNetwork.message}
+          </span>
+        )}
 
         <Alert>
           <p className="text-sm">
-            The minimum deposit amount on TRX (TRC20) in Bitoment is 0.001 USDT.
+            The minimum deposit amount on {networkInfo.networkName} in Bitoment
+            is {networkInfo.minAmount} {networkInfo.crypto}.
           </p>
         </Alert>
 

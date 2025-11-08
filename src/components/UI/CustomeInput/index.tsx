@@ -53,7 +53,7 @@ const CustomeInput = ({
           type={type}
           placeholder={placeholder}
           className={cn(
-            sizes[size],
+            inputType !== "fill" && sizes[size],
             "border-none w-full placeholder:text-gray-500 focus:outline-none ",
             inputType !== "fill" && "rounded-xl",
             variant === "secondary" ? "bg-gray-200" : "bg-white",

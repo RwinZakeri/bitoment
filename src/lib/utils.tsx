@@ -55,8 +55,16 @@ export const getCryptoIcon = (name: string) => {
   }
 };
 
-export function formatCurrency(value: number): string {
+export function formatCurrency(value: number, currency?: string): string {
   try {
+    if (currency) {
+      return new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    }
     return new Intl.NumberFormat(undefined, {
       style: "decimal",
       minimumFractionDigits: 2,
@@ -193,7 +201,6 @@ export const assetAllocationData = {
     },
   ],
 };
-
 
 export const handleCopyAddress = async (text: string) => {
   try {

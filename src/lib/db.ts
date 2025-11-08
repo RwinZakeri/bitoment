@@ -15,19 +15,22 @@ async function initializeDatabase() {
   try {
     // Create users table
     await sql`
-  CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT,
-        name TEXT,
-        phoneNumber TEXT,
-        nationalInsuranceNumber TEXT,
-        birthDate TEXT,
-        oauth_provider TEXT,
-        oauth_id TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT,
+      name TEXT,
+      phoneNumber TEXT,
+      nationalInsuranceNumber TEXT,
+      birthDate TEXT,
+      oauth_provider TEXT,
+      oauth_id TEXT,
+      currency TEXT, 
+      theme TEXT, 
+      language TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
 
     // Migrate phoneNumber from INTEGER to TEXT if needed (for existing databases)
     // This allows phone numbers that exceed INTEGER max value (2,147,483,647)

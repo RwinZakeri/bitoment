@@ -8,6 +8,7 @@ import Checkbox from "@/components/UI/checkbox";
 import CryptoAssets from "@/components/UI/crypto-assets";
 import CustomeInput from "@/components/UI/CustomeInput";
 import axios from "@/config/axios.config";
+import { useCurrency } from "@/context/currencyContext";
 import BtcIcon from "@/public/icons/BtcIcon";
 import CorrosIcon from "@/public/icons/CorrosIcon";
 import { LinkCpgFormData, linkCpgSchema } from "@/schema/wallet/linkCpgSchema";
@@ -21,6 +22,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const LinkCpg = () => {
+  const { currency } = useCurrency();
   const {
     register,
     handleSubmit,
@@ -60,7 +62,7 @@ const LinkCpg = () => {
       const response = await axios.post<CreateCpgLinkResponse>("/wallet/cpg", {
         order_id: data.orderId || undefined,
         price: parseFloat(data.price),
-        currency: data.selectedCrypto?.shortName.toUpperCase() || "USDT",
+        currency: data.selectedCrypto?.shortName.toUpperCase() || currency,
         status: "active" as const,
       });
 
@@ -164,7 +166,11 @@ const LinkCpg = () => {
 
         <div>
           <CustomeInput
-            icon={<p className="text-sm font-medium">USDT</p>}
+            icon={
+              <p className="text-sm font-medium">
+                {watchedCrypto?.shortName || currency}
+              </p>
+            }
             placeholder="0.00"
             label="Price"
             inputType="stroke"

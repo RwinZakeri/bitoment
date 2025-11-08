@@ -2,6 +2,7 @@
 import Button from "@/components/UI/button";
 import CustomeInput from "@/components/UI/CustomeInput";
 import Stepper from "@/components/UI/stepper";
+import { useCurrency } from "@/context/currencyContext";
 import { payFromWalletSchema } from "@/schema/wallet/invest/investSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -10,12 +11,14 @@ import toast from "react-hot-toast";
 import { PayFromWalletFormData, PayFromWalletProps } from "./types";
 
 const PayFromWallet = ({
-  amountPlaceholder = "100.00 USDT",
+  amountPlaceholder,
   amountLabel = "Investment Amount",
   buttonText = "Add Plan",
   stepperSteps = ["0%", "25%", "50%", "75%", "100%"],
   passedSteps = 5,
 }: PayFromWalletProps) => {
+  const { currency } = useCurrency();
+  const defaultPlaceholder = amountPlaceholder || `100.00 ${currency}`;
   const {
     register,
     handleSubmit,
@@ -46,7 +49,7 @@ const PayFromWallet = ({
     const amount = data.amount || "0.00";
 
     toast.success(
-      `Investment Details:\nAmount: ${amount} USDT\nPercentage: ${selectedStepLabel}`,
+      `Investment Details:\nAmount: ${amount} ${currency}\nPercentage: ${selectedStepLabel}`,
       {
         duration: 5000,
         style: {
@@ -68,7 +71,7 @@ const PayFromWallet = ({
     >
       <div>
         <CustomeInput
-          placeholder={amountPlaceholder}
+          placeholder={defaultPlaceholder}
           label={amountLabel}
           inputType="stroke"
           type="number"

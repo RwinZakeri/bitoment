@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const user = (await db
       .prepare(
         `
-      SELECT id, email, phoneNumber, name, nationalInsuranceNumber, birthDate, created_at 
+      SELECT id, email, phoneNumber, name, nationalInsuranceNumber, birthDate, currency, theme, language, created_at 
       FROM users 
       WHERE id = ?
     `
@@ -235,7 +235,7 @@ export async function PUT(request: NextRequest) {
 
     const user = (await db
       .prepare(
-        `SELECT id, email, name, phoneNumber, nationalInsuranceNumber, birthDate, created_at 
+        `SELECT id, email, name, phoneNumber, nationalInsuranceNumber, birthDate, currency, theme, language, created_at 
          FROM users 
          WHERE id = ?`
       )
