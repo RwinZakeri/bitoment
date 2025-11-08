@@ -9,7 +9,6 @@ import Paper from "@/components/UI/paper";
 import PlanCard from "@/components/UI/plan-card";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
-import { useCurrency } from "@/context/currencyContext";
 import {
   chartData,
   formatCurrency,
@@ -27,7 +26,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
-  const { currency } = useCurrency();
   const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletBalance],

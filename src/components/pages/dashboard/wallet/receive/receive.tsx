@@ -71,7 +71,7 @@ const Receive = () => {
       minAmount,
       crypto,
     };
-  }, [watchedNetwork, watchedCrypto]);
+  }, [watchedNetwork, watchedCrypto, currency]);
 
   useEffect(() => {
     const generateRandomAddress = () => {

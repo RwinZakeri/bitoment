@@ -72,7 +72,7 @@ const LinkCpg = () => {
 
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Payment link created successfully!");
     },
     onError: (error: unknown) => {

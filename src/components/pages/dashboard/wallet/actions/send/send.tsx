@@ -122,7 +122,7 @@ const Send = () => {
     trigger("blockchainNetwork");
   };
 
-  const onSubmit = async (data: SendCryptoFormData) => {
+  const onSubmit = async (_data: SendCryptoFormData) => {
     try {
       setIsSuccessModalOpen(true);
     } catch (error) {

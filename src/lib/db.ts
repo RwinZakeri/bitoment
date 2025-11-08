@@ -232,7 +232,7 @@ async function forcePhoneNumberMigration() {
             ALTER COLUMN phoneNumber TYPE TEXT 
             USING COALESCE(phoneNumber::TEXT, '')
           `);
-        } catch (e) {}
+        } catch {}
       }
     }
   } catch (error: unknown) {
