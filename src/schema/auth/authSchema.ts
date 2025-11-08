@@ -46,7 +46,7 @@ export const signInSchema = z.object({
     ),
 });
 
-// Custom error messages for different scenarios
+
 export const customErrorMessages = {
   networkError: "Network error. Please check your connection and try again.",
   serverError: "Server error. Please try again later.",

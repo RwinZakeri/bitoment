@@ -45,9 +45,4 @@ const Stepper = ({ passedSteps, steps, onStepClick }: StepperPropsType) => {
 
 export default Stepper;
 
-/*
 
-step index
-4      4
-
-*/

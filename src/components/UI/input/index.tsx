@@ -48,7 +48,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-0 bottom-2 w-7 h-7 bg-white flex items-center justify-center cursor-pointer"
+              className="absolute right-0 bottom-2 w-7 h-7 bg-white dark:bg-gray-200 flex items-center justify-center cursor-pointer"
             >
               {showPassword ? (
                 <EyeOffIcon className="size-6" />
@@ -58,7 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </button>
           ) : (
             icon && (
-              <div className="absolute right-0 bottom-2 w-7 h-7 bg-white">
+              <div className="absolute right-0 bottom-2 w-7 h-7 bg-white dark:bg-gray-200">
                 {icon}
               </div>
             )

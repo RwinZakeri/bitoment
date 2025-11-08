@@ -38,11 +38,11 @@ function isAuthRoute(pathname: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Handle CORS for API routes - accept all origins
+  
   if (pathname.startsWith("/api/")) {
     const response = NextResponse.next();
 
-    // Get the origin from the request, or use * for all origins
+    
     const origin = request.headers.get("origin") || "*";
     response.headers.set("Access-Control-Allow-Origin", origin);
     response.headers.set(
@@ -56,7 +56,7 @@ export function middleware(request: NextRequest) {
     response.headers.set("Access-Control-Allow-Credentials", "true");
     response.headers.set("Access-Control-Max-Age", "86400");
 
-    // Handle preflight requests
+    
     if (request.method === "OPTIONS") {
       return new NextResponse(null, { status: 200, headers: response.headers });
     }

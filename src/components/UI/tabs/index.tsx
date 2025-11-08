@@ -44,7 +44,7 @@ const Tabs: React.FC<TabsProps> = ({
              p-4
               ${
                 activeTab === tab.id
-                  ? "border-cyan-400 text-black border-b-2 border-b-cyan-40"
+                  ? "border-cyan-400 text-foreground border-b-2 border-b-cyan-40"
                   : "text-gray-500"
               }
             `}
@@ -58,7 +58,6 @@ const Tabs: React.FC<TabsProps> = ({
         ))}
       </div>
 
-      {/* Tab Content */}
       <div
         className={contentClassName}
         role="tabpanel"

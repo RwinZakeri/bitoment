@@ -58,7 +58,7 @@ const SwapHistory = () => {
       <PageLayout title="Swap History">
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               Error loading swap history
             </h3>
             <p className="text-gray-500">
@@ -76,7 +76,7 @@ const SwapHistory = () => {
       {!swapHistoryData?.data || swapHistoryData.data.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               No swap history
             </h3>
             <p className="text-gray-500">

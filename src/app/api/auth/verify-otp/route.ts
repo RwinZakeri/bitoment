@@ -1,4 +1,4 @@
-// app/api/auth/verify-otp/route.ts
+
 import {
   getContentType,
   isOTPExpired,
@@ -8,14 +8,14 @@ import db from "@/lib/db";
 import { OTPState, VerifyOTPRequest, VerifyOTPResponse } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-// Ensure SQLite works in Node runtime (NOT Edge)
+
 export const runtime = "nodejs";
 
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<VerifyOTPResponse>> {
   try {
-    // ✅ Check if Content-Type is JSON
+    
     const contentType = getContentType(request);
     if (contentType !== "application/json") {
       return NextResponse.json(
@@ -56,7 +56,7 @@ export async function POST(
       );
     }
 
-    // ✅ Fetch latest OTP record for the email
+    
     const otpRecord = (await db
       .prepare(
         `SELECT id, otp, expires_at, used, state, created_at, verified_at
@@ -88,7 +88,7 @@ export async function POST(
       );
     }
 
-    // ✅ Check state
+    
     if (otpRecord.state !== OTPState.EMAIL_SENT) {
       return NextResponse.json(
         {
@@ -101,7 +101,7 @@ export async function POST(
       );
     }
 
-    // ✅ Check if OTP expired
+    
     if (isOTPExpired(otpRecord.expires_at)) {
       return NextResponse.json(
         {
@@ -113,7 +113,7 @@ export async function POST(
       );
     }
 
-    // ✅ Check verification time
+    
     if (
       isOTPVerificationTimeExpired(otpRecord.created_at, otpRecord.verified_at)
     ) {
@@ -128,7 +128,7 @@ export async function POST(
       );
     }
 
-    // ✅ Match OTP
+    
     if (otpRecord.otp !== otp) {
       return NextResponse.json(
         {
@@ -140,7 +140,7 @@ export async function POST(
       );
     }
 
-    // ✅ Mark OTP as verified
+    
     const verifiedAt = new Date().toISOString();
     await db
       .prepare(

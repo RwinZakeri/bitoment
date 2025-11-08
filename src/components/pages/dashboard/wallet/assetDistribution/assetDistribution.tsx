@@ -11,7 +11,6 @@ import { AssetDistributionResponse } from "@/types";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const AssetDistribution = () => {
   const router = useRouter();
@@ -35,12 +34,6 @@ const AssetDistribution = () => {
         return res.data;
       },
     });
-
-  useEffect(() => {
-    console.log(
-      assetDistributionData?.data?.filter((item) => item.name !== "Other")
-    );
-  }, [assetDistributionData]);
 
   if (walletLoading || assetDistributionLoading) {
     return (
@@ -71,15 +64,7 @@ const AssetDistribution = () => {
         </div>
 
         <div className="mt-6 space-y-4">
-          {/* {assetDistributionData?.data?.filter((item) => item.name !== "Other").data.map((asset, index) => (
-              <CurrencyProgressCard
-                key={index}
-                title={asset.name}
-                price={asset.price}
-                progress={asset.percentage.split("%")[0]}
-                icon={asset.icon}
-              />
-            ))} */}
+          {}
           {assetDistributionData?.data
             ?.filter((item) => item.name !== "Other")
             .map((item) => (

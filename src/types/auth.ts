@@ -1,10 +1,10 @@
-// Authentication related types
 
-// OTP State enum
+
+
 export enum OTPState {
-  EMAIL_SENT = 0, // Email successfully sent
-  SENT_AND_USED = 1, // Sent and used
-  PASSWORD_RESET = 2, // Password reset
+  EMAIL_SENT = 0, 
+  SENT_AND_USED = 1, 
+  PASSWORD_RESET = 2, 
 }
 
 export interface SignUpRequest {
@@ -62,7 +62,7 @@ export interface JWTPayload {
   };
 }
 
-// OTP related types
+
 export interface SendOTPRequest {
   email: string;
 }
@@ -94,7 +94,7 @@ export interface ResetPasswordResponse {
   message: string;
 }
 
-// Device related types
+
 export interface DeviceInfo {
   id: number;
   user_id: number;
@@ -157,7 +157,7 @@ export interface DeleteDeviceResponse {
   message: string;
 }
 
-// Login session related types
+
 export interface LoginSession {
   id: number;
   user_email: string;
@@ -174,7 +174,7 @@ export interface LoginSessionResponse {
   sessions?: LoginSession[];
 }
 
-// Wallet related types
+
 export interface Wallet {
   id: number;
   user_id: number;
@@ -210,7 +210,7 @@ export interface DeleteMoneyResponse {
   wallet?: Wallet;
 }
 
-// Wallet History related types
+
 export interface Transaction {
   amount: string;
   title: string;
@@ -235,7 +235,7 @@ export interface GetWalletHistoryResponse {
   data: HistoryDay[];
 }
 
-// Risk Report related types
+
 export interface RiskReportTransaction {
   type: "up" | "down" | "cpg" | "link";
   title: string;
@@ -256,7 +256,7 @@ export interface GetRiskReportResponse {
   data: RiskReportDay[];
 }
 
-// Swap History related types
+
 export interface SwapTransaction {
   cryptoOne: string;
   cryptoTwo: string;
@@ -278,7 +278,7 @@ export interface GetSwapHistoryResponse {
   data: SwapHistoryDay[];
 }
 
-// CPG Links related types
+
 export interface CpgLink {
   id: number;
   user_id: number;
@@ -322,7 +322,7 @@ export interface GetPublicCpgLinkResponse {
   link?: CpgLink;
 }
 
-// Google OAuth related types
+
 export interface GoogleOAuthRequest {
   accessToken: string;
 }
@@ -346,7 +346,7 @@ export interface GoogleUserInfo {
   id: string;
 }
 
-// Verification Step related types
+
 export interface VerificationSubStep {
   subStepName: string;
   isPassed: boolean;
@@ -358,7 +358,7 @@ export interface VerificationStepLevel {
 }
 
 export interface VerificationStepData {
-  verificationStep: number; // 1 = Basic, 2 = Intermediate, 3 = Advanced
+  verificationStep: number; 
   steps: VerificationStepLevel[];
 }
 

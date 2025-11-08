@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Helper function to generate random data
+
 function generateRandomHistory(filter?: string, crypto?: string | null) {
   const weekdays = [
     "Monday",
@@ -45,43 +45,43 @@ function generateRandomHistory(filter?: string, crypto?: string | null) {
   ];
 
   const data = [];
-  const numDays = Math.floor(Math.random() * 15) + 10; // 10-24 days of data for lots of history
+  const numDays = Math.floor(Math.random() * 15) + 10; 
 
   for (let i = 0; i < numDays; i++) {
     const randomWeekday = weekdays[Math.floor(Math.random() * weekdays.length)];
     const randomMonth = months[Math.floor(Math.random() * months.length)];
     const randomDay = Math.floor(Math.random() * 28) + 1;
-    const randomYear = 2023 + Math.floor(Math.random() * 2); // 2023 or 2024
+    const randomYear = 2023 + Math.floor(Math.random() * 2); 
 
-    const numTransactions = Math.floor(Math.random() * 8) + 2; // 2-9 transactions per day for more data
+    const numTransactions = Math.floor(Math.random() * 8) + 2; 
     const transactions = [];
 
     for (let j = 0; j < numTransactions; j++) {
-      // Choose type based on filter first
+      
       let type;
       if (filter === "crypto") {
-        // For crypto filter, only use "up" or "down" types
+        
         const cryptoTypes = ["up", "down"];
         type = cryptoTypes[Math.floor(Math.random() * cryptoTypes.length)];
       } else if (filter === "cpg") {
-        // For cpg filter, only use "cpg" type
+        
         type = "cpg";
       } else {
-        // For "all" filter, use any type
+        
         type =
           transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
       }
 
-      // Choose currency based on type and crypto filter
+      
       let selectedCurrency;
       if (type === "cpg") {
-        // If type is cpg, use a crypto currency for name and icon, but keep category as cpg
+        
         const availableCurrencies = crypto
           ? cryptoCurrencies.filter(
               (c) => c.name.toUpperCase() === crypto.toUpperCase()
             )
           : cryptoCurrencies;
-        // If no matching currency found when filtering, use the first currency from the list
+        
         if (availableCurrencies.length === 0) {
           selectedCurrency = {
             ...cryptoCurrencies[0],
@@ -94,19 +94,19 @@ function generateRandomHistory(filter?: string, crypto?: string | null) {
             ];
           selectedCurrency = {
             ...cryptoCurrency,
-            category: "cpg", // Override category to cpg
+            category: "cpg", 
           };
         }
       } else {
-        // For "up" or "down" types, use crypto currencies
-        // If crypto filter is specified, only use that crypto
+        
+        
         const availableCurrencies = crypto
           ? cryptoCurrencies.filter(
               (c) => c.name.toUpperCase() === crypto.toUpperCase()
             )
           : cryptoCurrencies;
 
-        // If filtering by crypto and no matching currency found, use first currency as fallback
+        
         if (crypto && availableCurrencies.length === 0) {
           selectedCurrency = cryptoCurrencies[0];
         } else {
@@ -117,7 +117,7 @@ function generateRandomHistory(filter?: string, crypto?: string | null) {
         }
       }
 
-      // Skip transaction only if crypto filter doesn't match (for strict filtering)
+      
       if (
         crypto &&
         selectedCurrency.name.toUpperCase() !== crypto.toUpperCase()
@@ -166,7 +166,7 @@ function generateRandomHistory(filter?: string, crypto?: string | null) {
   return data;
 }
 
-// Helper function to sort transactions
+
 function sortTransactions(
   data: ReturnType<typeof generateRandomHistory>,
   sortBy: string | null,
@@ -182,8 +182,8 @@ function sortTransactions(
 
       switch (sortBy) {
         case "date":
-          // Sort by dateAsName (YYYY-M-D or YYYY-MM-DD format) first, then by hour
-          // Normalize date format for parsing
+          
+          
           const normalizeDate = (dateStr: string) => {
             const parts = dateStr.split("-");
             if (parts.length === 3) {
@@ -200,7 +200,7 @@ function sortTransactions(
           const dateB = new Date(normalizedDateB);
           comparison = dateA.getTime() - dateB.getTime();
           if (comparison === 0) {
-            // If dates are equal, sort by hour
+            
             const [hourA, minA] = a.hour.split(":").map(Number);
             const [hourB, minB] = b.hour.split(":").map(Number);
             const timeA = hourA * 60 + minA;
@@ -210,13 +210,13 @@ function sortTransactions(
           break;
 
         case "type":
-          // Sort by transaction type: up, down, cpg
+          
           const typeOrder: Record<string, number> = { up: 1, down: 2, cpg: 3 };
           comparison = (typeOrder[a.type] || 0) - (typeOrder[b.type] || 0);
           break;
 
         case "amount":
-          // Extract numeric value from amount string (e.g., "5.23 BTC" -> 5.23)
+          
           const amountA = parseFloat(a.amount.split(" ")[0]) || 0;
           const amountB = parseFloat(b.amount.split(" ")[0]) || 0;
           comparison = amountA - amountB;
@@ -239,7 +239,7 @@ function sortTransactions(
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const filter = searchParams.get("filter") || "all";
-  const crypto = searchParams.get("crypto"); // Filter by specific crypto type
+  const crypto = searchParams.get("crypto"); 
   const sortBy = searchParams.get("sortBy");
   const sortOrder = searchParams.get("sortOrder") || "asc";
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-// Helper function to generate random swap history data
+
 function generateRandomSwapHistory() {
   const weekdays = [
     "Monday",
@@ -35,24 +35,24 @@ function generateRandomSwapHistory() {
   ];
 
   const data = [];
-  const numDays = Math.floor(Math.random() * 15) + 10; // 10-24 days of data
+  const numDays = Math.floor(Math.random() * 15) + 10; 
 
   for (let i = 0; i < numDays; i++) {
     const randomWeekday = weekdays[Math.floor(Math.random() * weekdays.length)];
     const randomMonth = months[Math.floor(Math.random() * months.length)];
     const randomDay = Math.floor(Math.random() * 28) + 1;
-    const randomYear = 2023 + Math.floor(Math.random() * 2); // 2023 or 2024
+    const randomYear = 2023 + Math.floor(Math.random() * 2); 
 
-    const numSwaps = Math.floor(Math.random() * 8) + 2; // 2-9 swaps per day
+    const numSwaps = Math.floor(Math.random() * 8) + 2; 
     const swaps = [];
 
     for (let j = 0; j < numSwaps; j++) {
-      // Select two different cryptocurrencies
+      
       const cryptoOne =
         cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
       let cryptoTwo =
         cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];
-      // Ensure they are different
+      
       while (cryptoTwo.symbol === cryptoOne.symbol) {
         cryptoTwo =
           cryptoCurrencies[Math.floor(Math.random() * cryptoCurrencies.length)];

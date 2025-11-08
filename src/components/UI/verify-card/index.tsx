@@ -13,18 +13,21 @@ const VerifyCard = ({
   passedSteps,
   stepsLength,
 }: verifyCardPropsType) => {
-  console.log(stepsLength);
   const isPassed = passedSteps > index;
 
   const router = useRouter();
   return (
     <div
       className={`w-full relative rounded-lg p-4 ${
-        isPassed ? "bg-cyan-200" : "bg-white"
+        isPassed
+          ? "bg-cyan-200 dark:bg-primary-cyan-500/20"
+          : "bg-white dark:bg-gray-200"
       }`}
     >
       <div className="flex items-center justify-between ">
-        <p className="text-black font-semibold text-base self-start">{title}</p>
+        <p className="text-foreground font-semibold text-base self-start">
+          {title}
+        </p>
         <Image src={img} alt={title} width={50} height={50} />
       </div>
 

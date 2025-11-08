@@ -64,14 +64,14 @@ const AutoComplete = ({
               e.stopPropagation();
               setOpen(true);
             }}
-            className="bg-white rounded-xl h-[60px] px-4 w-full outline-0 relative"
+            className="bg-white dark:bg-gray-200 rounded-xl h-[60px] px-4 w-full outline-0 relative"
             style={{ zIndex: zIndex + 1 }}
             placeholder="TRC20"
             type="text"
           />
 
           <div
-            className="absolute top-5 bg-white right-4"
+            className="absolute top-5 bg-white dark:bg-gray-200 right-4"
             style={{ zIndex: zIndex + 3 }}
           >
             <LeftIcon className={`${isOpen ? "rotate-90" : "-rotate-90"}`} />
@@ -79,7 +79,7 @@ const AutoComplete = ({
 
           {isOpen && (
             <div
-              className="w-full flex flex-col gap-1 bg-white rounded-lg py-2 px-1 absolute top-full left-0 shadow-lg border border-gray-200"
+              className="w-full flex flex-col gap-1 bg-white dark:bg-gray-200 rounded-lg py-2 px-1 absolute top-full left-0 shadow-lg border border-gray-200 dark:border-gray-300"
               style={{ zIndex: zIndex + 2 }}
             >
               {!type.length ? (

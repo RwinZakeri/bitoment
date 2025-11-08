@@ -4,7 +4,7 @@ import SkeletonThemeWrapper from "./SkeletonTheme";
 const WalletSkeleton = () => {
   return (
     <SkeletonThemeWrapper>
-      {/* Wallet Balance Section */}
+      
       <div className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-white">
         <div className="flex flex-col items-center gap-4">
           <Skeleton height={16} width={120} />
@@ -17,7 +17,7 @@ const WalletSkeleton = () => {
         </div>
       </div>
 
-      {/* Action Buttons */}
+      
       <div className="mt-8 grid grid-cols-2 gap-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <div key={index} className="p-4 border rounded-lg">
@@ -29,7 +29,7 @@ const WalletSkeleton = () => {
         ))}
       </div>
 
-      {/* Asset Distribution Section */}
+      
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <Skeleton height={24} width={140} />
@@ -47,7 +47,7 @@ const WalletSkeleton = () => {
         </div>
       </div>
 
-      {/* Wallet History Section */}
+      
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <Skeleton height={24} width={120} />

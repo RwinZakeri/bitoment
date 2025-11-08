@@ -25,19 +25,19 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
   }, [id]);
 
   const darkMarketPercent = useMemo(() => {
-    return Math.floor(Math.random() * 101); // 0 to 100 inclusive
+    return Math.floor(Math.random() * 101); 
   }, []);
 
   const mixerPercent = useMemo(() => {
-    return Math.floor(Math.random() * 101); // 0 to 100 inclusive
+    return Math.floor(Math.random() * 101); 
   }, []);
 
   const gamblingPercent = useMemo(() => {
-    return Math.floor(Math.random() * 101); // 0 to 100 inclusive
+    return Math.floor(Math.random() * 101); 
   }, []);
 
   const radarChartData = useMemo(() => {
-    // Determine colors based on risk level
+    
     const getRiskColor = () => {
       if (riskLevel < 40) {
         return {

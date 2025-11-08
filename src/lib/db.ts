@@ -1,19 +1,15 @@
 import postgres from "postgres";
 
-// Get connection string from environment variable
 const connectionString =
   process.env.DATABASE_URL ||
-  "postgresql://neondb_owner:npg_RYID5P6aZfzn@ep-empty-bush-ahhgx8s7-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+  "postgresql://user:password@localhost:5432/dbname";
 
-// Create Postgres database client
 const sql = postgres(connectionString, {
   ssl: "require",
 });
 
-// Initialize database schema
 async function initializeDatabase() {
   try {
-    // Create users table
     await sql`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
@@ -32,8 +28,6 @@ async function initializeDatabase() {
     )
   `;
 
-    // Migrate phoneNumber from INTEGER to TEXT if needed (for existing databases)
-    // This allows phone numbers that exceed INTEGER max value (2,147,483,647)
     await sql`
       DO $$ 
       BEGIN
@@ -46,7 +40,6 @@ async function initializeDatabase() {
       END $$;
     `;
 
-    // Add oauth_provider column if it doesn't exist
     await sql`
       DO $$ 
       BEGIN
@@ -59,7 +52,6 @@ async function initializeDatabase() {
       END $$;
     `;
 
-    // Add oauth_id column if it doesn't exist
     await sql`
       DO $$ 
       BEGIN
@@ -72,7 +64,6 @@ async function initializeDatabase() {
       END $$;
     `;
 
-    // Create password_reset_otps table
     await sql`
   CREATE TABLE IF NOT EXISTS password_reset_otps (
         id SERIAL PRIMARY KEY,
@@ -86,7 +77,6 @@ async function initializeDatabase() {
   )
     `;
 
-    // Add state column if it doesn't exist
     await sql`
       DO $$ 
       BEGIN
@@ -99,7 +89,6 @@ async function initializeDatabase() {
       END $$;
     `;
 
-    // Add verified_at column if it doesn't exist
     await sql`
       DO $$ 
       BEGIN
@@ -112,7 +101,6 @@ async function initializeDatabase() {
       END $$;
     `;
 
-    // Create user_devices table
     await sql`
   CREATE TABLE IF NOT EXISTS user_devices (
         id SERIAL PRIMARY KEY,
@@ -134,7 +122,6 @@ async function initializeDatabase() {
   )
     `;
 
-    // Create indexes for user_devices
     await sql`
       CREATE INDEX IF NOT EXISTS idx_user_devices_user_id ON user_devices (user_id)
     `;
@@ -143,7 +130,6 @@ async function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_user_devices_device_id ON user_devices (device_id)
     `;
 
-    // Create login_sessions table
     await sql`
   CREATE TABLE IF NOT EXISTS login_sessions (
         id SERIAL PRIMARY KEY,
@@ -156,7 +142,6 @@ async function initializeDatabase() {
       )
     `;
 
-    // Create indexes for login_sessions
     await sql`
       CREATE INDEX IF NOT EXISTS idx_login_sessions_user_email ON login_sessions (user_email)
     `;
@@ -165,7 +150,6 @@ async function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_login_sessions_created_at ON login_sessions (created_at)
     `;
 
-    // Create wallets table
     await sql`
   CREATE TABLE IF NOT EXISTS wallets (
         id SERIAL PRIMARY KEY,
@@ -178,12 +162,10 @@ async function initializeDatabase() {
   )
     `;
 
-    // Create index for wallets
     await sql`
       CREATE INDEX IF NOT EXISTS idx_wallets_user_id ON wallets (user_id)
     `;
 
-    // Create cpg_links table
     await sql`
   CREATE TABLE IF NOT EXISTS cpg_links (
         id SERIAL PRIMARY KEY,
@@ -200,7 +182,6 @@ async function initializeDatabase() {
   )
     `;
 
-    // Create indexes for cpg_links
     await sql`
       CREATE INDEX IF NOT EXISTS idx_cpg_links_user_id ON cpg_links (user_id)
     `;
@@ -208,20 +189,13 @@ async function initializeDatabase() {
     await sql`
       CREATE INDEX IF NOT EXISTS idx_cpg_links_link_id ON cpg_links (link_id)
     `;
-
-    console.log("Database schema initialized successfully");
   } catch (error) {
     console.error("Error initializing database schema:", error);
-    // Don't throw - let the app start, but log the error
   }
 }
 
-// Force phoneNumber migration immediately - runs on every server start
 async function forcePhoneNumberMigration() {
   try {
-    console.log("🔍 Checking phoneNumber column type...");
-
-    // Try to get column info
     const columnInfo = await sql`
       SELECT data_type, udt_name
       FROM information_schema.columns 
@@ -232,9 +206,7 @@ async function forcePhoneNumberMigration() {
 
     if (columnInfo && columnInfo.length > 0) {
       const currentType = columnInfo[0].data_type || columnInfo[0].udt_name;
-      console.log(`📊 Current phoneNumber column type: ${currentType}`);
 
-      // Check if it's any integer type
       if (
         currentType === "integer" ||
         currentType === "int4" ||
@@ -242,56 +214,35 @@ async function forcePhoneNumberMigration() {
         currentType === "int32" ||
         columnInfo[0].udt_name === "int4"
       ) {
-        console.log("⚠️  phoneNumber is INTEGER - migrating to TEXT NOW...");
-
-        // Force migration - convert all existing values and change type
         await sql.unsafe(`
           ALTER TABLE users 
           ALTER COLUMN phoneNumber TYPE TEXT 
           USING phoneNumber::TEXT
         `);
-
-        console.log("✅ SUCCESS: phoneNumber migrated from INTEGER to TEXT!");
       } else if (
         currentType === "text" ||
         currentType === "character varying" ||
         currentType === "varchar" ||
         columnInfo[0].udt_name === "text"
       ) {
-        console.log("✅ phoneNumber is already TEXT - ready to use");
       } else {
-        console.log(
-          `⚠️  phoneNumber type is: ${currentType} - ensuring it's TEXT...`
-        );
-        // Try to migrate anyway if it's not TEXT
         try {
           await sql.unsafe(`
             ALTER TABLE users 
             ALTER COLUMN phoneNumber TYPE TEXT 
             USING COALESCE(phoneNumber::TEXT, '')
           `);
-          console.log("✅ phoneNumber forced to TEXT");
-        } catch (e) {
-          console.log(
-            "⚠️  Could not force migration (may already be correct):",
-            e
-          );
-        }
+        } catch (e) {}
       }
-    } else {
-      console.log(
-        "ℹ️  phoneNumber column doesn't exist yet (will be created as TEXT)"
-      );
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("❌ Error during phoneNumber migration:", errorMessage);
-    // Try one more time with direct SQL
+
     try {
       await sql.unsafe(
         `ALTER TABLE users ALTER COLUMN phoneNumber TYPE TEXT USING phoneNumber::TEXT`
       );
-      console.log("✅ phoneNumber migration succeeded (fallback method)");
     } catch (fallbackError: unknown) {
       const fallbackMessage =
         fallbackError instanceof Error
@@ -308,7 +259,6 @@ async function forcePhoneNumberMigration() {
         fallbackMessage.includes("already") ||
         fallbackCode === "42704"
       ) {
-        console.log("ℹ️  phoneNumber column doesn't exist or is already TEXT");
       } else {
         console.error("❌ Failed to migrate phoneNumber:", fallbackMessage);
       }
@@ -316,19 +266,16 @@ async function forcePhoneNumberMigration() {
   }
 }
 
-// Initialize database on module load
 initializeDatabase()
   .then(async () => {
-    // Force phoneNumber migration immediately after initialization
     await forcePhoneNumberMigration();
   })
   .catch((error) => {
     console.error("Failed to initialize database:", error);
-    // Try migration anyway
+
     forcePhoneNumberMigration().catch(console.error);
   });
 
-// Helper to convert ? placeholders to $1, $2, etc. for Postgres
 function convertQuery(
   query: string,
   params: unknown[]
@@ -338,7 +285,6 @@ function convertQuery(
   return { query: convertedQuery, values: params };
 }
 
-// Type for database interface
 type DbInterface = {
   prepare(query: string): {
     get<T = unknown>(...params: unknown[]): Promise<T | undefined>;
@@ -351,34 +297,27 @@ type DbInterface = {
   transactionAsync<T>(callback: (db: DbInterface) => Promise<T>): Promise<T>;
 };
 
-// Database interface that mimics better-sqlite3 API for easier migration
 const db: DbInterface = {
-  // Prepare a statement (returns an object with get, all, run methods)
   prepare(query: string) {
     return {
-      // Get single row (like SQLite's .get())
       async get<T = unknown>(...params: unknown[]): Promise<T | undefined> {
         const { query: convertedQuery, values } = convertQuery(query, params);
         const result = await sql.unsafe(convertedQuery, values as never[]);
         return (result[0] as unknown as T) || undefined;
       },
 
-      // Get all rows (like SQLite's .all())
       async all<T = unknown>(...params: unknown[]): Promise<T[]> {
         const { query: convertedQuery, values } = convertQuery(query, params);
         const result = await sql.unsafe(convertedQuery, values as never[]);
         return result as unknown[] as T[];
       },
 
-      // Execute query (like SQLite's .run())
       async run(
         ...params: unknown[]
       ): Promise<{ lastInsertRowid?: number; changes?: number }> {
-        // For INSERT queries, try to get the inserted ID using RETURNING
         if (query.trim().toUpperCase().startsWith("INSERT")) {
           const insertMatch = query.match(/INSERT\s+INTO\s+(\w+)/i);
           if (insertMatch) {
-            // Try to add RETURNING id to get the inserted ID
             let queryWithReturning = query;
             if (!query.includes("RETURNING")) {
               queryWithReturning =
@@ -399,7 +338,6 @@ const db: DbInterface = {
                 changes: result.length > 0 ? 1 : 0,
               };
             } catch {
-              // If RETURNING fails, just execute the query
               const { query: convertedQuery, values } = convertQuery(
                 query,
                 params
@@ -410,34 +348,27 @@ const db: DbInterface = {
           }
         }
 
-        // For UPDATE/DELETE queries, execute and return changes
         const { query: convertedQuery, values } = convertQuery(query, params);
         const result = await sql.unsafe(convertedQuery, values as never[]);
-        // If RETURNING is present, result.length is the number of affected rows
-        // If RETURNING is not present, result will be empty array, so we can't know the count
-        // In that case, we assume 1 (for backward compatibility) but it's not accurate
+
         const hasReturning = query.toUpperCase().includes("RETURNING");
         return { changes: hasReturning ? result.length : result.length || 1 };
       },
     };
   },
 
-  // Transaction helper - synchronous version throws error
   transaction<T>(callback?: () => T): T {
     if (callback) {
-      // Unreachable - just here to match interface signature
     }
     throw new Error(
       "Transaction must be called asynchronously. Use db.transactionAsync() instead."
     );
   },
 
-  // Async transaction helper
   async transactionAsync<T>(
     callback: (transactionDb: DbInterface) => Promise<T>
   ): Promise<T> {
     return (await sql.begin(async (transactionSql) => {
-      // Create a transaction-specific db instance
       const transactionDb: DbInterface = {
         prepare(query: string) {
           return {
@@ -508,8 +439,7 @@ const db: DbInterface = {
                 convertedQuery,
                 values as never[]
               );
-              // If RETURNING is present, result.length is the number of affected rows
-              // If RETURNING is not present, result will be empty array, so we can't know the count
+
               const hasReturning = query.toUpperCase().includes("RETURNING");
               return {
                 changes: hasReturning ? result.length : result.length || 1,
@@ -519,7 +449,6 @@ const db: DbInterface = {
         },
         transaction<T>(callback?: () => T): T {
           if (callback) {
-            // Unreachable - just here to match interface signature
           }
           throw new Error("Nested transactions not supported");
         },
@@ -527,7 +456,6 @@ const db: DbInterface = {
           callback?: (db: DbInterface) => Promise<T>
         ): Promise<T> {
           if (callback) {
-            // Unreachable - just here to match interface signature
           }
           throw new Error("Nested transactions not supported");
         },

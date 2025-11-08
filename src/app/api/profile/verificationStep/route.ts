@@ -69,8 +69,6 @@ export async function GET(
     )
     .get(tokenPayload.data.userId)) as User | undefined;
 
-  console.log(user);
-
   if (!user) {
     return NextResponse.json({
       status: 404,
@@ -79,12 +77,8 @@ export async function GET(
     });
   }
 
-  // ========== Basic Level (Step 1) ==========
-  // Initial Registration is always passed if user exists
   verificationStep.steps[0].passSteps[0].isPassed = true;
 
-  // ========== Intermediate Level (Step 2) ==========
-  // Check Phone Number Verification (phoneNumber is now TEXT/string in database)
   if (
     user.phoneNumber &&
     typeof user.phoneNumber === "string" &&
@@ -93,40 +87,23 @@ export async function GET(
     verificationStep.steps[1].passSteps[0].isPassed = true;
   }
 
-  // Check Identity Information Submission
   if (user.nationalInsuranceNumber && user.birthDate) {
     verificationStep.steps[1].passSteps[1].isPassed = true;
   }
 
-  // Check if all Intermediate Level steps are passed
   const allIntermediatePassed = verificationStep.steps[1].passSteps.every(
     (step) => step.isPassed
   );
 
-  // ========== Advanced Level (Step 3) ==========
-  // Check Upload National ID Card (if column exists in database)
-  // For now, this will remain false until database columns are added
-  // You can add: if (user.nationalIdCard) { verificationStep.steps[2].passSteps[0].isPassed = true; }
-
-  // Check Identity Selfie (if column exists in database)
-  // For now, this will remain false until database columns are added
-  // You can add: if (user.identitySelfie) { verificationStep.steps[2].passSteps[1].isPassed = true; }
-
-  // Check if all Advanced Level steps are passed
   const allAdvancedPassed = verificationStep.steps[2].passSteps.every(
     (step) => step.isPassed
   );
 
-  // ========== Calculate verificationStep based on completed levels ==========
-  // verificationStep represents the current level (1 = Basic, 2 = Intermediate, 3 = Advanced)
   if (allAdvancedPassed) {
-    // All levels completed, user is at Advanced Level
     verificationStep.verificationStep = 3;
   } else if (allIntermediatePassed) {
-    // Intermediate Level completed, user is at Intermediate Level
     verificationStep.verificationStep = 2;
   } else {
-    // Only Basic Level completed, user is at Basic Level
     verificationStep.verificationStep = 1;
   }
 

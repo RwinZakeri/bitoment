@@ -15,7 +15,7 @@ const LinkedCard = ({
       {label && <span className="text-base">{label}</span>}
       <Link
         href={link}
-        className={`w-full rounded-xl bg-white flex justify-between items-center ${
+        className={`w-full rounded-xl bg-white dark:bg-gray-200 flex justify-between items-center ${
           size === "lg" ? "h-[60px] px-4" : "px-3 py-2"
         }`}
       >
@@ -25,7 +25,9 @@ const LinkedCard = ({
               {icon}
             </div>
           )}
-          <p className={`text-black ${size === "sm" && "text-xs"}`}>{title}</p>
+          <p className={`text-foreground ${size === "sm" && "text-xs"}`}>
+            {title}
+          </p>
         </div>
         <LeftIcon
           className={type === "crypto-link" ? "-rotate-90" : "rotate-180"}

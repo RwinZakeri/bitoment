@@ -31,7 +31,6 @@ const drawerItems = {
   },
 } as const;
 
-// Mapping functions to convert enum values to API string values
 const mapCurrencyToApi = (currencyEnum: number): string => {
   switch (currencyEnum) {
     case CurrencyEnum.USD:
@@ -75,9 +74,64 @@ const mapThemeToApi = (themeEnum: number): string => {
   }
 };
 
+const mapApiToCurrency = (currencyString: string): number => {
+  switch (currencyString) {
+    case "USD":
+      return CurrencyEnum.USD;
+    case "EUR":
+      return CurrencyEnum.EUR;
+    default:
+      return CurrencyEnum.USD;
+  }
+};
+
+const mapApiToLanguage = (languageString: string): number => {
+  switch (languageString) {
+    case "en":
+      return LanguageEnum.ENGLISH;
+    case "es":
+      return LanguageEnum.SPANISH;
+    case "fr":
+      return LanguageEnum.FRENCH;
+    case "de":
+      return LanguageEnum.GERMAN;
+    case "zh":
+      return LanguageEnum.CHINESE;
+    case "ar":
+      return LanguageEnum.ARABIC;
+    default:
+      return LanguageEnum.ENGLISH;
+  }
+};
+
+const mapApiToTheme = (themeString: string): number => {
+  switch (themeString) {
+    case "light":
+      return ThemeEnum.LIGHT;
+    case "dark":
+      return ThemeEnum.DARK;
+    case "system":
+      return ThemeEnum.SYSTEM_DEFAULT;
+    default:
+      return ThemeEnum.LIGHT;
+  }
+};
+
 const SettingPage = () => {
   const [selectedOption, setSelectedOption] = useState<string | number>();
-  const { setCurrency, setLanguage, setTheme } = useCurrency();
+  const { setCurrency, setLanguage, setTheme, currency, language, theme } =
+    useCurrency();
+
+  const getCurrentValue = (selected: string): number | undefined => {
+    if (selected === "currency" && currency) {
+      return mapApiToCurrency(currency);
+    } else if (selected === "language" && language) {
+      return mapApiToLanguage(language);
+    } else if (selected === "theme" && theme) {
+      return mapApiToTheme(theme);
+    }
+    return undefined;
+  };
 
   const chooseDrawerOption = (selected: string) => {
     return drawerItems[selected as keyof typeof drawerItems];
@@ -103,7 +157,6 @@ const SettingPage = () => {
       setTheme(themeString);
     }
 
-    // Close the drawer after selection
     handleCloseDrawer();
   };
 
@@ -125,6 +178,7 @@ const SettingPage = () => {
             centerized
             onLinkedOption={handleOptionSelect}
             options={chooseDrawerOption(selectedOption as string).options}
+            selectedValue={getCurrentValue(selectedOption as string)}
           />
         </Drawer>
       )}

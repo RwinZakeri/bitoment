@@ -170,7 +170,7 @@ export const linkCpgSchema = z.object({
     .string()
     .optional()
     .refine((val) => {
-      if (!val || val.trim() === "") return true; // Optional field
+      if (!val || val.trim() === "") return true; 
       const num = parseFloat(val);
       return !isNaN(num) && num > 0 && num <= 1000000;
     }, "Please enter a valid amount (0.01 - 1,000,000)"),

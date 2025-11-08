@@ -86,7 +86,7 @@ export default function CryptoSlugPage({
       <PageLayout title={`${slug.toUpperCase()} Wallet`}>
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               Asset not found
             </h3>
             <p className="text-gray-500">
@@ -120,7 +120,7 @@ export default function CryptoSlugPage({
         {!historyData?.data || historyData.data.length === 0 ? (
           <div className="mt-8 flex flex-col items-center justify-center py-12">
             <div className="text-center">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
                 No transaction history
               </h3>
               <p className="text-gray-500">

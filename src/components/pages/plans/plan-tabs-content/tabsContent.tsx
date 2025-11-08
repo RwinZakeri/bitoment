@@ -71,7 +71,7 @@ const PerformanceTab = () => {
 
   return (
     <div className="p-2 mt-4">
-      <div className="w-full flex bg-white rounded-2xl p-4">
+      <div className="w-full flex bg-white dark:bg-gray-200 rounded-2xl p-4">
         <p className="text-xs">
           Low-risk investments focus on well-established cryptocurrencies,
           offering stable returns with lower risk.
@@ -123,7 +123,10 @@ const PerformanceTab = () => {
           clickHandler={() => ""}
         />
       </div>
-      <Paper className="bg-white p-4 mt-2 rounded-xl" label="Features">
+      <Paper
+        className="bg-white dark:bg-gray-200 p-4 mt-2 rounded-xl"
+        label="Features"
+      >
         <div className="flex flex-col gap-4 ">
           {palnFeatures.map((item) => (
             <div
@@ -143,7 +146,7 @@ const PerformanceTab = () => {
       </Paper>
       <Paper
         icon={<LineChartIcon className="ml-2" />}
-        className="bg-white p-2 rounded-2xl mt-4"
+        className="bg-white dark:bg-gray-200 p-2 rounded-2xl mt-4"
         label="Fund Performance Chart"
       >
         <LineChart data={chartData} />
@@ -151,7 +154,7 @@ const PerformanceTab = () => {
 
       <Paper
         icon={<WindowIcon />}
-        className="bg-white p-4 rounded-2xl mt-4"
+        className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
         label="Asset Allocation"
       >
         <div className="h-80">
@@ -195,7 +198,7 @@ const PerformanceTab = () => {
       </Paper>
       <Paper
         label="Documentation"
-        className="bg-white rounded-2xl p-4 mt-4"
+        className="bg-white dark:bg-gray-200 rounded-2xl p-4 mt-4"
         icon={<DocumentIcon />}
       >
         <div className="flex flex-col gap-4">

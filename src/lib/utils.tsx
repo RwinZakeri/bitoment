@@ -49,7 +49,7 @@ export const getCryptoIcon = (name: string) => {
     case "sol":
       return <SolIcon className="w-4 h-4" />;
     case "bnb":
-      return <BinanceIcon className="w-4 h-4" />; // Using EtcIcon as placeholder for BNB
+      return <BinanceIcon className="w-4 h-4" />; 
     default:
       return <BtcIcon className="w-4 h-4" />;
   }
@@ -190,11 +190,11 @@ export const assetAllocationData = {
     {
       data: [35, 25, 20, 15, 5],
       backgroundColor: [
-        "#F7931A", // Bitcoin orange
-        "#627EEA", // Ethereum blue
-        "#9945FF", // Solana purple
-        "#26A17B", // Tether green
-        "#6B7280", // Others gray
+        "#F7931A", 
+        "#627EEA", 
+        "#9945FF", 
+        "#26A17B", 
+        "#6B7280", 
       ],
       borderColor: ["#F7931A", "#627EEA", "#9945FF", "#26A17B", "#6B7280"],
       borderWidth: 2,

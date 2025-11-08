@@ -1,7 +1,7 @@
 const TwoFactorDescription = () => {
   return (
     <>
-      <div className="flex flex-col gap-4 mt-8 text-lg text-black">
+      <div className="flex flex-col gap-4 mt-8 text-lg text-foreground">
         <p className="text-base leading-relaxed">
           Two-factor authentication secures your account by adding an extra
           layer of security. To enhance account safety, we recommend enabling at

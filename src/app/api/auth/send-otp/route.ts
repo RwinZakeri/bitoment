@@ -60,7 +60,7 @@ export async function POST(
       );
     }
 
-    // Check if user exists
+    
     const user = (await db
       .prepare("SELECT id, email FROM users WHERE email = ?")
       .get(email)) as { id: number; email: string } | undefined;
@@ -79,14 +79,14 @@ export async function POST(
     const expiresAt = generateOTPExpiration(1);
     const createdAt = new Date().toISOString();
 
-    // Use a transaction to ensure atomicity
+    
     await db.transactionAsync(async (txDb) => {
-      // Delete any existing OTPs for this email
+      
       await txDb
         .prepare("DELETE FROM password_reset_otps WHERE email = ?")
         .run(email);
 
-      // Insert new OTP
+      
       await txDb
         .prepare(
           "INSERT INTO password_reset_otps (email, otp, expires_at, state, created_at) VALUES (?, ?, ?, ?, ?)"
@@ -104,9 +104,9 @@ export async function POST(
         html: "<p>back to website please</p>",
       });
 
-      // Check if email was sent successfully
+      
       if (!emailResult || emailResult.error) {
-        // Rollback: delete the OTP record if email failed
+        
         await db
           .prepare(
             "DELETE FROM password_reset_otps WHERE email = ? AND created_at = ?"
@@ -124,7 +124,7 @@ export async function POST(
         );
       }
     } catch (emailError: unknown) {
-      // Rollback: delete the OTP record if email failed
+      
       db.prepare(
         "DELETE FROM password_reset_otps WHERE email = ? AND created_at = ?"
       ).run(email, createdAt);

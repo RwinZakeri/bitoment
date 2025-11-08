@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --text-primary: #000000;
   --blue-500: #256bfd;
   --primary-cyan-200: #abf4ed;
   --primary-cyan-300: #00ead6;
@@ -33,9 +34,49 @@
   --secondary: #c6c6c6;
   --amber-500: #fcb62b;
   --emerald-500: #00da49;
+  --color-white: #fff;
+}
+
+.dark,
+[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --text-primary: #ffffff;
+  --gray-100: #1a1a1a;
+  --gray-200: #252525;
+  --gray-250: #2d2d2d;
+  --gray-300: #3a3a3a;
+  --gray-400-alt2: #6b6b6b;
+  --gray-400: #8a8a8a;
+  --gray-400-alt: #707070;
+  --gray-500: #9a9a9a;
+  --gray-600: #b0b0b0;
+  --gray-700-alt: #4a4a4a;
+  --gray-700: #5a5a5a;
+  --gray-800: #0f0f0f;
+  --primary-cyan-200: #7ae8e0;
+  --primary-cyan-300: #00ead6;
+  --primary-cyan-400: #1ae8d4;
+  --primary-cyan-500: #15d4c3;
+  --primary-cyan-600: #12c4b4;
+  --primary-cyan-700: #0fa89a;
+  --teal-500: #0fb8a8;
+  --teal-light: #6dd4c8;
+  --custom-coral: #7ae8e0;
+  --blue-500: #4a8eff;
+  --red-500: #ff5252;
+  --coral-red: #ff8a80;
+  --coral-red-200: #4a2a2a;
+  --amber-500: #ffb74d;
+  --emerald-500: #4caf50;
+  --border-gray: #3a3a3a;
+  --secondary: #6b6b6b;
+  --primary-slate-800: #1e2229;
+  --color-white: #1a1a1a;
 }
 
 @theme inline {
+  --color-white: var(--color-white);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-poppins: var(--font-poppins);
@@ -71,13 +112,6 @@
   --text-3xl: 28px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 input[type="radio"]:checked ~ label {
   #dot {
     border: 2px solid var(--primary-cyan-400);
@@ -107,17 +141,33 @@ input[type="radio"]:checked ~ label {
   }
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+.dark #dot,
+[data-theme="dark"] #dot {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark input[type="radio"]:checked ~ label #dot,
+[data-theme="dark"] input[type="radio"]:checked ~ label #dot {
+  border: 2px solid var(--primary-cyan-400);
+  background: rgba(26, 232, 212, 0.1);
+}
+
+.dark #dot #innerDot,
+[data-theme="dark"] #dot #innerDot {
+  background-color: var(--primary-cyan-400);
+  box-shadow: 0 0 8px rgba(26, 232, 212, 0.4);
+}
+
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
 
-/* Stepper Component Styles */
 .stepper-step {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -147,7 +197,12 @@ input[type="radio"]:checked ~ label {
   background: linear-gradient(90deg, var(--gray-300), var(--gray-400));
 }
 
-/* Stepper Animation Keyframes */
+.dark .stepper-connector.pending,
+[data-theme="dark"] .stepper-connector.pending {
+  background: linear-gradient(90deg, var(--gray-600), var(--gray-500));
+  opacity: 0.4;
+}
+
 @keyframes stepper-pulse {
   0%,
   100% {
@@ -158,11 +213,26 @@ input[type="radio"]:checked ~ label {
   }
 }
 
+@keyframes stepper-pulse-dark {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(26, 232, 212, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(26, 232, 212, 0.2),
+      0 0 20px rgba(26, 232, 212, 0.1);
+  }
+}
+
 .stepper-step.active {
   animation: stepper-pulse 2s infinite;
 }
 
-/* Swap Animation Keyframes */
+.dark .stepper-step.active,
+[data-theme="dark"] .stepper-step.active {
+  animation: stepper-pulse-dark 2s infinite;
+}
+
 @keyframes swap-pulse {
   0%,
   100% {
@@ -180,6 +250,21 @@ input[type="radio"]:checked ~ label {
   }
   50% {
     box-shadow: 0 0 0 10px rgba(21, 224, 204, 0);
+  }
+}
+
+.dark .swap-button-active,
+[data-theme="dark"] .swap-button-active {
+  animation: swap-pulse-button-dark 0.6s ease-in-out;
+}
+
+@keyframes swap-pulse-button-dark {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(26, 232, 212, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(26, 232, 212, 0);
   }
 }
 
@@ -222,27 +307,21 @@ input[type="radio"]:checked ~ label {
   animation: card-flip 0.6s ease-in-out;
 }
 
-
 .checkout__payment-qrcode {
-  position: relative;     /* containing block for ::after */
+  position: relative;
   display: inline-block;
-  /* optional: match the QR's rounded corners */
-  border-radius: 0.5rem;  /* same as rounded-lg; tweak as needed */
-  /* you can remove overflow if you want the rotating background to overflow */
+  border-radius: 0.5rem;
   overflow: visible;
 }
 
-/* ensure the real QR sits above the pseudo-element */
 .checkout__payment-qrcode .qr-inner {
   position: relative;
   z-index: 2;
   border-radius: inherit;
-  /* keep inner padding / outline if needed */
   padding: 6px;
   background: transparent;
 }
 
-/* rotating background / outline */
 .qr-inner::after {
   content: "";
   position: absolute;
@@ -251,27 +330,92 @@ input[type="radio"]:checked ~ label {
   width: 200%;
   height: 200%;
   display: block;
-  z-index: 1; /* sits behind .qr-inner (z-index:2) */
-  pointer-events: none; /* click passes through to QR if needed */
+  z-index: 1;
+  pointer-events: none;
   border-radius: inherit;
 
-  /* your gradients and colors — preserved exactly */
   background-color: #f9c310;
-  background-image:
-    linear-gradient(#f9c310, #f9c310),
+  background-image: linear-gradient(#f9c310, #f9c310),
     linear-gradient(#c79a05, #c79a05);
-  /* positions copied from your example */
   background-position: 0 0, 100% 0, 100% 100%, 0 100%;
   background-repeat: no-repeat;
   background-size: 50% 50%, 50% 50%;
 
-  /* animation */
   animation: rotate 10s linear infinite;
   transform-origin: 50% 50%;
 }
 
-/* simple 360° rotation */
 @keyframes rotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dark,
+[data-theme="dark"] {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body,
+[data-theme="dark"] body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.dark html,
+[data-theme="dark"] html {
+  background-color: var(--background);
+}
+
+.dark .swap-card-transition,
+[data-theme="dark"] .swap-card-transition {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+.dark .swap-card-transition:hover,
+[data-theme="dark"] .swap-card-transition:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+.dark .stepper-step.active,
+[data-theme="dark"] .stepper-step.active {
+  box-shadow: 0 0 0 0 rgba(26, 232, 212, 0.4), 0 0 20px rgba(26, 232, 212, 0.2);
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus,
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+  outline: 2px solid var(--primary-cyan-400);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(26, 232, 212, 0.1);
+}
+
+.dark ::-webkit-scrollbar,
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track,
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--gray-800);
+}
+
+.dark ::-webkit-scrollbar-thumb,
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--gray-600);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
 }

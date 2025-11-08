@@ -67,14 +67,14 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
 
   if (isLoading) {
     return (
-      <Paper className="p-3 bg-white">
+      <Paper className="p-3 bg-white dark:bg-gray-200">
         <div className="shadow-sm rounded-lg overflow-hidden">
           <div className="flex flex-col gap-6">
             <div className="px-3 py-5 flex flex-col bg-gray-200 gap-3 animate-pulse">
               <div className="h-16 bg-gray-300 rounded"></div>
               <div className="h-10 bg-gray-300 rounded w-1/2"></div>
             </div>
-            <div className="px-3 bg-white rounded-b-lg">
+            <div className="px-3 bg-white dark:bg-gray-200 rounded-b-lg">
               <div className="flex gap-3 flex-col">
                 <div className="h-6 bg-gray-200 rounded w-1/3 animate-pulse"></div>
                 <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
@@ -89,7 +89,7 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
 
   if (isError || !data?.link) {
     return (
-      <Paper className="p-3 bg-white">
+      <Paper className="p-3 bg-white dark:bg-gray-200">
         <div className="shadow-sm rounded-lg overflow-hidden">
           <div className="px-3 py-5 text-center">
             <p className="text-red-500">
@@ -194,7 +194,7 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
                       />
                     </div>
                     <p className="text-[0.75rem] flex py-4 text-gray-600">
-                      <InfoIcon className="text-black" />
+                      <InfoIcon className="text-foreground" />
                       &nbsp;If you&apos;re sending the payment from an exchange,
                       ensure it doesn&apos;t deduct fees from the sent amount.
                       If it does, send the requested amount plus the exchange

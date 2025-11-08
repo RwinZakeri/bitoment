@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  // const result = assetData.data.slice(0, 3).reduce((acc, rec) => {
-  // return acc - Number(rec.percentage.split("%")[0]);
-  // }, 100);
+  
+  
+  
 
   const data = [
     {

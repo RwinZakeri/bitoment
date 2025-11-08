@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef } from "react";
 import { DoughnutChartProps } from "./type";
 
-// Register Chart.js components
+
 ChartJS.register(ArcElement, Tooltip, Legend, DoughnutController);
 
 const DoughnutChart = ({
@@ -70,7 +70,7 @@ const DoughnutChart = ({
       });
     }
 
-    // Cleanup function
+    
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();

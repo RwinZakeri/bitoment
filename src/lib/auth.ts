@@ -4,34 +4,13 @@ import bcrypt from "bcryptjs";
 import jwt, { Secret } from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
-// JWT secret - Next.js automatically loads .env files
-// Use environment variable or fallback to default
-// IMPORTANT: Make sure SECRET_KEY is set in .env and there's only ONE definition
 const JWT_SECRET = process.env.SECRET_KEY || "golbargegolamgoletoyebaghche";
 
-// Validate that JWT_SECRET is set properly
-if (!JWT_SECRET || JWT_SECRET === "your-secret-key-here") {
-  console.warn(
-    "⚠️  WARNING: JWT_SECRET is not properly configured. Using fallback secret."
-  );
-}
-
-/**
- * Hash a password using bcrypt
- * @param password - Plain text password
- * @returns Promise<string> - Hashed password
- */
 export async function hashPassword(password: string): Promise<string> {
   const saltRounds = 12;
   return await bcrypt.hash(password, saltRounds);
 }
 
-/**
- * Compare a password with its hash
- * @param password - Plain text password
- * @param hashedPassword - Hashed password from database
- * @returns Promise<boolean> - True if passwords match
- */
 export async function comparePassword(
   password: string,
   hashedPassword: string
@@ -39,12 +18,6 @@ export async function comparePassword(
   return await bcrypt.compare(password, hashedPassword);
 }
 
-/**
- * Generate a JWT token
- * @param payload - Token payload
- * @param expiresIn - Token expiration time (default: 7d)
- * @returns string - JWT token
- */
 export function generateToken(
   payload: JWTPayload["data"],
   expiresIn: string = "7d"
@@ -52,36 +25,22 @@ export function generateToken(
   return jwt.sign({ expiresIn, data: payload }, JWT_SECRET);
 }
 
-/**
- * Verify and decode a JWT token
- * @param token - JWT token
- * @returns JWTPayload - Decoded token payload
- */
 export function verifyToken(token: string): JWTPayload {
   return jwt.verify(token, JWT_SECRET as Secret) as JWTPayload;
 }
 
-/**
- * Validate email format
- * @param email - Email address to validate
- * @returns boolean - True if email is valid
- */
 export function isValidEmail(email: string): boolean {
-  // More comprehensive email regex that follows RFC 5322 standards
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-  // Additional checks
   if (!email || email.length > 254) {
     return false;
   }
 
-  // Check for consecutive dots
   if (email.includes("..")) {
     return false;
   }
 
-  // Check for valid local and domain parts
   const parts = email.split("@");
   if (parts.length !== 2) {
     return false;
@@ -89,12 +48,10 @@ export function isValidEmail(email: string): boolean {
 
   const [localPart, domainPart] = parts;
 
-  // Local part validation
   if (localPart.length === 0 || localPart.length > 64) {
     return false;
   }
 
-  // Domain part validation
   if (domainPart.length === 0 || domainPart.length > 253) {
     return false;
   }
@@ -102,11 +59,6 @@ export function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
-/**
- * Validate password strength
- * @param password - Password to validate
- * @returns object - Validation result with isValid and message
- */
 export function validatePassword(password: string): {
   isValid: boolean;
   message?: string;
@@ -136,11 +88,6 @@ export function validatePassword(password: string): {
   return { isValid: true, message: "Password is valid" };
 }
 
-/**
- * Extract token from Authorization header
- * @param authHeader - Authorization header value
- * @returns string | null - Extracted token or null
- */
 export function extractTokenFromHeader(
   authHeader: string | null
 ): string | null {
@@ -150,11 +97,6 @@ export function extractTokenFromHeader(
   return authHeader.substring(7);
 }
 
-/**
- * Get content type from request headers
- * @param request - Next.js request object
- * @returns string | undefined - Content type or undefined if not found
- */
 export function getContentType(request: NextRequest): string | undefined {
   const contentType = request.headers.get("content-type");
   if (!contentType || !contentType.includes("application/json")) {
@@ -163,11 +105,6 @@ export function getContentType(request: NextRequest): string | undefined {
   return contentType;
 }
 
-/**
- * Generate a random OTP
- * @param length - Length of OTP (default: 4)
- * @returns string - Generated OTP
- */
 export function generateOTP(length: number = 4): string {
   const digits = "0123456789";
   let otp = "";
@@ -177,47 +114,28 @@ export function generateOTP(length: number = 4): string {
   return otp;
 }
 
-/**
- * Check if OTP is expired
- * @param expiresAt - Expiration timestamp
- * @returns boolean - True if expired
- */
 export function isOTPExpired(expiresAt: string): boolean {
   return new Date() > new Date(expiresAt);
 }
 
-/**
- * Generate expiration time for OTP (default: 5 minutes)
- * @param minutes - Minutes until expiration (default: 5)
- * @returns string - ISO timestamp
- */
 export function generateOTPExpiration(minutes: number = 5): string {
   const now = new Date();
   now.setMinutes(now.getMinutes() + minutes);
   return String(now.getTime());
 }
 
-/**
- * Check if OTP verification time has expired (time between state 0 to 1)
- * @param createdAt - When OTP was created (state 0)
- * @param verifiedAt - When OTP was verified (state 1), null if not verified yet
- * @param maxMinutes - Maximum minutes allowed for verification (default: 10)
- * @returns boolean - True if verification time has expired
- */
 export function isOTPVerificationTimeExpired(
   createdAt: string,
   verifiedAt: string | null,
   maxMinutes: number = 10
 ): boolean {
   if (!verifiedAt) {
-    // If not verified yet, check if too much time has passed since creation
     const created = new Date(createdAt);
     const now = new Date();
     const diffMinutes = (now.getTime() - created.getTime()) / (1000 * 60);
     return diffMinutes > maxMinutes;
   }
 
-  // If verified, check if verification happened within the allowed time
   const created = new Date(createdAt);
   const verified = new Date(verifiedAt);
   const diffMinutes = (verified.getTime() - created.getTime()) / (1000 * 60);

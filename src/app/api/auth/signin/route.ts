@@ -83,18 +83,18 @@ export async function POST(
       email: user.email,
     });
 
-    // Extract device information from user agent
+    
     const userAgent = request.headers.get("user-agent") || "";
     const parser = new UAParser(userAgent);
     const result = parser.getResult();
 
-    // Get IP address from headers
+    
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded
       ? forwarded.split(",")[0]
       : request.headers.get("x-real-ip") || "unknown";
 
-    // Store login session
+    
     try {
       await db
         .prepare(
@@ -109,7 +109,7 @@ export async function POST(
         );
     } catch (sessionError) {
       console.error("Error storing login session:", sessionError);
-      // Don't fail the login if session tracking fails
+      
     }
 
     return NextResponse.json(

@@ -6,7 +6,7 @@ import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
 import MutationKey from "@/types/mutation_key";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-// import Link from "next/link";
+
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import OtpInput from "react-otp-input";
@@ -61,7 +61,6 @@ const ForgotPasswordOtp = ({
       setStep(2);
     },
     onError: (err: unknown) => {
-      console.log(err);
       const errorMessage =
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message || "An error occurred";

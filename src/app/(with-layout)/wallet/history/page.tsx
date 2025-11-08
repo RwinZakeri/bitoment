@@ -57,7 +57,7 @@ const HistoryPageContent = () => {
   });
 
   const getCryptoIcon = (name: string) => {
-    // Both crypto and CPG transactions use their respective crypto icons
+    
     switch (name.toLowerCase()) {
       case "btc":
         return <BtcIcon className="w-4 h-4" />;
@@ -96,7 +96,7 @@ const HistoryPageContent = () => {
         </div>
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               Unable to load history
             </h3>
             <p className="text-gray-500 mb-4">
@@ -118,7 +118,7 @@ const HistoryPageContent = () => {
     ? `${cryptoParam.toUpperCase()} Wallet History`
     : "Wallet History";
 
-  // Define popup options for sorting
+  
   const popupOptions: PopupOption[] = [
     {
       label: "Date",
@@ -162,7 +162,7 @@ const HistoryPageContent = () => {
             ref={buttonRef}
             size="sm"
             variant="text"
-            className="bg-white"
+            className="bg-white dark:bg-gray-200"
             type="button"
             onClick={() => setIsPopupOpen(!isPopupOpen)}
           >
@@ -188,7 +188,7 @@ const HistoryPageContent = () => {
       {!historyData?.data || historyData.data.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               No transaction history
             </h3>
             <p className="text-gray-500">

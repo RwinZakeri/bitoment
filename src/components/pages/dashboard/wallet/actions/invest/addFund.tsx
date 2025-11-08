@@ -10,7 +10,6 @@ import ReactQueryKey from "@/types/react_query_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import {
@@ -53,10 +52,6 @@ const AddFund = ({
     },
   });
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   const addFundMutation = useMutation({
     mutationKey: [MutationKey.addMoney],
     mutationFn: async (amount: number): Promise<AddMoneyResponse> => {
@@ -67,7 +62,6 @@ const AddFund = ({
     },
     onSuccess: (data) => {
       if (data.success && data.wallet) {
-        // Invalidate all wallet-related queries
         queryClient.invalidateQueries({ queryKey: [ReactQueryKey.wallet] });
         queryClient.invalidateQueries({
           queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletBalance],

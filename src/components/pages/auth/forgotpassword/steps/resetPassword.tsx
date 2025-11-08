@@ -20,7 +20,7 @@ interface ResetPasswordData {
 }
 
 const ForgotPasswordResetPassword = ({
-  // setStep,
+  
   resetPasswordData,
 }: {
   setStep: Dispatch<SetStateAction<number>>;

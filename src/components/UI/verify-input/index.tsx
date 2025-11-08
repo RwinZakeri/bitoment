@@ -11,12 +11,12 @@ const VerifyInput = React.forwardRef<HTMLInputElement, VerifyInputPropsType>(
     return (
       <div className="flex flex-col gap-4 ">
         {label && (
-          <label htmlFor={inputId} className="text-base text-black">
+          <label htmlFor={inputId} className="text-base text-foreground">
             {label}
           </label>
         )}
         <div
-          className={`bg-white rounded-lg w-full flex justify-between ${
+          className={`bg-white dark:bg-gray-200 rounded-lg w-full flex justify-between ${
             inputSize === "sm" ? "p-3.5" : "px-3 py-5"
           }`}
         >

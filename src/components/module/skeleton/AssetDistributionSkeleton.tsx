@@ -5,7 +5,7 @@ const AssetDistributionSkeleton = () => {
   return (
     <SkeletonThemeWrapper>
       <div className="rounded-xl bg-white mt-4 p-4 shadow-lg">
-        {/* TotalPrice Section */}
+        
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-2">
             <Skeleton height={16} width={100} />
@@ -23,7 +23,7 @@ const AssetDistributionSkeleton = () => {
           </div>
         </div>
 
-        {/* Currency Progress Cards Section */}
+        
         <div className="mt-6 space-y-4">
           {Array.from({ length: 3 }).map((_, index) => (
             <div

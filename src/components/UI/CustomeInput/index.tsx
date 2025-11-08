@@ -22,7 +22,7 @@ const CustomeInput = ({
     if (variant === "secondary") {
       return "bg-gray-200";
     }
-    return "bg-white";
+    return "bg-white dark:bg-gray-200";
   };
 
   return (
@@ -56,7 +56,9 @@ const CustomeInput = ({
             inputType !== "fill" && sizes[size],
             "border-none w-full placeholder:text-gray-500 focus:outline-none ",
             inputType !== "fill" && "rounded-xl",
-            variant === "secondary" ? "bg-gray-200" : "bg-white",
+            variant === "secondary"
+              ? "bg-gray-200 dark:bg-gray-300"
+              : "bg-white dark:bg-gray-200",
             error && "border-2 border-red-500 focus:border-red-500"
           )}
           {...rest}
@@ -65,7 +67,7 @@ const CustomeInput = ({
           <div
             className={cn(
               size === "md"
-                ? "absolute cursor-pointer right-4 p-2 bg-white top-1/2 transform -translate-y-1/2"
+                ? "absolute cursor-pointer right-4 p-2 bg-white dark:bg-gray-200 top-1/2 transform -translate-y-1/2"
                 : "absolute right-2 bg-gray-200 pl-1 top-2.5"
             )}
           >

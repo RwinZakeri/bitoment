@@ -2,10 +2,7 @@ import db from "@/lib/db";
 import { CpgLink, GetPublicCpgLinkResponse } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * GET /api/payment/[slug]
- * Get a CPG link by link_id (public endpoint, no authentication required)
- */
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -23,7 +20,7 @@ export async function GET(
       );
     }
 
-    // Get the CPG link by link_id (public access, no user_id check)
+    
     const link = (await db
       .prepare("SELECT * FROM cpg_links WHERE link_id = ?")
       .get(slug)) as CpgLink | undefined;
@@ -38,7 +35,7 @@ export async function GET(
       );
     }
 
-    // Check if link is active
+    
     if (link.status !== "active") {
       return NextResponse.json(
         {

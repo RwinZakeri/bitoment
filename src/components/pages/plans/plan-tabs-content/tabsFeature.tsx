@@ -42,7 +42,7 @@ const FeaturesTab = () => {
   const currentDurationLabel = durationLabels[selectedStep] || "1 Month";
   return (
     <div className="p-2 mt-4">
-      <div className="w-full flex bg-white justify-between rounded-2xl p-4">
+      <div className="w-full flex bg-white dark:bg-gray-200 justify-between rounded-2xl p-4">
         <p className="text-sm w-64">
           Smart investing in traditional markets and cryptocurrencies with a
           focus on maximizing returns and managing risk.
@@ -101,7 +101,7 @@ const FeaturesTab = () => {
       </div>
       <Paper
         icon={<DocumentWithEyeIcon />}
-        className="bg-white p-4 rounded-2xl mt-4"
+        className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
         label="Asset Allocation"
       >
         <div className="grid grid-cols-2">
@@ -120,7 +120,7 @@ const FeaturesTab = () => {
       </Paper>
       <Paper
         icon={<LineChartIcon className="ml-2" />}
-        className="bg-white p-2 rounded-2xl mt-4"
+        className="bg-white dark:bg-gray-200 p-2 rounded-2xl mt-4"
         label="Fund Performance Chart"
       >
         <div className="mt-4 flex-col flex gap-4">
@@ -150,7 +150,7 @@ const FeaturesTab = () => {
 
       <Paper
         icon={<WindowIcon />}
-        className="bg-white p-4 rounded-2xl mt-4"
+        className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
         label="Asset Allocation"
       >
         <div className="h-80">
@@ -194,7 +194,7 @@ const FeaturesTab = () => {
       </Paper>
       <Paper
         label="Documentation"
-        className="bg-white rounded-2xl p-4 mt-4"
+        className="bg-white dark:bg-gray-200 rounded-2xl p-4 mt-4"
         icon={<DocumentIcon />}
       >
         <div className="flex flex-col gap-4">

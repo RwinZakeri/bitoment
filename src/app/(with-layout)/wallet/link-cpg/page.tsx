@@ -74,9 +74,6 @@ const LinkCpg = () => {
     },
     onSuccess: (data) => {
       toast.success("Payment link created successfully!");
-      if (data.link) {
-        console.log("Created link:", data.link);
-      }
     },
     onError: (error: unknown) => {
       const errorMessage =

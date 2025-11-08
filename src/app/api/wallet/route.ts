@@ -10,10 +10,6 @@ import {
 } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * GET /api/wallet
- * Get user's wallet balance
- */
 export async function GET(
   request: NextRequest
 ): Promise<NextResponse<GetWalletResponse>> {
@@ -64,10 +60,6 @@ export async function GET(
   }
 }
 
-/**
- * POST /api/wallet
- * Add money to wallet
- */
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<AddMoneyResponse>> {
@@ -99,7 +91,6 @@ export async function POST(
 
     const userId = tokenPayload.data.userId;
 
-    // Get current wallet
     const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet | undefined;
@@ -114,22 +105,11 @@ export async function POST(
       );
     }
 
-    // Update wallet balance
-    // Convert balance to number since Postgres NUMERIC returns as string
     const currentBalance =
       typeof wallet.balance === "string"
         ? parseFloat(wallet.balance)
         : wallet.balance;
     const newBalance = currentBalance + amount;
-
-    console.log("Wallet update debug:", {
-      currentBalance,
-      amount,
-      newBalance,
-      userId,
-      balanceType: typeof wallet.balance,
-      newBalanceType: typeof newBalance,
-    });
 
     const updateWallet = db.prepare(`
       UPDATE wallets 
@@ -140,9 +120,6 @@ export async function POST(
 
     const result = await updateWallet.run(newBalance, userId);
 
-    console.log("Update result:", result);
-
-    // Verify update was successful
     if (result.changes === 0) {
       return NextResponse.json(
         {
@@ -153,12 +130,10 @@ export async function POST(
       );
     }
 
-    // Get updated wallet (ensure balance is converted to number if it comes as string)
     const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet;
 
-    // Convert balance to number if it's a string (Postgres NUMERIC returns as string)
     if (typeof updatedWallet.balance === "string") {
       updatedWallet.balance = parseFloat(updatedWallet.balance);
     }
@@ -184,10 +159,6 @@ export async function POST(
   }
 }
 
-/**
- * PUT /api/wallet
- * Delete money from wallet (reduce balance)
- */
 export async function PUT(
   request: NextRequest
 ): Promise<NextResponse<DeleteMoneyResponse>> {
@@ -219,7 +190,6 @@ export async function PUT(
 
     const userId = tokenPayload.data.userId;
 
-    // Get current wallet
     const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet | undefined;
@@ -234,13 +204,11 @@ export async function PUT(
       );
     }
 
-    // Convert balance to number since Postgres NUMERIC returns as string
     const currentBalance =
       typeof wallet.balance === "string"
         ? parseFloat(wallet.balance)
         : wallet.balance;
 
-    // Check if user has sufficient balance
     if (currentBalance < amount) {
       return NextResponse.json(
         {
@@ -251,7 +219,6 @@ export async function PUT(
       );
     }
 
-    // Update wallet balance
     const newBalance = currentBalance - amount;
     const updateWallet = db.prepare(`
       UPDATE wallets 
@@ -262,7 +229,6 @@ export async function PUT(
 
     const result = await updateWallet.run(newBalance, userId);
 
-    // Verify update was successful
     if (result.changes === 0) {
       return NextResponse.json(
         {
@@ -273,12 +239,10 @@ export async function PUT(
       );
     }
 
-    // Get updated wallet (ensure balance is converted to number if it comes as string)
     const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet;
 
-    // Convert balance to number if it's a string (Postgres NUMERIC returns as string)
     if (typeof updatedWallet.balance === "string") {
       updatedWallet.balance = parseFloat(updatedWallet.balance);
     }
@@ -304,10 +268,6 @@ export async function PUT(
   }
 }
 
-/**
- * DELETE /api/wallet
- * Reset wallet balance to 0
- */
 export async function DELETE(
   request: NextRequest
 ): Promise<NextResponse<DeleteMoneyResponse>> {
@@ -326,7 +286,6 @@ export async function DELETE(
 
     const userId = tokenPayload.data.userId;
 
-    // Get current wallet
     const wallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet | undefined;
@@ -341,7 +300,6 @@ export async function DELETE(
       );
     }
 
-    // Reset wallet balance to 0
     const updateWallet = db.prepare(`
       UPDATE wallets 
       SET balance = 0, updated_at = CURRENT_TIMESTAMP
@@ -351,7 +309,6 @@ export async function DELETE(
 
     const result = await updateWallet.run(userId);
 
-    // Verify update was successful
     if (result.changes === 0) {
       return NextResponse.json(
         {
@@ -362,12 +319,10 @@ export async function DELETE(
       );
     }
 
-    // Get updated wallet (ensure balance is converted to number if it comes as string)
     const updatedWallet = (await db
       .prepare("SELECT * FROM wallets WHERE user_id = ?")
       .get(userId)) as Wallet;
 
-    // Convert balance to number if it's a string (Postgres NUMERIC returns as string)
     if (typeof updatedWallet.balance === "string") {
       updatedWallet.balance = parseFloat(updatedWallet.balance);
     }

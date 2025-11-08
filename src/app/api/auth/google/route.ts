@@ -8,9 +8,6 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 import { UAParser } from "ua-parser-js";
 
-/**
- * Fetch user information from Google using access token
- */
 async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
   if (!accessToken || accessToken.trim().length === 0) {
     throw new Error("Access token is empty or invalid");
@@ -19,18 +16,14 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
   let response: Response;
   let lastError: Error | null = null;
 
-  // Try using Authorization header first (more secure and recommended)
   try {
-    response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`, {
+    response = await fetch(`https://www.googleapis.com/oauth2/v2/userinfo`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      // Let Next.js/server handle the default timeout
-      // Adding a longer timeout via next.config if needed
     });
 
-    // If that fails, try with query parameter (legacy support)
     if (!response.ok) {
       try {
         response = await fetch(
@@ -56,7 +49,9 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
       accessTokenPrefix: accessToken?.substring(0, 10),
     });
     throw new Error(
-      `Failed to connect to Google API: ${lastError.message}. Please check your network connection and try again.`
+      `Failed to connect to Google API: ${
+        lastError?.message || "Unknown error"
+      }. Please check your network connection and try again.`
     );
   }
 
@@ -65,9 +60,7 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
     try {
       const text = await response.text();
       errorData = text ? JSON.parse(text) : {};
-    } catch {
-      // Ignore JSON parse errors
-    }
+    } catch {}
 
     console.error("Google API error:", {
       status: response.status,
@@ -75,7 +68,6 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
       error: errorData,
     });
 
-    // Provide more specific error messages
     if (response.status === 401) {
       throw new Error("Invalid or expired access token");
     } else if (response.status === 403) {
@@ -93,12 +85,10 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
     given_name?: string;
     picture?: string;
     id?: string;
-    sub?: string; // Google OAuth returns 'sub' as the user ID
+    sub?: string;
   };
   try {
     data = await response.json();
-    // Debug log to help troubleshoot (remove in production if needed)
-    console.log("Google API response data keys:", Object.keys(data));
   } catch (parseError) {
     console.error("Failed to parse Google API response:", parseError);
     throw new Error("Invalid response format from Google API");
@@ -109,7 +99,6 @@ async function getGoogleUserInfo(accessToken: string): Promise<GoogleUserInfo> {
     throw new Error("Email not found in Google user info");
   }
 
-  // Google OAuth returns 'sub' (subject) as the user ID, not 'id'
   const userId = data.sub || data.id;
   if (!userId) {
     console.error(
@@ -154,7 +143,6 @@ export async function POST(
       );
     }
 
-    // Fetch user info from Google
     let googleUser: GoogleUserInfo;
     try {
       googleUser = await getGoogleUserInfo(accessToken);
@@ -185,7 +173,6 @@ export async function POST(
       );
     }
 
-    // Check if user exists
     const existingUser = (await db
       .prepare(
         "SELECT id, email, name, password, oauth_provider FROM users WHERE email = ?"
@@ -204,10 +191,8 @@ export async function POST(
     let isNewUser = false;
 
     if (existingUser) {
-      // User exists - sign in
       userId = existingUser.id;
 
-      // Update OAuth info if not already set to google
       if (existingUser.oauth_provider !== "google") {
         const updateOAuth = db.prepare(
           "UPDATE users SET oauth_provider = ?, oauth_id = ?, name = COALESCE(name, ?) WHERE id = ?"
@@ -219,7 +204,6 @@ export async function POST(
           userId
         );
       } else {
-        // Ensure oauth_id is set even if provider is already google
         await db
           .prepare(
             "UPDATE users SET oauth_id = ? WHERE id = ? AND (oauth_id IS NULL OR oauth_id = '')"
@@ -227,14 +211,12 @@ export async function POST(
           .run(googleUser.id, userId);
       }
 
-      // Update name if it changed and is not null
       if (googleUser.name && googleUser.name !== existingUser.name) {
         await db
           .prepare("UPDATE users SET name = ? WHERE id = ?")
           .run(googleUser.name, userId);
       }
     } else {
-      // New user - sign up
       isNewUser = true;
       const insertUser = db.prepare(`
         INSERT INTO users (email, name, password, oauth_provider, oauth_id, created_at)
@@ -244,13 +226,12 @@ export async function POST(
       const result = await insertUser.run(
         googleUser.email,
         googleUser.name,
-        null, // Explicitly set password to NULL for OAuth users
+        null,
         "google",
         googleUser.id
       );
       userId = result.lastInsertRowid as number;
 
-      // Create wallet for the new user with initial balance of 1000
       const insertWallet = db.prepare(`
         INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
         VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
@@ -258,24 +239,20 @@ export async function POST(
       await insertWallet.run(userId, 1000.0, "USD");
     }
 
-    // Generate JWT token
     const token = generateToken({
       userId: userId,
       email: googleUser.email,
     });
 
-    // Extract device information from user agent
     const userAgent = request.headers.get("user-agent") || "";
     const parser = new UAParser(userAgent);
     const result = parser.getResult();
 
-    // Get IP address from headers
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded
       ? forwarded.split(",")[0]
       : request.headers.get("x-real-ip") || "unknown";
 
-    // Store login session
     try {
       await db
         .prepare(
@@ -290,10 +267,8 @@ export async function POST(
         );
     } catch (sessionError) {
       console.error("Error storing login session:", sessionError);
-      // Don't fail the login if session tracking fails
     }
 
-    // Get updated user info
     const user = (await db
       .prepare("SELECT id, email, name FROM users WHERE id = ?")
       .get(userId)) as {

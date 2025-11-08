@@ -12,7 +12,7 @@ const PlanCard = ({
 }: planCardPropsType) => {
   const cardContent = (
     <div
-      className={`bg-white max-h-20 py-5 px-6 flex justify-between rounded-xl ${
+      className={`bg-white dark:bg-gray-200 max-h-20 py-5 px-6 flex justify-between rounded-xl ${
         onClick || link
           ? "cursor-pointer hover:opacity-90 transition-opacity"
           : ""
@@ -22,11 +22,11 @@ const PlanCard = ({
         <div>{icon}</div>
         <div className="flex flex-col gap-1">
           <p className="font-semibold">{title}</p>
-          <p className="text-xs text-gray-800/40">{date}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{date}</p>
         </div>
       </div>
       <div className="flex flex-col items-center ">
-        {price && <p className="text-black">${price}</p>}
+        {price && <p className="text-foreground">${price}</p>}
         {amount && (
           <p className="text-cyan-400 text-xs font-semibold">+{amount}%</p>
         )}

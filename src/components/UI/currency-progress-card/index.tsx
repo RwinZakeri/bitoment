@@ -12,15 +12,14 @@ const CurrencyProgressCard = ({
   vertical,
 }: CurrencyProgressCardPropsType) => {
   const { currency } = useCurrency();
-  console.log(icon);
 
   return (
     <Link
       href={`/wallet/${title.toLocaleLowerCase()}`}
       className={`flex justify-between ${
         vertical
-          ? " bg-[#EFEFEF] flex-col-reverse gap-4 items-center rounded-lg p-4"
-          : " p-4 rounded-xl shadow-[0px_2px_10px_rgba(32,32,32,25%)]"
+          ? " bg-gray-200 flex-col-reverse gap-4 items-center rounded-lg p-4"
+          : " p-4 rounded-xl shadow-[0px_2px_10px_rgba(32,32,32,25%)] dark:bg-gray-200"
       }`}
     >
       <div className={`flex flex-col gap-2 ${vertical && "items-center"}`}>
@@ -43,8 +42,10 @@ const CurrencyProgressCard = ({
           <p className="font-bold text-xl">{title}</p>
         </div>
         <p className="flex items-center gap-1">
-          <span className="text-black text-base">{price}</span>
-          <span className="text-gray-800/65 text-sm">{currency}</span>
+          <span className="text-foreground text-base">{price}</span>
+          <span className="text-gray-500 dark:text-gray-400 text-sm">
+            {currency}
+          </span>
         </p>
       </div>
       <CircleProgressBar

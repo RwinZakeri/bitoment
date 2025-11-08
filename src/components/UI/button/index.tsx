@@ -5,12 +5,14 @@ import { forwardRef } from "react";
 import { ButtonProps } from "./type";
 
 const VARIANTS = {
-  filled: "bg-cyan-300 text-black/70 hover:bg-cyan-400 focus:ring-cyan-400",
-  text: "bg-transparent text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 focus:ring-cyan-400",
-  secondary: "bg-secondary text-black/70 hover:bg-secondary/90",
+  filled:
+    "bg-cyan-300 text-black/70 dark:text-foreground/90 hover:bg-cyan-400 focus:ring-cyan-400",
+  text: "bg-transparent text-cyan-500 hover:text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-500/10 focus:ring-cyan-400",
+  secondary:
+    "bg-secondary text-black/70 dark:text-foreground/90 hover:bg-secondary/90",
   outline: "bg-transparent border border-white text-white hover:bg-white/10",
   "outline-dark":
-    "bg-transparent border border-black/25 text-black/70 hover:bg-black/5",
+    "bg-transparent border border-black/25 dark:border-white/25 text-black/70 dark:text-foreground/90 hover:bg-black/5 dark:hover:bg-white/5",
 } as const;
 
 const SIZES = {
@@ -58,11 +60,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         <div className="flex items-center justify-center gap-2">
-          {/* {isLoading && (
-            <span className="mr-1">
-              loading ...
-            </span>
-          )} */}
           {icon && <span className="flex items-center">{icon}</span>}
           <span>{children}</span>
         </div>

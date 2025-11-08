@@ -78,7 +78,7 @@ const RiskReportContent = () => {
         </div>
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               Unable to load risk report
             </h3>
             <p className="text-gray-500 mb-4">
@@ -109,7 +109,7 @@ const RiskReportContent = () => {
       {!riskReportData?.data || riskReportData.data.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
               No risk report data
             </h3>
             <p className="text-gray-500">

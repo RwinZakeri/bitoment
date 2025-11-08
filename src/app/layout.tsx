@@ -41,28 +41,28 @@ export default function RootLayout({
       <body
         className={`${poppins.className} relative max-w-[520px] w-full mx-auto`}
       >
-        <main className="bg-gray-200 min-h-screen">
+        <main className="bg-gray-200 dark:bg-gray-100 min-h-screen transition-colors duration-200">
           <ConfigProvider>{children}</ConfigProvider>
           <Toaster
             position="top-center"
             toastOptions={{
               duration: 4000,
               style: {
-                background: "#363636",
-                color: "#fff",
+                background: "var(--gray-200)",
+                color: "var(--foreground)",
               },
               success: {
                 duration: 3000,
                 iconTheme: {
-                  primary: "#00e4cc",
-                  secondary: "#fff",
+                  primary: "var(--primary-cyan-400)",
+                  secondary: "var(--foreground)",
                 },
               },
               error: {
                 duration: 5000,
                 iconTheme: {
-                  primary: "#ff6b6b",
-                  secondary: "#fff",
+                  primary: "var(--red-500)",
+                  secondary: "var(--foreground)",
                 },
               },
             }}

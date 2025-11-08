@@ -50,7 +50,7 @@ const IdentityVerification = () => {
   useEffect(() => {
     if (profileData?.user) {
       reset({
-        // Ensure phoneNumber is converted to string (handles both string and number types)
+        
         phoneNumber: profileData.user.phoneNumber
           ? typeof profileData.user.phoneNumber === "string"
             ? profileData.user.phoneNumber
@@ -70,7 +70,7 @@ const IdentityVerification = () => {
     },
     onSuccess: () => {
       toast.success("Identity verification information updated successfully");
-      // setIsModalOpen(true);
+      
     },
     onError: (error) => {
       toast.error("Failed to update identity verification information");
@@ -153,7 +153,7 @@ const IdentityVerification = () => {
             label="Date of Birth"
             {...register("birthDate", {
               validate: (value) => {
-                if (!value) return true; // Optional field
+                if (!value) return true; 
                 const today = new Date();
                 const birthDate = new Date(value);
                 const age = today.getFullYear() - birthDate.getFullYear();
@@ -215,7 +215,7 @@ const IdentityVerification = () => {
         )}
       </form>
 
-      {/* <VerifyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
+      
     </PageLayout>
   );
 };

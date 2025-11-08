@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 const WelcomePage = () => {
   const router = useRouter();
 
-  // Google OAuth configuration
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
   const googleScope =
     "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
@@ -45,16 +44,13 @@ const WelcomePage = () => {
     await signInWithGoogle();
   };
 
-  // Load Google Sign-In script
   useEffect(() => {
     if (!googleClientId || typeof window === "undefined") return;
 
-    // Check if script is already loaded
     if (window.google) {
       return;
     }
 
-    // Check if script is already in DOM
     const existingScript = document.querySelector(
       'script[src="https://accounts.google.com/gsi/client"]'
     );
@@ -72,7 +68,6 @@ const WelcomePage = () => {
     document.head.appendChild(script);
 
     return () => {
-      // Only remove if we added it and it still exists
       const scriptToRemove = document.querySelector(
         'script[src="https://accounts.google.com/gsi/client"]'
       );

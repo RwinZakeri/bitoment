@@ -164,7 +164,7 @@ const Receive = () => {
         </Alert>
 
         <div className="w-full flex items-center justify-center">
-          <div className="w-32 h-32 bg-white flex items-center justify-center rounded-lg p-2">
+          <div className="w-32 h-32 bg-white dark:bg-gray-200 flex items-center justify-center rounded-lg p-2">
             {walletAddress ? (
               <QRCodeSVG
                 value={walletAddress}
@@ -178,7 +178,7 @@ const Receive = () => {
           </div>
         </div>
 
-        <div className="w-60 bg-white rounded-2xl p-4 mx-auto my-4">
+        <div className="w-60 bg-white dark:bg-gray-200 rounded-2xl p-4 mx-auto my-4">
           <p className="text-gray-500 text-center">
             Your {watchedCrypto?.shortName || "BTC"} Address
           </p>

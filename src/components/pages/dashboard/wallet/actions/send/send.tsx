@@ -124,7 +124,6 @@ const Send = () => {
 
   const onSubmit = async (data: SendCryptoFormData) => {
     try {
-      console.log("Form submitted:", data);
       setIsSuccessModalOpen(true);
     } catch (error) {
       console.error("Submission error:", error);

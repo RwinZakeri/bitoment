@@ -21,23 +21,19 @@ const Modal = ({
   backdropOpacity = 0.5,
   backdropBlur = true,
   modalPadding = 6,
-  modalMargin = 12
+  modalMargin = 12,
 }: ModalPropsType) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      // Prevent body scroll when modal is open
       document.body.style.overflow = "hidden";
 
-      // Focus the modal for accessibility
       modalRef.current?.focus();
     } else {
-      // Restore body scroll when modal is closed
       document.body.style.overflow = "unset";
     }
 
-    // Cleanup on unmount
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -63,7 +59,6 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  // Size variants
   const sizeClasses = {
     sm: "max-w-sm",
     md: "max-w-md",
@@ -73,21 +68,18 @@ const Modal = ({
     auto: "max-w-full",
   };
 
-  // Position variants
   const positionClasses = {
     center: "items-center justify-center",
     top: "items-start justify-center pt-4",
     bottom: "items-end justify-center pb-4",
   };
 
-  // Backdrop styles
   const backdropStyle = {
     backgroundColor: `rgba(0, 0, 0, ${backdropOpacity})`,
   };
 
   return (
     <div className={cn("fixed inset-0 z-50 flex", positionClasses[position])}>
-      {/* Backdrop */}
       {showBackdrop && (
         <div
           className={cn(
@@ -101,11 +93,10 @@ const Modal = ({
         />
       )}
 
-      {/* Modal Content */}
       <div
         ref={modalRef}
         className={cn(
-          "relative bg-white w-full rounded-xlF shadow-xl focus:outline-none",
+          "relative bg-white dark:bg-gray-200 w-full rounded-xlF shadow-xl focus:outline-none",
           size !== "auto" && sizeClasses[size],
           className
         )}
@@ -120,12 +111,11 @@ const Modal = ({
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         {close && (
           <button
             onClick={onClose}
             className={cn(
-              "absolute top-4 right-4 z-10 p-1 rounded-md hover:bg-gray-100 transition-colors",
+              "absolute top-4 right-4 z-10 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-300 transition-colors",
               closeButtonClassName
             )}
             aria-label="Close modal"

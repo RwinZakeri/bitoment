@@ -1,5 +1,5 @@
 const ReactQueryKey = {
-  // Profile related
+  
   profile: "profile",
   devices: "devices",
   mobileDevices: "mobileDevices",
@@ -7,7 +7,7 @@ const ReactQueryKey = {
   desktopDevices: "desktopDevices",
   profileVerificationStep: "profileVerificationStep",
 
-  // Wallet related
+  
   wallet: "wallet",
   walletBalance: "walletBalance",
   walletHistory: "walletHistory",
@@ -16,16 +16,16 @@ const ReactQueryKey = {
   walletRiskReport: "walletRiskReport",
   walletCpgSingle: "walletCpgSingle",
 
-  // Session related
+  
   sessions: "sessions",
 
-  // asset
+  
   assetDistribution: "assetDistributionData",
 
-  // crypto
+  
   allCrypto: "allCrypto",
 
-  // swap
+  
   swapHistory: "swapHistory",
 
   currency : "currency"

@@ -25,7 +25,7 @@ const Popup = ({
       const trigger = triggerRef.current;
       const rect = trigger.getBoundingClientRect();
 
-      // Use requestAnimationFrame to ensure popup is rendered
+      
       requestAnimationFrame(() => {
         const popup = popupRef.current;
         if (popup) {
@@ -52,7 +52,7 @@ const Popup = ({
               break;
           }
 
-          // Ensure popup stays within viewport
+          
           const viewportWidth = window.innerWidth;
           const viewportHeight = window.innerHeight;
 
@@ -71,11 +71,11 @@ const Popup = ({
 
           setPopupPosition({ top, left });
         } else {
-          // Fallback: estimate position without popup dimensions
+          
           let top = 0;
           let left = 0;
-          const estimatedWidth = 160; // min-w-[160px]
-          const estimatedHeight = options.length * 40 + 16; // approximate
+          const estimatedWidth = 160; 
+          const estimatedHeight = options.length * 40 + 16; 
 
           switch (position) {
             case "bottom-right":
@@ -137,18 +137,18 @@ const Popup = ({
 
   return (
     <>
-      {/* Backdrop */}
+      
       <div
         className="fixed inset-0 z-40"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Popup */}
+      
       <div
         ref={popupRef}
         className={cn(
-          "fixed z-50 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[160px]",
+          "fixed z-50 bg-white dark:bg-gray-200 rounded-lg shadow-lg border border-gray-200 dark:border-gray-300 py-2 min-w-[160px]",
           !popupPosition && "opacity-0 pointer-events-none",
           className
         )}

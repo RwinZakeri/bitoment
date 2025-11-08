@@ -13,7 +13,7 @@ import {
 import { useEffect, useRef } from "react";
 import { RadarChartProps } from "./type";
 
-// Register Chart.js components
+
 ChartJS.register(
   RadarController,
   RadialLinearScale,
@@ -83,7 +83,7 @@ const RadarChart = ({ data, options, className = "" }: RadarChartProps) => {
       });
     }
 
-    // Cleanup function
+    
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();

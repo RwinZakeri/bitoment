@@ -21,7 +21,7 @@ const RiskReportCard = ({
     if (typeof price === "number") {
       return formatCurrency(price, currency);
     }
-    // If price is already a formatted string, try to extract number and format
+    
     const numPrice = parseFloat(String(price).replace(/[^0-9.-]/g, ""));
     if (!isNaN(numPrice)) {
       return formatCurrency(numPrice, currency);
@@ -29,7 +29,7 @@ const RiskReportCard = ({
     return price;
   };
   return (
-    <div className="p-3 w-full cursor-pointer bg-white flex items-center justify-between rounded-lg">
+    <div className="p-3 w-full cursor-pointer bg-white dark:bg-gray-200 flex items-center justify-between rounded-lg">
       <div className="flex items-center-safe gap-2">
         <div
           className={cn(

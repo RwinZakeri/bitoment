@@ -28,8 +28,6 @@ export async function GET(request: NextRequest) {
       )
       .get(tokenPayload.data.userId)) as User | undefined;
 
-    console.log(user);
-
     if (!user) {
       return NextResponse.json(
         {
@@ -73,9 +71,6 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
 
-    console.log("Profile update request body:", body);
-
-    // Validate the request body
     const validationResult = optionalProfileUpdateSchema.safeParse(body);
     if (!validationResult.success) {
       console.error("Validation errors:", validationResult.error.issues);
@@ -92,8 +87,6 @@ export async function PUT(request: NextRequest) {
     const { fullName, email, phoneNumber, nationalInsuranceNumber, birthDate } =
       validationResult.data;
 
-    // Get current user data to preserve existing values for optional fields
-    // Note: phoneNumber is now TEXT in database
     const currentUser = (await db
       .prepare(
         `SELECT name, email, phoneNumber, nationalInsuranceNumber, birthDate 
@@ -120,11 +113,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Use provided values or keep existing ones
     const updatedName = fullName !== undefined ? fullName : currentUser.name;
     const updatedEmail = email !== undefined ? email : currentUser.email;
 
-    // Check if email is being changed and if it already exists for another user
     if (email !== undefined && email !== currentUser.email) {
       const existingUser = (await db
         .prepare("SELECT id FROM users WHERE email = ? AND id != ?")
@@ -141,22 +132,18 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Handle phoneNumber - now stored as TEXT in database (migrated from INTEGER)
-    // Clean and validate the phone number
     let updatedPhoneNumber: string | null = null;
     if (
       phoneNumber !== undefined &&
       phoneNumber !== null &&
       phoneNumber !== ""
     ) {
-      // Clean phone number (remove non-digits but keep for validation)
       const cleanedPhone =
         typeof phoneNumber === "string"
           ? phoneNumber.replace(/\D/g, "")
           : String(phoneNumber).replace(/\D/g, "");
 
       if (cleanedPhone && cleanedPhone.length >= 10) {
-        // Store cleaned phone number as text
         updatedPhoneNumber = cleanedPhone;
       } else if (cleanedPhone) {
         return NextResponse.json(
@@ -170,14 +157,11 @@ export async function PUT(request: NextRequest) {
         updatedPhoneNumber = null;
       }
     } else if (phoneNumber === "") {
-      // If empty string is explicitly provided, set to null
       updatedPhoneNumber = null;
     } else {
-      // Keep existing phone number
       updatedPhoneNumber = currentUser.phoneNumber?.toString() || null;
     }
 
-    // Handle optional fields - convert empty strings to null for database
     const updatedNationalInsuranceNumber =
       nationalInsuranceNumber !== undefined
         ? nationalInsuranceNumber === ""
@@ -191,16 +175,6 @@ export async function PUT(request: NextRequest) {
           : birthDate
         : currentUser.birthDate;
 
-    console.log("Updating profile with:", {
-      fullName: updatedName,
-      email: updatedEmail,
-      phoneNumber: updatedPhoneNumber,
-      nationalInsuranceNumber: updatedNationalInsuranceNumber,
-      birthDate: updatedBirthDate,
-    });
-
-    // Update query - phoneNumber is TEXT, explicitly cast to ensure type safety
-    // Use CAST to ensure phoneNumber is treated as TEXT, not INTEGER
     const updateUser = db.prepare(`
       UPDATE users 
       SET name = ?, 
@@ -220,8 +194,6 @@ export async function PUT(request: NextRequest) {
       updatedBirthDate,
       tokenPayload.data.userId
     );
-
-    console.log("Profile update result:", result);
 
     if (result.changes === 0) {
       return NextResponse.json(
@@ -249,7 +221,6 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("Profile update error:", error);
 
-    // Log more detailed error information
     if (error instanceof Error) {
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
@@ -257,7 +228,6 @@ export async function PUT(request: NextRequest) {
 
     const errorMessage = error instanceof Error ? error.message : String(error);
 
-    // Check for integer out of range error (phoneNumber column still INTEGER)
     if (
       errorMessage.includes("out of range for type integer") ||
       errorMessage.includes("integer out of range")
@@ -277,7 +247,6 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Check for duplicate email error (Postgres unique constraint violation)
     if (
       errorMessage.includes("unique") ||
       errorMessage.includes("duplicate") ||

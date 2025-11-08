@@ -3,10 +3,7 @@ import { verifyAuthToken } from "@/lib/middleware";
 import { DeviceInfo, GetDevicesResponse } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * GET /api/profile/devices/mobile
- * Get only mobile devices that are currently active for the authenticated user
- */
+
 export async function GET(
   request: NextRequest
 ): Promise<NextResponse<GetDevicesResponse>> {

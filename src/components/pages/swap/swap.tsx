@@ -47,7 +47,6 @@ const Swap = () => {
   const handleAssetSelect = (item: CryptoCurrency) => {
     if (selectingFor === "from") {
       setFromCrypto(item);
-      // Reset amount when changing crypto
       setFromAmount("");
     } else {
       setToCrypto(item);
@@ -61,12 +60,10 @@ const Swap = () => {
       return;
     }
 
-    // Trigger swap animation
     setIsSwapping(true);
     setIsButtonPulsing(true);
     setSwapButtonRotation((prev) => prev + 180);
 
-    // Swap the cryptos after a brief delay for animation
     setTimeout(() => {
       const tempCrypto = fromCrypto;
       const tempAmount = fromAmount;
@@ -76,15 +73,12 @@ const Swap = () => {
       setFromAmount(toAmount);
       setToAmount(tempAmount);
 
-      // Reset pulse animation
       setTimeout(() => {
         setIsButtonPulsing(false);
       }, 600);
 
-      // Reset animation state after animation completes
       setTimeout(() => {
         setIsSwapping(false);
-        // Show success modal only if requested (for bottom swap button)
         if (showSuccessModal) {
           setIsModalOpen(true);
         }
@@ -96,7 +90,6 @@ const Swap = () => {
     if (!fromCrypto || !toCrypto || !fromAmount || !toAmount) {
       return;
     }
-    // Just swap positions without showing success modal
     swapPositions(false);
   };
 
@@ -104,7 +97,6 @@ const Swap = () => {
     if (!fromCrypto || !toCrypto || !fromAmount || !toAmount) {
       return;
     }
-    // Open confirmation modal
     setIsConfirmModalOpen(true);
   };
 
@@ -112,9 +104,7 @@ const Swap = () => {
     if (!fromCrypto || !toCrypto) {
       return;
     }
-    // Close confirmation modal
     setIsConfirmModalOpen(false);
-    // Execute swap and show success modal
     handleCloseConfirmModal();
   };
 
@@ -197,7 +187,6 @@ const Swap = () => {
         Swap
       </Button>
 
-      {/* Confirmation Modal */}
       <Modal
         className="rounded-xl"
         isOpen={isConfirmModalOpen}
@@ -212,10 +201,9 @@ const Swap = () => {
           </div>
 
           <div className="flex flex-col gap-4 bg-gray-50 rounded-xl p-4">
-            {/* From Section */}
             <div className="flex flex-col gap-2">
               <p className="text-sm text-gray-500">From</p>
-              <div className="flex items-center justify-between bg-white rounded-lg p-3">
+              <div className="flex items-center justify-between bg-white dark:bg-gray-200 rounded-lg p-3">
                 <div className="flex items-center gap-3">
                   {fromCrypto?.icon ? (
                     <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
@@ -246,7 +234,6 @@ const Swap = () => {
               </div>
             </div>
 
-            {/* Swap Icon */}
             <div className="flex justify-center">
               <div className="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center">
                 <SwapIcon
@@ -257,10 +244,9 @@ const Swap = () => {
               </div>
             </div>
 
-            {/* To Section */}
             <div className="flex flex-col gap-2">
               <p className="text-sm text-gray-500">To</p>
-              <div className="flex items-center justify-between bg-white rounded-lg p-3">
+              <div className="flex items-center justify-between bg-white dark:bg-gray-200 rounded-lg p-3">
                 <div className="flex items-center gap-3">
                   {toCrypto?.icon ? (
                     <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
@@ -292,7 +278,6 @@ const Swap = () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex gap-3">
             <Button
               variant="secondary"
@@ -309,7 +294,6 @@ const Swap = () => {
         </div>
       </Modal>
 
-      {/* Success Modal */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col items-center text-center space-y-4">
           <SuccessTickIcon className="w-16 h-16 text-green-500" />
@@ -318,7 +302,7 @@ const Swap = () => {
             <span className="text-xs">Amount:</span>
             <span>
               {" "}
-              <span className="text-black text-2xl font-semibold">
+              <span className="text-foreground text-2xl font-semibold">
                 {toAmount}
               </span>{" "}
               <span className="text-gray-400">

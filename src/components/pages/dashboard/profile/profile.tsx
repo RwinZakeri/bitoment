@@ -38,7 +38,7 @@ const Profile = () => {
           className="w-20 h-20 rounded-full mx-auto"
         />
         <div className="flex flex-col gap-1.5 text-center ">
-          <p className="text-base font-semibold text-black/70">
+          <p className="text-base font-semibold text-foreground/70">
             {profileData?.user?.name || "User"}
           </p>
           <p className="text-gray-400-alt">

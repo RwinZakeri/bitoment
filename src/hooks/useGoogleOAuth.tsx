@@ -14,9 +14,9 @@ const useGoogleOAuth = (
   const [isLoading, setIsLoading] = useState(false);
 
   const signInWithGoogle = useCallback(async () => {
-    // Wait for Google API to be loaded
+    
     if (!window.google) {
-      // Try to wait a bit if script is still loading
+      
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       if (!window.google) {
@@ -47,7 +47,7 @@ const useGoogleOAuth = (
                 throw new Error("No access token received from Google");
               }
 
-              // Send access token to backend API
+              
               const apiResponse = await axios.post<GoogleOAuthResponse>(
                 "/api/auth/google",
                 { accessToken: response.access_token }
@@ -59,7 +59,7 @@ const useGoogleOAuth = (
                 );
               }
 
-              // Call onSuccess with the API response
+              
               options?.onSuccess?.(apiResponse.data);
               resolve();
             } catch (error) {
@@ -78,19 +78,19 @@ const useGoogleOAuth = (
           error_callback: (error: GoogleAccountsOAuth2Error) => {
             setIsLoading(false);
 
-            // Handle popup closure gracefully - don't show error if user just closed the popup
+            
             const isPopupClosed =
               error.type === "popup_closed" ||
               error.message?.toLowerCase().includes("popup window closed") ||
               error.message?.toLowerCase().includes("popup closed");
 
             if (isPopupClosed) {
-              // User closed the popup - this is not really an error, just silently resolve
+              
               resolve();
               return;
             }
 
-            // For other errors, show the error message
+            
             const errorMessage =
               error.message || "Google authentication failed";
             options?.onError?.(errorMessage);

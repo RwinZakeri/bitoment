@@ -32,7 +32,7 @@ const RadioOptions = ({
     <div className="flex flex-col gap-3">
       <p className="text-gray-500/65">{label}</p>
 
-      <div className="py-5 px-4 bg-white rounded-[10px]">
+      <div className="py-5 px-4 bg-white dark:bg-gray-200 rounded-[10px]">
         {twoFactorOptions.map((item: twoFactorOptionsProps, index: number) => {
           return (
             <div
@@ -45,7 +45,7 @@ const RadioOptions = ({
               <div className="flex justify-between items-center cursor-pointer">
                 <div className="flex items-center gap-3">
                   {item.icon}
-                  <p className="text-sm text-black">{item.label}</p>
+                  <p className="text-sm text-foreground">{item.label}</p>
                 </div>
                 <Radio name="twoFactorOption" value={item.value} id={item.id} />
               </div>

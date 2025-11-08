@@ -16,19 +16,19 @@ interface CryptoCurrencyConfig {
   priceMax: number;
 }
 
-// Helper function to generate random price
+
 function generateRandomPrice(min: number, max: number): string {
   return (Math.random() * (max - min) + min).toFixed(2);
 }
 
-// Helper function to generate random percentage
+
 function generateRandomPercentage(): string {
   const isPositive = Math.random() > 0.5;
   const value = (Math.random() * 15).toFixed(2);
   return isPositive ? `+${value}%` : `-${value}%`;
 }
 
-// Comprehensive list of cryptocurrencies with price ranges
+
 const cryptoCurrenciesConfig: CryptoCurrencyConfig[] = [
   {
     name: "Bitcoin",
@@ -634,7 +634,7 @@ const cryptoCurrenciesConfig: CryptoCurrencyConfig[] = [
   },
 ];
 
-// Regenerate random prices and percentages for each request
+
 function getCryptoList(): CryptoCurrency[] {
   return cryptoCurrenciesConfig.map((config) => ({
     name: config.name,

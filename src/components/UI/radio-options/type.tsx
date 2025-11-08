@@ -4,7 +4,7 @@ import GoogleChromeLogoIcon from "@/public/icons/GoogleChromeLogoIcon";
 import { TwoFactorMethod, TwoFactorOption } from "@/types";
 import { v4 as uuId } from "uuid";
 
-// Re-export the interface from global types for backward compatibility
+
 export type twoFactorOptionsProps = TwoFactorOption;
 
 export const twoFactorOption: twoFactorOptionsProps[] = [

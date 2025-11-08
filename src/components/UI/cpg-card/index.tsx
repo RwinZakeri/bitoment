@@ -44,7 +44,7 @@ const CpgCard = ({
   const statusDisplay = getStatusDisplay();
   return (
     <>
-      <div className="bg-white p-4 rounded-xl">
+      <div className="bg-white dark:bg-gray-200 p-4 rounded-xl">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Image src={LinkIcon} alt="link icon" width={16} height={16} />

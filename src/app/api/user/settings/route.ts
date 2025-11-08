@@ -80,7 +80,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { currency, theme, language } = body;
 
-    // Validate that at least one field is provided
+    
     if (!currency && !theme && !language) {
       return NextResponse.json(
         {
@@ -92,7 +92,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Get current user settings
+    
     const currentUser = (await db
       .prepare(
         `SELECT currency, theme, language 
@@ -117,7 +117,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Use provided values or keep existing ones
+    
     const updatedCurrency =
       currency !== undefined ? currency : currentUser.currency || "USD";
     const updatedTheme =
@@ -125,7 +125,7 @@ export async function PUT(request: NextRequest) {
     const updatedLanguage =
       language !== undefined ? language : currentUser.language || "en";
 
-    // Update user settings
+    
     const updateSettings = db.prepare(`
       UPDATE users 
       SET currency = ?, 

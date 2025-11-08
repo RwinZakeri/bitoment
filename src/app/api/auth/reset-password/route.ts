@@ -66,7 +66,7 @@ export async function POST(
       );
     }
 
-    // Check if OTP has already been used for password reset (state 2)
+    
     if (otpRecord.state === OTPState.PASSWORD_RESET) {
       return NextResponse.json(
         {
@@ -78,7 +78,7 @@ export async function POST(
       );
     }
 
-    // Only check OTP expiration if OTP hasn't been verified yet (state 0)
+    
     if (
       otpRecord.state === OTPState.EMAIL_SENT &&
       isOTPExpired(otpRecord.expires_at)
@@ -92,7 +92,7 @@ export async function POST(
       );
     }
 
-    // Only check verification time expiration if OTP hasn't been verified yet (state 0)
+    
     if (
       otpRecord.state === OTPState.EMAIL_SENT &&
       isOTPVerificationTimeExpired(otpRecord.created_at, otpRecord.verified_at)
@@ -107,7 +107,7 @@ export async function POST(
       );
     }
 
-    // Check if OTP is in the correct state (must be verified - state 1)
+    
     if (otpRecord.state !== OTPState.SENT_AND_USED) {
       return NextResponse.json(
         {
@@ -143,7 +143,7 @@ export async function POST(
       );
     }
 
-    // Only compare passwords if user has a password (not OAuth user)
+    
     if (user.password) {
       const isSamePassword = await comparePassword(newPassword, user.password);
       if (isSamePassword) {
@@ -164,7 +164,7 @@ export async function POST(
       .prepare("UPDATE users SET password = ? WHERE email = ?")
       .run(hashedPassword, email);
 
-    // Update OTP state to PASSWORD_RESET (2) and mark as used
+    
     await db
       .prepare(
         "UPDATE password_reset_otps SET used = TRUE, state = ? WHERE id = ?"

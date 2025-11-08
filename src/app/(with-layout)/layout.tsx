@@ -25,16 +25,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <section className="pb-[70px]">
       {children}
 
-      <nav className="fixed left-1/2 -translate-x-1/2 bottom-0 max-w-[520px] w-full h-[70px] bg-white shadow-xl flex justify-around items-center">
+      <nav className="fixed left-1/2 -translate-x-1/2 bottom-0 max-w-[520px] w-full h-[70px] bg-white dark:bg-gray-200 shadow-xl flex justify-around items-center">
         {navItems.map((item) => {
           const isActive = `/${pathname.split("/")[1]}` == item.href;
-          console.log(pathname.split("/")[1], item.href);
           return (
             <Link
               key={uuid()}
               href={item.href}
               className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-all ${
-                isActive ? "text-black" : "text-gray-500"
+                isActive ? "text-foreground" : "text-gray-500"
               }`}
             >
               {item.icon}

@@ -14,7 +14,7 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<SignUpResponse>> {
   try {
-    // check content type
+    
     if (!getContentType(request)) {
       return NextResponse.json(
         {
@@ -27,7 +27,7 @@ export async function POST(
       );
     }
 
-    // get body and type
+    
     let body: SignUpRequest;
     try {
       body = await request.json();
@@ -108,7 +108,7 @@ export async function POST(
 
     const hashedPassword = await hashPassword(password);
 
-    // Use a transaction to ensure atomicity
+    
     const userId = await db.transactionAsync(async (txDb) => {
       const insertUser = txDb.prepare(`
         INSERT INTO users (email, password, name, currency, theme, language, created_at)
@@ -125,7 +125,7 @@ export async function POST(
       );
       const userId = result.lastInsertRowid as number;
 
-      // Create wallet for the new user with initial balance of 1000
+      
       const insertWallet = txDb.prepare(`
         INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
         VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)

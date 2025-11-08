@@ -15,7 +15,7 @@ import {
 import { useEffect, useRef } from "react";
 import { LineChartProps } from "./type";
 
-// Register Chart.js components
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -84,7 +84,7 @@ const LineChart = ({ data, options, className = "" }: LineChartProps) => {
       });
     }
 
-    // Cleanup function
+    
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();

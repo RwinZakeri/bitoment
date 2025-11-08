@@ -152,7 +152,7 @@ const Cpg = () => {
           />
         </div>
         <div className="mt-4 flex flex-col gap-3">
-          <div className="bg-white p-4 rounded-xl animate-pulse">
+          <div className="bg-white dark:bg-gray-200 p-4 rounded-xl animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
             <div className="space-y-2">
               <div className="h-3 bg-gray-200 rounded"></div>
@@ -190,7 +190,6 @@ const Cpg = () => {
               shareHandler={() => {
                 setOpenShareModal(true);
                 setShare({ ...link });
-                console.log(share);
               }}
               key={link.id}
               id={link.link_id}
@@ -203,7 +202,7 @@ const Cpg = () => {
             />
           ))
         ) : (
-          <div className="bg-white p-4 rounded-xl text-center text-gray-500">
+          <div className="bg-white dark:bg-gray-200 p-4 rounded-xl text-center text-gray-500">
             {searchQuery
               ? "No payment links found matching your search"
               : "No payment links yet. Create your first payment link!"}
@@ -227,7 +226,7 @@ const Cpg = () => {
           {linkToDelete && (
             <div className="bg-gray-100 p-3 rounded-lg mb-6">
               <p className="text-xs text-gray-500 mb-1">Link ID</p>
-              <p className="text-sm font-mono text-gray-800 break-all">
+              <p className="text-sm font-mono text-foreground break-all">
                 {linkToDelete.linkId}
               </p>
             </div>
@@ -302,7 +301,7 @@ const Cpg = () => {
                 </div>
               </div>
               <div className="w-fit">
-                <div className="w-20 h-20 bg-white flex items-center justify-center">
+                <div className="w-20 h-20 bg-white dark:bg-gray-200 flex items-center justify-center">
                   {qrCodeValue ? (
                     <QRCodeSVG
                       value={qrCodeValue}

@@ -12,7 +12,6 @@ import {
 } from "react";
 import { CurrencyContextType } from "./type";
 
-
 const CurrencyContext = createContext<CurrencyContextType | undefined>(
   undefined
 );
@@ -31,7 +30,6 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguageState] = useState<string>("en");
   const queryClient = useQueryClient();
 
-  // Fetch user settings
   const { data, isLoading } = useQuery({
     queryKey: [ReactQueryKey.currency],
     queryFn: async () => {
@@ -39,10 +37,9 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
       return response.data;
     },
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
-  // Update local state when data is fetched
   useEffect(() => {
     if (data?.settings) {
       setCurrencyState(data.settings.currency || "USD");
@@ -51,7 +48,6 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [data]);
 
-  // Mutation for updating settings
   const { mutate: updateSettingsMutation } = useMutation({
     mutationKey: [MutationKey.updateSettings],
     mutationFn: async (settings: {
@@ -63,7 +59,6 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
       return response.data;
     },
     onSuccess: (data) => {
-      // Update local state
       if (data?.settings) {
         if (data.settings.currency) {
           setCurrencyState(data.settings.currency);
@@ -75,7 +70,7 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
           setLanguageState(data.settings.language);
         }
       }
-      // Invalidate and refetch settings
+
       queryClient.invalidateQueries({
         queryKey: [ReactQueryKey.currency],
       });

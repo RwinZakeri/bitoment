@@ -44,7 +44,7 @@ const Checkbox = ({
 
   const CheckmarkIcon = () => (
     <svg
-      className={cn(getCheckmarkSize(), "text-black")}
+      className={cn(getCheckmarkSize(), "text-black dark:text-foreground")}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

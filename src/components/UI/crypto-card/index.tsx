@@ -22,7 +22,7 @@ const CryptoCard = ({
     if (typeof price === "number") {
       return formatCurrency(price, currency);
     }
-    // If price is already a formatted string, try to extract number and format
+    
     const numPrice = parseFloat(String(price).replace(/[^0-9.-]/g, ""));
     if (!isNaN(numPrice)) {
       return formatCurrency(numPrice, currency);
@@ -30,7 +30,7 @@ const CryptoCard = ({
     return price;
   };
   return (
-    <div className="w-full cursor-pointer bg-white flex items-center justify-between rounded-lg p-3">
+    <div className="w-full cursor-pointer bg-white dark:bg-gray-200 flex items-center justify-between rounded-lg p-3">
       <div className="flex gap-2.5 items-center">
         {cardType === "crypto" ? (
           <div
@@ -71,7 +71,7 @@ const CryptoCard = ({
             <p className="text-gray-500 text-xs">{label}</p>
           ) : cardType !== "asset" ? (
             <div className="flex flex-col items-center gap-1">
-              <p className="text-black text-xs">+{formatPrice(price)}</p>
+              <p className="text-foreground text-xs">+{formatPrice(price)}</p>
               <p className="text-gray-500 text-xs">{amount}</p>
             </div>
           ) : null}

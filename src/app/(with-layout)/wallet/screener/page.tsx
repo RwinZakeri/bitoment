@@ -19,19 +19,19 @@ const ScreenerPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const onScanSuccess = useCallback((decodedText: string) => {
-    // console.log("QR Code detected:", decodedText);
+    
     setScanResult(decodedText);
     setIsScanning(false);
-    // Stop scanning after successful scan
+    
     if (scannerRef.current) {
       scannerRef.current.clear();
     }
   }, []);
 
   const onScanFailure = useCallback(() => {
-    // Note: this fires frequently when no QR is found; keep it quiet to avoid spam
-    // Uncomment if you need to debug failures:
-    // console.debug("QR Code scan failed:", error);
+    
+    
+    
   }, []);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ScreenerPage = () => {
     let isMounted = true;
     setErrorMessage("");
 
-    // Dynamically import to avoid SSR issues
+    
     import("html5-qrcode")
       .then(({ Html5QrcodeScanner }) => {
         if (!isMounted) return;
@@ -50,7 +50,7 @@ const ScreenerPage = () => {
             qrbox: { width: 250, height: 250 },
             fps: 5,
           },
-          false // verbose
+          false 
         );
 
         scannerRef.current = scanner as unknown as ScannerInstance;
@@ -66,7 +66,7 @@ const ScreenerPage = () => {
     return () => {
       isMounted = false;
       if (scannerRef.current) {
-        // clear returns a promise; don't await inside cleanup
+        
         scannerRef.current
           .clear()
           .catch(() => {})

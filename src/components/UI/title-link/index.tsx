@@ -14,7 +14,13 @@ const TitleLink = ({
   return (
     <div style={{ marginTop: margin }}>
       <div className="flex justify-between mb-3">
-        <p className={`text-black text-sm ${type === "date" ? "" : "font-semibold"}`}>{title}</p>
+        <p
+          className={`text-foreground text-sm ${
+            type === "date" ? "" : "font-semibold"
+          }`}
+        >
+          {title}
+        </p>
 
         {type === "date" ? (
           <p className="text-sm text-gray-500">{label}</p>

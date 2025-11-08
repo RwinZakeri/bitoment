@@ -16,12 +16,10 @@ const CircleProgressBar = ({
 }: CircleProgressBarProps) => {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
-  // Calculate the radius and circumference
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = circumference;
 
-  // Animate progress if enabled
   useEffect(() => {
     if (animated) {
       const startTime = Date.now();
@@ -32,7 +30,6 @@ const CircleProgressBar = ({
         const elapsed = Date.now() - startTime;
         const progressRatio = Math.min(elapsed / duration, 1);
 
-        // Easing function for smooth animation
         const easeOutCubic = 1 - Math.pow(1 - progressRatio, 3);
         const currentProgress =
           startProgress + (endProgress - startProgress) * easeOutCubic;
@@ -64,7 +61,6 @@ const CircleProgressBar = ({
         className="transform -rotate-180"
         style={{ overflow: "visible" }}
       >
-        {/* Background circle */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -73,7 +69,6 @@ const CircleProgressBar = ({
           strokeWidth={strokeWidth}
           fill="none"
         />
-        {/* Progress circle */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -92,10 +87,9 @@ const CircleProgressBar = ({
         />
       </svg>
 
-      {/* Percentage text */}
       {showPercentage && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-semibold text-gray-800">
+          <span className="text-lg font-semibold text-foreground">
             {Math.round(animatedProgress)}%
           </span>
         </div>

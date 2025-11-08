@@ -5,7 +5,7 @@ import Stepper from "@/components/UI/stepper";
 import { useCurrency } from "@/context/currencyContext";
 import { payFromWalletSchema } from "@/schema/wallet/invest/investSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { PayFromWalletFormData, PayFromWalletProps } from "./types";
@@ -59,10 +59,6 @@ const PayFromWallet = ({
       }
     );
   };
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
 
   return (
     <form

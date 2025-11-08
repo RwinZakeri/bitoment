@@ -10,28 +10,20 @@ import {
 } from "@/types/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * Generate a unique link ID
- */
+
 function generateLinkId(): string {
   const timestamp = Date.now().toString(36);
   const randomStr = Math.random().toString(36).substring(2, 9);
   return `cpg-${timestamp}-${randomStr}`;
 }
 
-/**
- * Generate a payment link URL
- */
+
 function generatePaymentUrl(linkId: string): string {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   return `${baseUrl}/payment/${linkId}`;
 }
 
-/**
- * GET /api/wallet/cpg
- * Get all CPG links for the authenticated user
- * Query params: link_id (optional) - to get a specific link
- */
+
 export async function GET(
   request: NextRequest
 ): Promise<NextResponse<GetCpgLinksResponse>> {
@@ -53,7 +45,7 @@ export async function GET(
     const linkId = searchParams.get("link_id");
 
     if (linkId) {
-      // Get specific link
+      
       const link = (await db
         .prepare("SELECT * FROM cpg_links WHERE link_id = ? AND user_id = ?")
         .get(linkId, userId)) as CpgLink | undefined;
@@ -75,7 +67,7 @@ export async function GET(
       });
     }
 
-    // Get all links for user
+    
     const links = (await db
       .prepare(
         "SELECT * FROM cpg_links WHERE user_id = ? ORDER BY created_at DESC"
@@ -100,10 +92,7 @@ export async function GET(
   }
 }
 
-/**
- * POST /api/wallet/cpg
- * Create a new CPG link
- */
+
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<CreateCpgLinkResponse>> {
@@ -133,7 +122,7 @@ export async function POST(
       );
     }
 
-    // Validate request body
+    
     const validationResult = createCpgLinkSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
@@ -148,11 +137,11 @@ export async function POST(
     const validatedData = validationResult.data;
     const userId = tokenPayload.data.userId;
 
-    // Generate unique link ID and URL
+    
     const linkId = generateLinkId();
     const url = generatePaymentUrl(linkId);
 
-    // Insert new CPG link
+    
     const insertLink = db.prepare(`
       INSERT INTO cpg_links (
         user_id,
@@ -177,7 +166,7 @@ export async function POST(
       validatedData.status || "active"
     );
 
-    // Get the created link
+    
     const createdLink = (await db
       .prepare("SELECT * FROM cpg_links WHERE link_id = ?")
       .get(linkId)) as CpgLink;
@@ -203,10 +192,7 @@ export async function POST(
   }
 }
 
-/**
- * DELETE /api/wallet/cpg
- * Delete a CPG link by link_id
- */
+
 export async function DELETE(
   request: NextRequest
 ): Promise<NextResponse<DeleteCpgLinkResponse>> {
@@ -238,7 +224,7 @@ export async function DELETE(
 
     const userId = tokenPayload.data.userId;
 
-    // Check if link exists and belongs to user
+    
     const link = (await db
       .prepare("SELECT * FROM cpg_links WHERE link_id = ? AND user_id = ?")
       .get(linkId, userId)) as CpgLink | undefined;
@@ -253,7 +239,7 @@ export async function DELETE(
       );
     }
 
-    // Delete the link
+    
     await db
       .prepare("DELETE FROM cpg_links WHERE link_id = ? AND user_id = ?")
       .run(linkId, userId);

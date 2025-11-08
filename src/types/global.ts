@@ -1,26 +1,17 @@
-/**
- * Global Types and Enums
- *
- * This file contains all global types, enums, and constants used throughout the application.
- * Following TypeScript best practices for maintainability and type safety.
- */
 
-// ============================================================================
-// ENUMS
-// ============================================================================
 
-/**
- * Two-factor authentication method selection enum
- */
+
+
+
+
+
 export enum TwoFactorMethod {
   SMS = 1,
   EMAIL = 2,
   GOOGLE_AUTHENTICATOR = 3,
 }
 
-/**
- * Language options enum
- */
+
 export enum Language {
   ENGLISH = 11,
   SPANISH = 12,
@@ -30,51 +21,39 @@ export enum Language {
   ARABIC = 16,
 }
 
-/**
- * Theme options enum
- */
+
 export enum Theme {
   LIGHT = 21,
   DARK = 22,
   SYSTEM_DEFAULT = 23,
 }
 
-/**
- * Currency options enum
- */
+
 export enum Currency {
   USD = 31,
   EUR = 32,
 }
 
-/**
- * Button size variants
- */
+
 export type ButtonSize = "sm" | "md" | "lg";
 
-/**
- * Radio button variants
- */
+
 export enum RadioVariant {
   DEFAULT = "default",
   TURQUOISE = "turquoise",
 }
 
-// ============================================================================
-// INTERFACES
-// ============================================================================
 
-/**
- * Base option type for dropdowns, radio buttons, etc.
- */
+
+
+
+
 export interface BaseOption {
   title: string;
   value: string | number;
 }
 
-/**
- * Two-factor authentication option interface
- */
+
 export interface TwoFactorOption {
   label: string;
   icon: React.ReactNode;
@@ -82,9 +61,7 @@ export interface TwoFactorOption {
   id: string;
 }
 
-/**
- * Linked options component props
- */
+
 export interface LinkedOptionsProps {
   label?: string;
   options: BaseOption[];
@@ -92,9 +69,7 @@ export interface LinkedOptionsProps {
   centerized?: boolean;
 }
 
-/**
- * Button component props
- */
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "filled" | "outline" | "outline-dark" | "text" | "secondary";
@@ -102,9 +77,7 @@ export interface ButtonProps
   loading?: boolean;
 }
 
-/**
- * Radio button component props
- */
+
 export interface RadioProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -112,9 +85,7 @@ export interface RadioProps
   variant?: RadioVariant;
 }
 
-/**
- * Checkbox component props
- */
+
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
@@ -123,9 +94,7 @@ export interface CheckboxProps
   variant?: "default" | "outline";
 }
 
-/**
- * Profile item interface
- */
+
 export interface ProfileItem {
   text: string;
   address: string;
@@ -133,9 +102,7 @@ export interface ProfileItem {
   id: string;
 }
 
-/**
- * Drawer component props
- */
+
 export interface DrawerProps {
   title: string;
   children: React.ReactNode;
@@ -143,42 +110,30 @@ export interface DrawerProps {
   isOpen?: boolean;
 }
 
-// ============================================================================
-// TYPE ALIASES
-// ============================================================================
 
-/**
- * Generic option type alias
- */
+
+
+
+
 export type OptionType = BaseOption;
 
-/**
- * Two-factor method type alias
- */
+
 export type TwoFactorMethodType = TwoFactorMethod;
 
-/**
- * Language type alias
- */
+
 export type LanguageType = Language;
 
-/**
- * Theme type alias
- */
+
 export type ThemeType = Theme;
 
-/**
- * Currency type alias
- */
+
 export type CurrencyType = Currency;
 
-// ============================================================================
-// CONSTANTS
-// ============================================================================
 
-/**
- * Setting linked options configuration
- */
+
+
+
+
 export const SETTING_LINKED_OPTIONS: BaseOption[] = [
   {
     title: "Language",
@@ -194,9 +149,7 @@ export const SETTING_LINKED_OPTIONS: BaseOption[] = [
   },
 ];
 
-/**
- * Language options configuration
- */
+
 export const LANGUAGE_OPTIONS: BaseOption[] = [
   {
     title: "English (EN)",
@@ -224,9 +177,7 @@ export const LANGUAGE_OPTIONS: BaseOption[] = [
   },
 ];
 
-/**
- * Theme options configuration
- */
+
 export const THEME_OPTIONS: BaseOption[] = [
   {
     title: "Light Mode",
@@ -242,9 +193,7 @@ export const THEME_OPTIONS: BaseOption[] = [
   },
 ];
 
-/**
- * Currency options configuration
- */
+
 export const CURRENCY_OPTIONS: BaseOption[] = [
   {
     title: "USD",
@@ -256,23 +205,17 @@ export const CURRENCY_OPTIONS: BaseOption[] = [
   },
 ];
 
-// ============================================================================
-// UTILITY TYPES
-// ============================================================================
 
-/**
- * Utility type to extract enum values
- */
+
+
+
+
 export type EnumValues<T> = T[keyof T];
 
-/**
- * Utility type for option value types
- */
+
 export type OptionValue = string | number;
 
-/**
- * Utility type for component variant props
- */
+
 export type ComponentVariant =
   | "primary"
   | "secondary"
@@ -280,13 +223,11 @@ export type ComponentVariant =
   | "default"
   | "turquoise";
 
-// ============================================================================
-// TYPE GUARDS
-// ============================================================================
 
-/**
- * Type guard to check if value is a valid TwoFactorMethod
- */
+
+
+
+
 export const isTwoFactorMethod = (value: unknown): value is TwoFactorMethod => {
   return (
     typeof value === "number" &&
@@ -294,9 +235,7 @@ export const isTwoFactorMethod = (value: unknown): value is TwoFactorMethod => {
   );
 };
 
-/**
- * Type guard to check if value is a valid Language
- */
+
 export const isLanguage = (value: unknown): value is Language => {
   return (
     typeof value === "number" &&
@@ -304,18 +243,14 @@ export const isLanguage = (value: unknown): value is Language => {
   );
 };
 
-/**
- * Type guard to check if value is a valid Theme
- */
+
 export const isTheme = (value: unknown): value is Theme => {
   return (
     typeof value === "number" && Object.values(Theme).includes(value as Theme)
   );
 };
 
-/**
- * Type guard to check if value is a valid Currency
- */
+
 export const isCurrency = (value: unknown): value is Currency => {
   return (
     typeof value === "number" &&
@@ -323,13 +258,11 @@ export const isCurrency = (value: unknown): value is Currency => {
   );
 };
 
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
 
-/**
- * Get enum key by value
- */
+
+
+
+
 export const getEnumKeyByValue = <T extends Record<string, string | number>>(
   enumObject: T,
   value: string | number
@@ -339,9 +272,7 @@ export const getEnumKeyByValue = <T extends Record<string, string | number>>(
     | undefined;
 };
 
-/**
- * Get enum value by key
- */
+
 export const getEnumValueByKey = <T extends Record<string, string | number>>(
   enumObject: T,
   key: string
@@ -349,9 +280,7 @@ export const getEnumValueByKey = <T extends Record<string, string | number>>(
   return enumObject[key as keyof T];
 };
 
-/**
- * Convert enum to options array
- */
+
 export const enumToOptions = <T extends Record<string, string | number>>(
   enumObject: T,
   labelFormatter?: (key: string) => string

@@ -10,7 +10,7 @@ const SwapHistoryCard = ({
   cryptoTwo,
 }: SwapHistoryCard) => {
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-white p-4">
+    <div className="flex items-center justify-between rounded-2xl bg-white dark:bg-gray-200 p-4">
       <div className="flex items-center gap-4">
         <div className="flex flex-col gap-1 items-center">
           <div className="w-6 h-6 rounded-full bg-gray-250 flex items-center justify-center">
@@ -33,8 +33,12 @@ const SwapHistoryCard = ({
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <div><p className="text-right text-base font-semibold">{amount}</p></div>
-        <div><p className="text-xs text-gray-400">{label}</p></div>
+        <div>
+          <p className="text-right text-base font-semibold">{amount}</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">{label}</p>
+        </div>
       </div>
     </div>
   );

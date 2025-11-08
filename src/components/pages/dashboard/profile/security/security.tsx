@@ -5,14 +5,12 @@ import LinkedCard from "@/components/UI/link-card";
 import axios from "@/config/axios.config";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-// import { useEffect } from "react";
 
 const Security = () => {
   const { data, isLoading } = useQuery({
     queryKey: [ReactQueryKey.devices],
     queryFn: async () => {
       const response = await axios.get("auth/sessions");
-      console.log(response);
       return response.data;
     },
     staleTime: 20000,
