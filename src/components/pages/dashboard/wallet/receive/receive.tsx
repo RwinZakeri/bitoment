@@ -6,6 +6,7 @@ import Alert from "@/components/UI/alert";
 import AutoComplete from "@/components/UI/auto-complete";
 import Button from "@/components/UI/button";
 import CryptoAssets from "@/components/UI/crypto-assets";
+import { handleCopyAddress } from "@/lib/utils";
 import BtcIcon from "@/public/icons/BtcIcon";
 import {
   ReceiveCryptoFormData,
@@ -16,7 +17,6 @@ import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 const Receive = () => {
   const {
@@ -65,16 +65,6 @@ const Receive = () => {
     trigger("blockchainNetwork");
   };
 
-  const handleCopyAddress = async () => {
-    try {
-      await navigator.clipboard.writeText(walletAddress);
-      toast.success("Address copied to clipboard!");
-    } catch (err) {
-      console.error("Failed to copy address:", err);
-      toast.error("Failed to copy address");
-    }
-  };
-
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -86,7 +76,7 @@ const Receive = () => {
         console.error("Failed to share address:", err);
       }
     } else {
-      handleCopyAddress();
+      handleCopyAddress(walletAddress);
     }
   };
 
@@ -172,7 +162,11 @@ const Receive = () => {
           >
             Share
           </Button>
-          <Button size="lg" className="w-full" onClick={handleCopyAddress}>
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => handleCopyAddress(walletAddress)}
+          >
             Copy
           </Button>
         </div>

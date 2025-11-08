@@ -291,6 +291,12 @@ export interface DeleteCpgLinkResponse {
   message: string;
 }
 
+export interface GetPublicCpgLinkResponse {
+  success: boolean;
+  message: string;
+  link?: CpgLink;
+}
+
 // Google OAuth related types
 export interface GoogleOAuthRequest {
   accessToken: string;

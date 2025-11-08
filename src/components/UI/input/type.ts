@@ -12,4 +12,5 @@ export interface InputProps
   variant?: inputVariant;
   error?: string;
   showPasswordToggle?: boolean;
+  size?: "sm" | "md";
 }

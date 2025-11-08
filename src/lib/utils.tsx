@@ -194,3 +194,13 @@ export const assetAllocationData = {
   ],
 };
 
+
+export const handleCopyAddress = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success("Address copied to clipboard!");
+  } catch (err) {
+    console.error("Failed to copy address:", err);
+    toast.error("Failed to copy address");
+  }
+};

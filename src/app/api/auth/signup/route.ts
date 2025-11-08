@@ -118,12 +118,12 @@ export async function POST(
       const result = await insertUser.run(email, hashedPassword, fullName);
       const userId = result.lastInsertRowid as number;
 
-      // Create wallet for the new user
+      // Create wallet for the new user with initial balance of 1000
       const insertWallet = txDb.prepare(`
         INSERT INTO wallets (user_id, balance, currency, created_at, updated_at)
         VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `);
-      await insertWallet.run(userId, 0.0, "USD");
+      await insertWallet.run(userId, 1000.0, "USD");
 
       return userId;
     });

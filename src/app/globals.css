@@ -68,6 +68,7 @@
   --color-secondary: var(--secondary);
   --color-amber-500: var(--amber-500);
   --color-emerald-500: var(--emerald-500);
+  --text-3xl: 28px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -221,10 +222,56 @@ input[type="radio"]:checked ~ label {
   animation: card-flip 0.6s ease-in-out;
 }
 
-/* #qr-shaded-region {
-  border: 100px 10px solid red !important;
-  border-radius: 100px !important;
-  div {
-    display: none;
-  }
-} */
+
+.checkout__payment-qrcode {
+  position: relative;     /* containing block for ::after */
+  display: inline-block;
+  /* optional: match the QR's rounded corners */
+  border-radius: 0.5rem;  /* same as rounded-lg; tweak as needed */
+  /* you can remove overflow if you want the rotating background to overflow */
+  overflow: visible;
+}
+
+/* ensure the real QR sits above the pseudo-element */
+.checkout__payment-qrcode .qr-inner {
+  position: relative;
+  z-index: 2;
+  border-radius: inherit;
+  /* keep inner padding / outline if needed */
+  padding: 6px;
+  background: transparent;
+}
+
+/* rotating background / outline */
+.qr-inner::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  display: block;
+  z-index: 1; /* sits behind .qr-inner (z-index:2) */
+  pointer-events: none; /* click passes through to QR if needed */
+  border-radius: inherit;
+
+  /* your gradients and colors — preserved exactly */
+  background-color: #f9c310;
+  background-image:
+    linear-gradient(#f9c310, #f9c310),
+    linear-gradient(#c79a05, #c79a05);
+  /* positions copied from your example */
+  background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+  background-repeat: no-repeat;
+  background-size: 50% 50%, 50% 50%;
+
+  /* animation */
+  animation: rotate 10s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* simple 360° rotation */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
