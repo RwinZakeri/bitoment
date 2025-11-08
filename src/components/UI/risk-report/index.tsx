@@ -10,7 +10,7 @@ const RiskReportCard = ({
   type,
   icon,
   title,
-  amount,
+  amount: _amount,
   price,
   riskLevel,
   assetAmount,

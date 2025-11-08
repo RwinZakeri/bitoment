@@ -5,24 +5,30 @@ import Button from "@/components/UI/button";
 import CryptoCard from "@/components/UI/crypto-card";
 import Filters from "@/components/UI/filters";
 import { filters } from "@/components/UI/filters/type";
+import Popup from "@/components/UI/popup";
+import { PopupOption } from "@/components/UI/popup/type";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
 import BinanceIcon from "@/public/icons/BinanceIcon";
 import BtcIcon from "@/public/icons/BtcIcon";
 import EtcIcon from "@/public/icons/EtcIcon";
+import ListIcon from "@/public/icons/ListIcon";
 import SolIcon from "@/public/icons/SolIcon";
 import TetherIcon from "@/public/icons/TetherIcon";
 import type { GetWalletHistoryResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useRef, useState } from "react";
 
 const HistoryPageContent = () => {
   const searchParams = useSearchParams();
   const cryptoParam = searchParams.get("crypto");
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<"date" | "type" | "amount" | null>(null);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const {
     data: historyData,
@@ -34,11 +40,16 @@ const HistoryPageContent = () => {
       ReactQueryKey.walletHistory,
       selectedFilter,
       cryptoParam,
+      sortBy,
+      sortOrder,
     ],
     queryFn: async () => {
       const cryptoQuery = cryptoParam ? `&crypto=${cryptoParam}` : "";
+      const sortQuery = sortBy
+        ? `&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        : "";
       const response = await axios.get<GetWalletHistoryResponse>(
-        `/wallet/history?filter=${selectedFilter}${cryptoQuery}`
+        `/wallet/history?filter=${selectedFilter}${cryptoQuery}${sortQuery}`
       );
       return response.data;
     },
@@ -107,16 +118,72 @@ const HistoryPageContent = () => {
     ? `${cryptoParam.toUpperCase()} Wallet History`
     : "Wallet History";
 
+  // Define popup options for sorting
+  const popupOptions: PopupOption[] = [
+    {
+      label: "Date",
+      icon: "/svgs/date.svg",
+
+      onClick: () => {
+        setSortBy("date");
+        setSortOrder("asc");
+      },
+    },
+
+    {
+      label: "Type",
+      icon: "/svgs/type.svg",
+      onClick: () => {
+        setSortBy("type");
+        setSortOrder("asc");
+      },
+    },
+
+    {
+      label: "Amount",
+      icon: "/svgs/amount.svg",
+      onClick: () => {
+        setSortBy("amount");
+        setSortOrder("asc");
+      },
+    },
+  ];
+
   return (
     <PageLayout title={pageTitle}>
-      <div className="mt-4">
+      <div className="mt-4 flex items-center justify-between">
         <Filters
           onClick={setSelectedFilter}
           selectedQuery={selectedFilter}
           FiltersItems={filters}
         />
+        <div className="relative">
+          <Button
+            ref={buttonRef}
+            size="sm"
+            variant="text"
+            className="bg-white"
+            type="button"
+            onClick={() => setIsPopupOpen(!isPopupOpen)}
+          >
+            <ListIcon />
+          </Button>
+          <Popup
+            isOpen={isPopupOpen}
+            onClose={() => setIsPopupOpen(false)}
+            options={popupOptions}
+            triggerRef={buttonRef}
+            position="bottom-right"
+          />
+        </div>
       </div>
-      <Button onClick={()=> router.push("/wallet/risk")} size="md" className="w-full mt-4">Risk Report</Button>
+      <Button
+        onClick={() => router.push("/wallet/risk")}
+        size="md"
+        className="w-full mt-4"
+      >
+        Risk Report
+      </Button>
 
       {!historyData?.data || historyData.data.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-12">

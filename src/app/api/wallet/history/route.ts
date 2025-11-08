@@ -166,15 +166,88 @@ function generateRandomHistory(filter?: string, crypto?: string | null) {
   return data;
 }
 
+// Helper function to sort transactions
+function sortTransactions(
+  data: ReturnType<typeof generateRandomHistory>,
+  sortBy: string | null,
+  sortOrder: string
+) {
+  if (!sortBy) return data;
+
+  const order = sortOrder === "desc" ? -1 : 1;
+
+  return data.map((day) => {
+    const sortedTransactions = [...day.transactions].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case "date":
+          // Sort by dateAsName (YYYY-M-D or YYYY-MM-DD format) first, then by hour
+          // Normalize date format for parsing
+          const normalizeDate = (dateStr: string) => {
+            const parts = dateStr.split("-");
+            if (parts.length === 3) {
+              const year = parts[0];
+              const month = parts[1].padStart(2, "0");
+              const day = parts[2].padStart(2, "0");
+              return `${year}-${month}-${day}`;
+            }
+            return dateStr;
+          };
+          const normalizedDateA = normalizeDate(a.dateAsName);
+          const normalizedDateB = normalizeDate(b.dateAsName);
+          const dateA = new Date(normalizedDateA);
+          const dateB = new Date(normalizedDateB);
+          comparison = dateA.getTime() - dateB.getTime();
+          if (comparison === 0) {
+            // If dates are equal, sort by hour
+            const [hourA, minA] = a.hour.split(":").map(Number);
+            const [hourB, minB] = b.hour.split(":").map(Number);
+            const timeA = hourA * 60 + minA;
+            const timeB = hourB * 60 + minB;
+            comparison = timeA - timeB;
+          }
+          break;
+
+        case "type":
+          // Sort by transaction type: up, down, cpg
+          const typeOrder: Record<string, number> = { up: 1, down: 2, cpg: 3 };
+          comparison = (typeOrder[a.type] || 0) - (typeOrder[b.type] || 0);
+          break;
+
+        case "amount":
+          // Extract numeric value from amount string (e.g., "5.23 BTC" -> 5.23)
+          const amountA = parseFloat(a.amount.split(" ")[0]) || 0;
+          const amountB = parseFloat(b.amount.split(" ")[0]) || 0;
+          comparison = amountA - amountB;
+          break;
+
+        default:
+          return 0;
+      }
+
+      return comparison * order;
+    });
+
+    return {
+      ...day,
+      transactions: sortedTransactions,
+    };
+  });
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const filter = searchParams.get("filter") || "all";
   const crypto = searchParams.get("crypto"); // Filter by specific crypto type
+  const sortBy = searchParams.get("sortBy");
+  const sortOrder = searchParams.get("sortOrder") || "asc";
 
   const data = generateRandomHistory(filter, crypto);
+  const sortedData = sortTransactions(data, sortBy, sortOrder);
 
   return NextResponse.json({
     success: true,
-    data,
+    data: sortedData,
   });
 }

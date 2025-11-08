@@ -14,6 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       containerClassName,
       error,
       showPasswordToggle = false,
+      size: _size,
       ...props
     },
     ref

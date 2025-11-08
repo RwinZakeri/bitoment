@@ -1,7 +1,7 @@
 type inputType = "fill" | "stroke";
 type inputVariant = "primary" | "secondary";
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   id?: string;
   label?: string;
   icon?: React.ReactNode;

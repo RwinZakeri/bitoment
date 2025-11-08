@@ -2,7 +2,6 @@
 import PageLayout from "@/components/layout/page/pageLayout";
 import ActionButtons from "@/components/module/action-button/actionButtons";
 import { WalletSkeleton } from "@/components/module/skeleton";
-import Button from "@/components/UI/button";
 import CryptoCard from "@/components/UI/crypto-card";
 import CryptoCredit from "@/components/UI/crypto-credit";
 import TitleLink from "@/components/UI/title-link";

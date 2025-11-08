@@ -253,6 +253,28 @@ export interface GetRiskReportResponse {
   data: RiskReportDay[];
 }
 
+// Swap History related types
+export interface SwapTransaction {
+  cryptoOne: string;
+  cryptoTwo: string;
+  cryptoOneIcon: string;
+  cryptoTwoIcon: string;
+  amount: string;
+  hour: string;
+}
+
+export interface SwapHistoryDay {
+  date: string;
+  dateAsName: string;
+  hour: string;
+  swaps: SwapTransaction[];
+}
+
+export interface GetSwapHistoryResponse {
+  success: boolean;
+  data: SwapHistoryDay[];
+}
+
 // CPG Links related types
 export interface CpgLink {
   id: number;

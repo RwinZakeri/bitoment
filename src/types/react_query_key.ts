@@ -24,6 +24,9 @@ const ReactQueryKey = {
 
   // crypto
   allCrypto: "allCrypto",
+
+  // swap
+  swapHistory: "swapHistory",
 } as const;
 
 export default ReactQueryKey;
