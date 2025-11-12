@@ -17,14 +17,14 @@ const CryptoCredit = ({
   return (
     <div
       onClick={() => type === "link" && clickHandler && clickHandler()}
-      className="rounded-2xl p-6 flex justify-between pb-15 shadow-[0px_2px_4px_rgba(0,0,0,0.25)]"
+      className="w-full rounded-2xl p-6 flex justify-between pb-15 shadow-[0px_2px_4px_rgba(0,0,0,0.25)]"
       style={{ backgroundColor: color }}
     >
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-3">
           <p className="text-gray-500 text-base">{label}</p>
-          <div className="flex gap-1">
-            <p className="text-4xl">{price}</p>
+          <div className="flex gap-1 flex-wrap">
+            <p className="text-4xl break-words min-w-0">{price}</p>
             <p className="text-2xl self-end text-gray-500">{displayCurrency}</p>
           </div>
         </div>
