@@ -9,14 +9,14 @@ import {
   Theme,
 } from "@/components/UI/linked-options/type";
 import { useCurrency } from "@/context/currencyContext";
+import { usePathname } from "@/i18n/routing";
 import {
   Currency as CurrencyEnum,
   Language as LanguageEnum,
   Theme as ThemeEnum,
 } from "@/types";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { usePathname } from "@/i18n/routing";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 const getDrawerItems = (t: ReturnType<typeof useTranslations>) => ({
@@ -171,7 +171,7 @@ const SettingPage = () => {
         toast.success(t("common.success"));
       } else if (optionType === "language" && typeof value === "number") {
         const languageString = mapLanguageToApi(value);
-        
+
         if (languageString !== "en" && languageString !== "ar") {
           toast.error(t("errors.unsupportedLanguage"));
           return;
@@ -179,8 +179,11 @@ const SettingPage = () => {
 
         await updateSettings({ language: languageString });
         handleCloseDrawer();
-        
-        const newPath = pathname === "/" ? `/${languageString}` : `/${languageString}${pathname}`;
+
+        const newPath =
+          pathname === "/"
+            ? `/${languageString}`
+            : `/${languageString}${pathname}`;
         window.location.href = newPath;
         return;
       } else if (optionType === "theme" && typeof value === "number") {
@@ -223,4 +226,3 @@ const SettingPage = () => {
 };
 
 export default SettingPage;
-

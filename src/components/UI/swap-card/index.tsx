@@ -34,7 +34,7 @@ const SwapCard = ({
       style={{ zIndex }}
       onClick={onClick}
     >
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 rounded-2xl ">
         <div className="flex flex-col gap-2">
           <p className="text-sm">{action}</p>
           <input

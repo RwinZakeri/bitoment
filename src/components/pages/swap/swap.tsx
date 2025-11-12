@@ -114,7 +114,7 @@ const Swap = () => {
     <PageLayout title={t("swap.title")}>
       <div className="flex flex-col gap-4 relative mt-6">
         <div
-          className={`swap-card-transition ${
+          className={`swap-card-transition rounded-2xl ${
             isSwapping ? "swap-card-swapping" : ""
           }`}
         >
