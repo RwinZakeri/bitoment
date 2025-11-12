@@ -124,7 +124,7 @@ const SettingPage = () => {
   const t = useTranslations();
   const pathname = usePathname();
   const [selectedOption, setSelectedOption] = useState<string | number>();
-  const { setCurrency, setLanguage, setTheme, currency, language, theme, updateSettings } =
+  const { setCurrency, setTheme, currency, language, theme, updateSettings } =
     useCurrency();
 
   const supportedLanguages = Language.filter((lang) => {

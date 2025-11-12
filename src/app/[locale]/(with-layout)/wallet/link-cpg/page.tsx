@@ -131,7 +131,7 @@ const LinkCpg = () => {
           />
           {errors.selectedCrypto && (
             <span className="text-red-500 text-sm mt-1 block">
-              {translateErrorMessage(errors.selectedCrypto.message, t)}
+              {translateErrorMessage(errors.selectedCrypto.message || "", t)}
             </span>
           )}
           {watchedCrypto && !errors.selectedCrypto && (
@@ -154,7 +154,7 @@ const LinkCpg = () => {
           />
           {errors.blockchainNetwork && (
             <span className="text-red-500 text-sm mt-1 block">
-              {translateErrorMessage(errors.blockchainNetwork.message, t)}
+              {translateErrorMessage(errors.blockchainNetwork.message || "", t)}
             </span>
           )}
           {watchedNetwork && !errors.blockchainNetwork && (
