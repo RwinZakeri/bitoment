@@ -19,7 +19,7 @@ const CurrencyProgressCard = ({
       className={`flex justify-between ${
         vertical
           ? " bg-gray-200 flex-col-reverse gap-4 items-center rounded-lg p-4"
-          : " p-4 rounded-xl shadow-[0px_2px_10px_rgba(32,32,32,25%)] dark:bg-gray-200"
+          : " p-4 rounded-xl shadow-[0px_2px_10px_rgba(32,32,32,25%)]"
       }`}
     >
       <div className={`flex flex-col gap-2 ${vertical && "items-center"}`}>

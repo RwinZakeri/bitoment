@@ -9,6 +9,7 @@ import Paper from "@/components/UI/paper";
 import PlanCard from "@/components/UI/plan-card";
 import TitleLink from "@/components/UI/title-link";
 import axios from "@/config/axios.config";
+import { Link, useRouter } from "@/i18n/routing";
 import {
   chartData,
   formatCurrency,
@@ -22,11 +23,11 @@ import LayoutGridIcon from "@/public/icons/LayoutGridIcon";
 import type { GetWalletResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const Dashboard = () => {
   const router = useRouter();
+  const t = useTranslations();
   const { data, isLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletBalance],
     queryFn: async () => {
@@ -54,11 +55,11 @@ const Dashboard = () => {
           button={
             <Button
               size="sm"
-              icon={<AddIcon />}
+              icon={<AddIcon className="text-foreground" />}
               onClick={() => router.push("/wallet/invest")}
               className="p-0 px-2 rounded-sm"
             >
-              Add
+              {t("common.add")}
             </Button>
           }
           totalPrice={formatCurrency(Number(data?.wallet?.balance))}
@@ -74,49 +75,55 @@ const Dashboard = () => {
 
       <div className="mt-10">
         <TitleLink
-          title="Your Active Plans"
+          title={t("dashboard.yourActivePlans")}
           type="link"
-          label="View All"
+          label={t("dashboard.viewAll")}
           address="/plans"
           className="flex gap-2 flex-col"
           margin={0}
         >
           <PlanCard
-            title="Peace Fund"
+            title={t("dashboard.peaceFund")}
             date="09/06/2024 - 08/07/2024"
-            icon={<LayerIcon className="w-6 h-6" />}
+            icon={<LayerIcon className="w-6 h-6 text-foreground" />}
             amount={String(percentageChange).substring(3, 5)}
             price={"71,367.78"}
             link="/plans"
           />
-          <LinkedCard title="Show more details" size="sm" link="/plans" />
+          <LinkedCard
+            title={t("dashboard.showMoreDetails")}
+            size="sm"
+            link="/plans"
+          />
         </TitleLink>
       </div>
 
       <div className="mt-6">
         <TitleLink
-          title="Plans Summary"
+          title={t("dashboard.plansSummary")}
           type="link"
-          label="Learn More"
+          label={t("dashboard.learnMore")}
           address="/plans"
           className="flex gap-2 flex-col"
           margin={0}
         >
           <Link className="flex flex-col gap-2" href={"/plans"}>
             <PlanCard
-              title="Future Fund"
-              date="Up to 4.00% per year"
-              icon={<CircularProgressIcon className="w-6 h-6" />}
+              title={t("dashboard.futureFund")}
+              date={t("dashboard.upToPerYear", { percentage: "4.00" })}
+              icon={
+                <CircularProgressIcon className="w-6 h-6 text-foreground" />
+              }
             />
             <PlanCard
-              title="Sustainable Wealth Fund"
-              date="Up to 2.50% per year"
-              icon={<LayoutGridIcon className="w-6 h-6" />}
+              title={t("dashboard.sustainableWealthFund")}
+              date={t("dashboard.upToPerYear", { percentage: "2.50" })}
+              icon={<LayoutGridIcon className="w-6 h-6 text-foreground" />}
             />
             <PlanCard
-              title="Peace Fund"
-              date="Up to 1.70% per year"
-              icon={<CylinderIcon className="w-6 h-6" />}
+              title={t("dashboard.peaceFund")}
+              date={t("dashboard.upToPerYear", { percentage: "1.70" })}
+              icon={<CylinderIcon className="w-6 h-6 text-foreground" />}
             />
           </Link>
         </TitleLink>

@@ -15,9 +15,11 @@ import type { GetRiskReportResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 
 const RiskReportContent = () => {
+  const t = useTranslations();
   const [selectedFilter, setSelectedFilter] = useState("all");
 
   const {
@@ -60,7 +62,7 @@ const RiskReportContent = () => {
 
   if (isLoading) {
     return (
-      <PageLayout title="Risk Report">
+      <PageLayout title={t("wallet.riskReport")}>
         <RiskReportSkeleton />
       </PageLayout>
     );
@@ -68,7 +70,7 @@ const RiskReportContent = () => {
 
   if (isError) {
     return (
-      <PageLayout title="Risk Report">
+      <PageLayout title={t("wallet.riskReport")}>
         <div className="mt-4">
           <Filters
             onClick={setSelectedFilter}
@@ -79,16 +81,16 @@ const RiskReportContent = () => {
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
-              Unable to load risk report
+              {t("wallet.unableToLoadRiskReport")}
             </h3>
             <p className="text-gray-500 mb-4">
-              There was an error loading your risk report. Please try again.
+              {t("wallet.errorLoadingRiskReport")}
             </p>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Retry
+              {t("wallet.retry")}
             </button>
           </div>
         </div>
@@ -97,7 +99,7 @@ const RiskReportContent = () => {
   }
 
   return (
-    <PageLayout title="Risk Report">
+    <PageLayout title={t("wallet.riskReport")}>
       <div className="mt-4">
         <Filters
           onClick={setSelectedFilter}
@@ -110,10 +112,10 @@ const RiskReportContent = () => {
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
-              No risk report data
+              {t("wallet.noRiskReportData")}
             </h3>
             <p className="text-gray-500">
-              You don&apos;t have any risk report data yet.
+              {t("wallet.noRiskReportDataYet")}
             </p>
           </div>
         </div>
@@ -152,10 +154,11 @@ const RiskReportContent = () => {
 };
 
 const RiskReport = () => {
+  const t = useTranslations();
   return (
     <Suspense
       fallback={
-        <PageLayout title="Risk Report">
+        <PageLayout title={t("wallet.riskReport")}>
           <RiskReportSkeleton />
         </PageLayout>
       }

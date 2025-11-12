@@ -11,16 +11,22 @@ const Stepper = ({ passedSteps, steps, onStepClick }: StepperPropsType) => {
 
         const isLastStep = steps.length === index + 1;
         const shouldFill = isPassed || isSelected;
+        // Check if the next step is reached to determine line color
+        // The line should be filled if we've passed the current step (meaning next step is reached)
+        const nextStepIndex = index + 1;
+        const nextStepReached =
+          nextStepIndex < steps.length && passedSteps > nextStepIndex;
+        const lineShouldFill = isPassed || nextStepReached;
 
         return (
           <div key={uuid()} className="flex items-center flex-col gap-1">
             <div
               onClick={() => onStepClick?.(index)}
-              className={`relative w-6 h-6 rounded-full border cursor-pointer transition-all ${
+              className={`relative w-6 h-6 rounded-full border cursor-pointer transition-all stepper-step-connector ${
                 shouldFill ? "bg-cyan-400 border-cyan-400" : "border-gray-400"
               } ${
                 !isLastStep
-                  ? shouldFill
+                  ? lineShouldFill
                     ? "after:content-[''] after:block after:absolute after:w-12 after:h-px after:bg-cyan-400 after:top-1/2 after:left-full after:-translate-y-1/2"
                     : "after:content-[''] after:block after:absolute after:w-12 after:h-px after:bg-gray-400 after:top-1/2 after:left-full after:-translate-y-1/2"
                   : ""
@@ -44,5 +50,3 @@ const Stepper = ({ passedSteps, steps, onStepClick }: StepperPropsType) => {
 };
 
 export default Stepper;
-
-

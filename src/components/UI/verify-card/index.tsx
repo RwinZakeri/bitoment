@@ -21,7 +21,7 @@ const VerifyCard = ({
       className={`w-full relative rounded-lg p-4 ${
         isPassed
           ? "bg-cyan-200 dark:bg-primary-cyan-500/20"
-          : "bg-white dark:bg-gray-200"
+          : "bg-white"
       }`}
     >
       <div className="flex items-center justify-between ">

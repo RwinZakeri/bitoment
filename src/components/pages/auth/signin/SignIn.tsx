@@ -4,7 +4,9 @@ import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescri
 import { Button } from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import useGoogleOAuth from "@/hooks/useGoogleOAuth";
-import { setCookie } from "@/lib/utils";
+import { useRouter } from "@/i18n/routing";
+import { translateErrorMessage } from "@/lib/translateErrors";
+import { redirectToDashboardWithLocale, setCookie } from "@/lib/utils";
 import EmailIcon from "@/public/icons/EmailIcon";
 import GoogleIcon from "@/public/icons/GoogleIcon";
 import { SignInFormData, signInSchema } from "@/schema/auth/authSchema";
@@ -13,14 +15,15 @@ import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const SignIn = () => {
   const router = useRouter();
+  const t = useTranslations();
   const {
     register,
     handleSubmit,
@@ -43,13 +46,15 @@ const SignIn = () => {
 
       return response;
     },
-    onSuccess: (data) => {
-      toast.success("Signed in successfully");
+    onSuccess: async (data) => {
+      toast.success(t("auth.signIn.signedInSuccessfully"));
       setCookie("token", data.data.token || "");
-      router.push("/dashboard");
+      await redirectToDashboardWithLocale(router);
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(error?.response?.data?.message || "Sign in failed");
+      toast.error(
+        error?.response?.data?.message || t("auth.signIn.signInFailed")
+      );
     },
   });
 
@@ -64,22 +69,20 @@ const SignIn = () => {
       redirectUri: typeof window !== "undefined" ? window.location.origin : "",
     },
     {
-      onSuccess: (data) => {
-        toast.success(data.message || "Signed in successfully with Google");
+      onSuccess: async (data) => {
+        toast.success(data.message || t("auth.signIn.signedInWithGoogle"));
         setCookie("token", data.token || "");
-        router.push("/dashboard");
+        await redirectToDashboardWithLocale(router);
       },
       onError: (error) => {
-        toast.error(error || "Google sign-in failed");
+        toast.error(error || t("auth.signIn.googleSignInFailed"));
       },
     }
   );
 
   const handleGoogleSignIn = async () => {
     if (!googleClientId) {
-      toast.error(
-        "Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID"
-      );
+      toast.error(t("auth.signIn.googleOAuthNotConfigured"));
       return;
     }
     await signInWithGoogle();
@@ -124,12 +127,11 @@ const SignIn = () => {
         className="mt-20"
         title={
           <div className="flex flex-col">
-            <span>Sign in</span>
-            <span>your account</span>
+            <span>{t("auth.signIn.title")}</span>
+            <span>{t("auth.signIn.yourAccount")}</span>
           </div>
         }
-        description="cryptocurrency wallet mobile apps available for
-        managing and storing your digital assets."
+        description={t("auth.signIn.description")}
       />
 
       <form
@@ -138,19 +140,27 @@ const SignIn = () => {
       >
         <Input
           type="email"
-          label="Email"
-          placeholder="Enter your email"
+          label={t("auth.signIn.email")}
+          placeholder={t("auth.signIn.enterEmail")}
           icon={<EmailIcon className="size-6" />}
           {...register("email")}
-          error={errors.email?.message}
+          error={
+            errors.email?.message
+              ? translateErrorMessage(errors.email.message, t)
+              : undefined
+          }
         />
         <Input
-          label="Password"
+          label={t("auth.signIn.password")}
           type="password"
           placeholder="*************"
           showPasswordToggle={true}
           {...register("password")}
-          error={errors.password?.message}
+          error={
+            errors.password?.message
+              ? translateErrorMessage(errors.password.message, t)
+              : undefined
+          }
         />
 
         <Link
@@ -163,7 +173,7 @@ const SignIn = () => {
           }}
           href={"/auth/forgot-password"}
         >
-          Forgot Password?
+          {t("auth.signIn.forgotPassword")}
         </Link>
 
         <div className="mt-8 flex flex-col gap-4">
@@ -175,7 +185,9 @@ const SignIn = () => {
             disabled={isPending}
             loading={isPending}
           >
-            {isPending ? "Signing in..." : "Sign In"}
+            {isPending
+              ? t("auth.signIn.signingIn")
+              : t("auth.signIn.signInButton")}
           </Button>
         </div>
       </form>
@@ -190,16 +202,18 @@ const SignIn = () => {
           disabled={isGoogleLoading || !googleClientId}
           loading={isGoogleLoading}
         >
-          {isGoogleLoading ? "Signing in..." : "Sign with Google"}
+          {isGoogleLoading
+            ? t("auth.signIn.signingIn")
+            : t("auth.signIn.signWithGoogle")}
         </Button>
 
         <p className="text-gray-500 text-center text-sm font-normal">
-          Don&apos;t have an account ?{" "}
+          {t("auth.signIn.dontHaveAccount")}{" "}
           <Link
             href={"/auth/sign-up"}
             className="cursor-pointer text-blue-500 font-semibold"
           >
-            Sign Up
+            {t("auth.signIn.signUp")}
           </Link>
         </p>
       </div>

@@ -1,5 +1,9 @@
+import createMiddleware from "next-intl/middleware";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { routing } from "./i18n/routing";
+
+const intlMiddleware = createMiddleware(routing);
 
 const PUBLIC_ROUTES = [
   "/welcome",
@@ -9,7 +13,7 @@ const PUBLIC_ROUTES = [
   "/auth/reset-password",
   "/auth/check-email",
   "/plans",
-  "/payment"
+  "/payment",
 ];
 
 const PROTECTED_ROUTES = ["/dashboard", "/wallet", "/profile", "/swap", "/cpg"];
@@ -19,30 +23,45 @@ function isAuthenticated(request: NextRequest): boolean {
   return !!token;
 }
 
-function isPublicRoute(pathname: string): boolean {
+function removeLocale(pathname: string): string {
+  const localePattern = /^\/(en|ar)(\/|$)/;
+  const match = pathname.match(localePattern);
+  if (match) {
+    return pathname.replace(`/${match[1]}`, "") || "/";
+  }
+  return pathname;
+}
+
+// Note: isPublicRoute is kept for potential future use but not currently used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isPublicRoute(_pathname: string): boolean {
+  const pathWithoutLocale = removeLocale(_pathname);
   return PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
+    (route) =>
+      pathWithoutLocale === route || pathWithoutLocale.startsWith(route + "/")
   );
 }
 
 function isProtectedRoute(pathname: string): boolean {
+  const pathWithoutLocale = removeLocale(pathname);
   return PROTECTED_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
+    (route) =>
+      pathWithoutLocale === route || pathWithoutLocale.startsWith(route + "/")
   );
 }
 
 function isAuthRoute(pathname: string): boolean {
-  return pathname.startsWith("/auth/");
+  const pathWithoutLocale = removeLocale(pathname);
+  return pathWithoutLocale.startsWith("/auth/");
 }
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  
+  // Handle API routes
   if (pathname.startsWith("/api/")) {
     const response = NextResponse.next();
 
-    
     const origin = request.headers.get("origin") || "*";
     response.headers.set("Access-Control-Allow-Origin", origin);
     response.headers.set(
@@ -56,7 +75,6 @@ export function middleware(request: NextRequest) {
     response.headers.set("Access-Control-Allow-Credentials", "true");
     response.headers.set("Access-Control-Max-Age", "86400");
 
-    
     if (request.method === "OPTIONS") {
       return new NextResponse(null, { status: 200, headers: response.headers });
     }
@@ -64,6 +82,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
+  // Skip middleware for static files
   if (
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/static/") ||
@@ -75,44 +94,51 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // First, apply intl middleware to handle locale routing
+  const response = intlMiddleware(request);
+
+  // Extract locale from pathname
+  const localeMatch = pathname.match(/^\/(en|ar)(\/|$)/);
+  const locale = localeMatch ? localeMatch[1] : routing.defaultLocale;
+
+  // Get the pathname after locale is applied
+  let pathWithoutLocale = pathname;
+  if (localeMatch) {
+    pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
+  }
+
+  // Handle authentication and routing logic
   const authenticated = isAuthenticated(request);
-  const isPublic = isPublicRoute(pathname);
   const isProtected = isProtectedRoute(pathname);
   const isAuth = isAuthRoute(pathname);
 
-  if (pathname === "/") {
+  // Handle root path redirect
+  if (pathWithoutLocale === "/" || pathname === "/") {
     if (authenticated) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(
+        new URL(`/${locale}/dashboard`, request.url)
+      );
     } else {
-      return NextResponse.redirect(new URL("/welcome", request.url));
+      return NextResponse.redirect(new URL(`/${locale}/welcome`, request.url));
     }
   }
 
+  // Redirect authenticated users away from auth pages
   if (authenticated && isAuth) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
   }
 
-  if (authenticated && pathname === "/welcome") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  // Redirect authenticated users away from welcome page
+  if (authenticated && pathWithoutLocale === "/welcome") {
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
   }
 
+  // Redirect unauthenticated users away from protected routes
   if (!authenticated && isProtected) {
-    return NextResponse.redirect(new URL("/welcome", request.url));
+    return NextResponse.redirect(new URL(`/${locale}/welcome`, request.url));
   }
 
-  if (!authenticated && pathname === "/") {
-    return NextResponse.redirect(new URL("/welcome", request.url));
-  }
-
-  if (isPublic || pathname === "/plans") {
-    return NextResponse.next();
-  }
-
-  if (authenticated) {
-    return NextResponse.next();
-  }
-
-  return NextResponse.redirect(new URL("/welcome", request.url));
+  return response;
 }
 
 export const config = {

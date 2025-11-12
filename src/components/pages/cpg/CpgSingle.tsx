@@ -5,18 +5,23 @@ import ToggleButton from "@/components/UI/toggle-buttom";
 import axios from "@/config/axios.config";
 import { useCurrency } from "@/context/currencyContext";
 import { handleCopyAddress } from "@/lib/utils";
+import BitomentIcon from "@/public/icons/BitomentIcon";
+import CopyIcon from "@/public/icons/CopyIcon";
 import InfoIcon from "@/public/icons/InfoIcon";
 import { GetPublicCpgLinkResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
 import { useMemo, useState } from "react";
 import { CpgSinglePropsType } from "./type";
 
 const PaymentSingle = ({ id }: CpgSinglePropsType) => {
+  const t = useTranslations();
   const { currency } = useCurrency();
-  const [selectedOption, setSelectedOption] = useState("Address");
+  const [selectedOptionKey, setSelectedOptionKey] = useState<
+    "address" | "amountWithValue"
+  >("address");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletCpgSingle, id],
@@ -50,7 +55,7 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
   }, [data?.link?.price]);
 
   const qrCodeValue = useMemo(() => {
-    if (selectedOption === "Address") {
+    if (selectedOptionKey === "address") {
       return walletAddress;
     } else {
       return `${walletAddress}?amount=${data?.link?.price || 0}&currency=${
@@ -58,7 +63,7 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
       }`;
     }
   }, [
-    selectedOption,
+    selectedOptionKey,
     walletAddress,
     data?.link?.price,
     data?.link?.currency,
@@ -67,14 +72,14 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
 
   if (isLoading) {
     return (
-      <Paper className="p-3 bg-white dark:bg-gray-200">
+      <Paper className="p-3 bg-white">
         <div className="shadow-sm rounded-lg overflow-hidden">
           <div className="flex flex-col gap-6">
             <div className="px-3 py-5 flex flex-col bg-gray-200 gap-3 animate-pulse">
               <div className="h-16 bg-gray-300 rounded"></div>
               <div className="h-10 bg-gray-300 rounded w-1/2"></div>
             </div>
-            <div className="px-3 bg-white dark:bg-gray-200 rounded-b-lg">
+            <div className="px-3 bg-white rounded-b-lg">
               <div className="flex gap-3 flex-col">
                 <div className="h-6 bg-gray-200 rounded w-1/3 animate-pulse"></div>
                 <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
@@ -89,13 +94,13 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
 
   if (isError || !data?.link) {
     return (
-      <Paper className="p-3 bg-white dark:bg-gray-200">
+      <Paper className="p-3 bg-white">
         <div className="shadow-sm rounded-lg overflow-hidden">
           <div className="px-3 py-5 text-center">
             <p className="text-red-500">
               {isError
-                ? "Failed to load payment link"
-                : "Payment link not found"}
+                ? t("wallet.failedToLoadPaymentLink")
+                : t("wallet.paymentLinkNotFound")}
             </p>
           </div>
         </div>
@@ -113,11 +118,10 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
         <div className="flex flex-col gap-6">
           <div className=" px-3 py-5 flex flex-col bg-gray-200 gap-3">
             <div className="flex items-end gap-3">
-              <Image
-                src={"/svgs/bitoment.svg"}
-                alt="bitoment"
+              <BitomentIcon
                 width={60}
                 height={60}
+                className="text-foreground"
               />
               <p className="">Bitoment</p>
             </div>
@@ -136,17 +140,16 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
               <CustomeInput
                 disabled
                 variant="secondary"
-                label="Amount"
+                label={t("wallet.amount")}
                 inputType="stroke"
                 size={"sm"}
                 value={`${amountWithFee} TRC20_${displayCurrency}`}
                 icon={
                   <button onClick={() => handleCopyAddress(amountWithFee)}>
-                    <Image
-                      src={"/svgs/copyIcon.svg"}
-                      alt=""
+                    <CopyIcon
                       width={14}
                       height={14}
+                      className="text-foreground"
                     />
                   </button>
                 }
@@ -155,23 +158,26 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
                 <CustomeInput
                   disabled
                   variant="secondary"
-                  label="Address"
+                  label={t("wallet.address")}
                   inputType="stroke"
                   size={"sm"}
                   value={walletAddress}
                   icon={
                     <button onClick={() => handleCopyAddress(walletAddress)}>
-                      <Image
-                        src={"/svgs/copyIcon.svg"}
-                        alt=""
+                      <CopyIcon
                         width={14}
                         height={14}
+                        className="text-foreground"
                       />
                     </button>
                   }
                 />
                 <p className="text-[10px] mt-1.5 font-extralight">
-                  Min Transaction Amount • 10 {displayCurrency} (TRC20)
+                  {t("wallet.minTransactionAmount", {
+                    amount: "10",
+                    currency: displayCurrency,
+                    network: "TRC20",
+                  })}
                 </p>
               </div>
               <div className="flex items-center justify-center py-6">
@@ -188,17 +194,28 @@ const PaymentSingle = ({ id }: CpgSinglePropsType) => {
                     </div>
                     <div className="py-4">
                       <ToggleButton
-                        options={["Address", "Width Value"]}
-                        state={selectedOption}
-                        setState={setSelectedOption}
+                        options={[
+                          t("wallet.address"),
+                          t("wallet.amountWithValue"),
+                        ]}
+                        state={
+                          selectedOptionKey === "address"
+                            ? t("wallet.address")
+                            : t("wallet.amountWithValue")
+                        }
+                        setState={(value) => {
+                          const addressText = t("wallet.address");
+                          setSelectedOptionKey(
+                            value === addressText
+                              ? "address"
+                              : "amountWithValue"
+                          );
+                        }}
                       />
                     </div>
                     <p className="text-[0.75rem] flex py-4 text-gray-600">
                       <InfoIcon className="text-foreground" />
-                      &nbsp;If you&apos;re sending the payment from an exchange,
-                      ensure it doesn&apos;t deduct fees from the sent amount.
-                      If it does, send the requested amount plus the exchange
-                      fees to avoid underpayment.
+                      &nbsp;{t("wallet.paymentInfo")}
                     </p>
                   </div>
                 </div>

@@ -7,13 +7,15 @@ import CustomeInput from "@/components/UI/CustomeInput";
 import Modal from "@/components/UI/modal";
 import SwapCard from "@/components/UI/swap-card";
 import { useCurrency } from "@/context/currencyContext";
+import { Link } from "@/i18n/routing";
 import SuccessTickIcon from "@/public/icons/SuccessTickIcon";
 import SwapIcon from "@/public/icons/SwapIcon";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
 const Swap = () => {
+  const t = useTranslations();
   const { currency } = useCurrency();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -109,7 +111,7 @@ const Swap = () => {
   };
 
   return (
-    <PageLayout title="Swap">
+    <PageLayout title={t("swap.title")}>
       <div className="flex flex-col gap-4 relative mt-6">
         <div
           className={`swap-card-transition ${
@@ -117,13 +119,13 @@ const Swap = () => {
           }`}
         >
           <SwapCard
-            action="Send"
+            action={t("swap.send")}
             balance={fromCrypto ? "0.231" : "0"}
             amount={fromAmount}
             zIndex={50}
             crypto={fromCrypto}
             onClick={() => handleOpenSelectModal("from")}
-            label="Select a coin"
+            label={t("swap.selectCoin")}
             onAmountChange={(value) => setFromAmount(value)}
           />
         </div>
@@ -133,13 +135,13 @@ const Swap = () => {
           }`}
         >
           <SwapCard
-            action="Receive"
+            action={t("swap.receive")}
             balance={toCrypto ? "0.231" : "0"}
             amount={toAmount}
             zIndex={10}
             crypto={toCrypto}
             onClick={() => handleOpenSelectModal("to")}
-            label="Select a coin"
+            label={t("swap.selectCoin")}
             onAmountChange={(value) => setToAmount(value)}
           />
         </div>
@@ -167,7 +169,7 @@ const Swap = () => {
       <CustomeInput
         className="mt-7"
         placeholder={`638,532.21 ${currency}`}
-        label="Available Portfolio"
+        label={t("swap.availablePortfolio")}
         inputType="stroke"
       />
 
@@ -175,7 +177,7 @@ const Swap = () => {
         href={"/swap/history"}
         className="block w-fit my-2 text-blue-500 p-0 m-0 ml-auto text-sm"
       >
-        Swap History{" "}
+        {t("swap.swapHistory")}
       </Link>
 
       <Button
@@ -184,7 +186,7 @@ const Swap = () => {
         onClick={handleSwapSubmit}
         disabled={!fromCrypto || !toCrypto || !fromAmount || !toAmount}
       >
-        Swap
+        {t("swap.swapButton")}
       </Button>
 
       <Modal
@@ -194,16 +196,18 @@ const Swap = () => {
       >
         <div className="flex flex-col space-y-6 p-2">
           <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-2">Confirm Swap</h2>
+            <h2 className="text-2xl font-semibold mb-2">
+              {t("swap.confirmSwap")}
+            </h2>
             <p className="text-gray-500 text-sm">
-              Please review your swap details before confirming
+              {t("swap.confirmSwapDescription")}
             </p>
           </div>
 
           <div className="flex flex-col gap-4 bg-gray-50 rounded-xl p-4">
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-gray-500">From</p>
-              <div className="flex items-center justify-between bg-white dark:bg-gray-200 rounded-lg p-3">
+              <p className="text-sm text-gray-500">{t("swap.from")}</p>
+              <div className="flex items-center justify-between bg-white rounded-lg p-3">
                 <div className="flex items-center gap-3">
                   {fromCrypto?.icon ? (
                     <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
@@ -224,7 +228,7 @@ const Swap = () => {
                       {fromCrypto?.shortName || "N/A"}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {fromCrypto?.name || "Select crypto"}
+                      {fromCrypto?.name || t("swap.selectCrypto")}
                     </p>
                   </div>
                 </div>
@@ -245,8 +249,8 @@ const Swap = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-gray-500">To</p>
-              <div className="flex items-center justify-between bg-white dark:bg-gray-200 rounded-lg p-3">
+              <p className="text-sm text-gray-500">{t("swap.to")}</p>
+              <div className="flex items-center justify-between bg-white rounded-lg p-3">
                 <div className="flex items-center gap-3">
                   {toCrypto?.icon ? (
                     <div className="w-10 h-10 rounded-full bg-gray-250 flex items-center justify-center">
@@ -267,7 +271,7 @@ const Swap = () => {
                       {toCrypto?.shortName || "N/A"}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {toCrypto?.name || "Select crypto"}
+                      {toCrypto?.name || t("swap.selectCrypto")}
                     </p>
                   </div>
                 </div>
@@ -285,10 +289,10 @@ const Swap = () => {
               onClick={handleCloseConfirmModal}
               className="flex-1"
             >
-              Cancel
+              {t("swap.cancel")}
             </Button>
             <Button size="lg" onClick={handleConfirmSwap} className="flex-1">
-              Confirm Swap
+              {t("swap.confirmSwapButton")}
             </Button>
           </div>
         </div>
@@ -297,9 +301,9 @@ const Swap = () => {
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="flex flex-col items-center text-center space-y-4">
           <SuccessTickIcon className="w-16 h-16 text-green-500" />
-          <h2 className="text-2xl font-semibold ">Swap Success</h2>
+          <h2 className="text-2xl font-semibold ">{t("swap.swapSuccess")}</h2>
           <p className="text-gray-600 flex flex-col gap-1">
-            <span className="text-xs">Amount:</span>
+            <span className="text-xs">{t("swap.amount")}</span>
             <span>
               {" "}
               <span className="text-foreground text-2xl font-semibold">
@@ -316,7 +320,7 @@ const Swap = () => {
             onClick={handleCloseModal}
             className="mt-4 w-full"
           >
-            Back
+            {t("common.back")}
           </Button>
         </div>
       </Modal>

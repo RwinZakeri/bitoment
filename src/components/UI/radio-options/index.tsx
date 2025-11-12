@@ -32,7 +32,7 @@ const RadioOptions = ({
     <div className="flex flex-col gap-3">
       <p className="text-gray-500/65">{label}</p>
 
-      <div className="py-5 px-4 bg-white dark:bg-gray-200 rounded-[10px]">
+      <div className="py-5 px-4 bg-white rounded-[10px]">
         {twoFactorOptions.map((item: twoFactorOptionsProps, index: number) => {
           return (
             <div

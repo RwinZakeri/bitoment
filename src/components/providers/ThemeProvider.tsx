@@ -18,7 +18,7 @@ export default function ThemeProvider({
     root.classList.remove("dark", "light");
     root.removeAttribute("data-theme");
 
-    let themeToApply = theme || "light";
+    let themeToApply = theme || "dark";
 
     if (theme === "system") {
       const prefersDark = window.matchMedia(
@@ -33,6 +33,18 @@ export default function ThemeProvider({
     } else {
       root.classList.add("light");
       root.setAttribute("data-theme", "light");
+    }
+
+    // Sync theme to localStorage for FOUC prevention on next page load
+    try {
+      if (theme) {
+        localStorage.setItem("theme", theme);
+      } else {
+        localStorage.setItem("theme", "dark");
+      }
+    } catch (e) {
+      // localStorage might not be available in some environments
+      console.warn("Failed to save theme to localStorage:", e);
     }
   }, [theme, isLoading]);
 

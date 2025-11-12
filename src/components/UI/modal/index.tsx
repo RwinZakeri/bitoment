@@ -96,7 +96,7 @@ const Modal = ({
       <div
         ref={modalRef}
         className={cn(
-          "relative bg-white dark:bg-gray-200 w-full rounded-xlF shadow-xl focus:outline-none",
+          "relative bg-white w-full rounded-xlF shadow-xl focus:outline-none",
           size !== "auto" && sizeClasses[size],
           className
         )}

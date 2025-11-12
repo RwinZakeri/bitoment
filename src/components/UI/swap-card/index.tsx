@@ -16,7 +16,7 @@ const SwapCard = ({
 }: SwapCardPropsType) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
+
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       onAmountChange?.(value);
     }
@@ -28,7 +28,7 @@ const SwapCard = ({
 
   return (
     <div
-      className={`w-full p-5 bg-white dark:bg-gray-200 rounded-2xl flex items-center justify-between transition-all duration-200 ease-in-out ${
+      className={`w-full p-5 bg-white overflow-hidden rounded-2xl flex items-center justify-between transition-all duration-200 ease-in-out ${
         onClick ? "cursor-pointer hover:shadow-md" : ""
       }`}
       style={{ zIndex }}

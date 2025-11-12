@@ -1,27 +1,31 @@
-export const palnFeatures = [
+export interface PlanFeature {
+  titleKey: string;
+  address: string;
+}
+
+export const palnFeatures: PlanFeature[] = [
   {
-    title: "The suggested investment duration for this fund is one year.",
+    titleKey: "plans.feature1",
     address: "/svgs/clock.svg",
   },
   {
-    title: "he estimated profit for the next year is 38%.",
+    titleKey: "plans.feature2",
     address: "/svgs/chart.svg",
   },
-
   {
-    title: "The price fluctuation level is low.",
+    titleKey: "plans.feature3",
     address: "/svgs/download.svg",
   },
   {
-    title: "The greatest drawdown in the past year was 17% .",
+    titleKey: "plans.feature4",
     address: "/svgs/chartTwo.svg",
   },
   {
-    title: "The fund's performance in the past year was 66%.",
+    titleKey: "plans.feature5",
     address: "/svgs/chartThree.svg",
   },
-    {
-    title: "The ability to buy and sell at any time is 24/7 .",
+  {
+    titleKey: "plans.feature6",
     address: "/svgs/door.svg",
   },
 ];

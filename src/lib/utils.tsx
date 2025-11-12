@@ -205,3 +205,39 @@ export const handleCopyAddress = async (text: string) => {
     toast.error("Failed to copy address");
   }
 };
+
+/**
+ * Redirects to dashboard with user's preferred language locale
+ * Fetches user settings to get their language preference
+ */
+export const redirectToDashboardWithLocale = async (
+  router: { push: (path: string) => void }
+) => {
+  try {
+    // Import axios dynamically to avoid circular dependencies
+    const axios = (await import("@/config/axios.config")).default;
+    
+    // Fetch user settings to get language preference
+    const response = await axios.get("user/settings");
+    const language = response.data?.settings?.language || "en";
+    
+    // Ensure language is a valid locale (en or ar)
+    const validLocale = language === "ar" ? "ar" : "en";
+    
+    // Use window.location for reliable locale switching
+    if (typeof window !== "undefined") {
+      window.location.href = `/${validLocale}/dashboard`;
+    } else {
+      // Fallback to router.push if window is not available
+      router.push(`/${validLocale}/dashboard`);
+    }
+  } catch (error) {
+    // If fetching settings fails, default to English
+    console.error("Failed to fetch user settings:", error);
+    if (typeof window !== "undefined") {
+      window.location.href = "/en/dashboard";
+    } else {
+      router.push("/en/dashboard");
+    }
+  }
+};

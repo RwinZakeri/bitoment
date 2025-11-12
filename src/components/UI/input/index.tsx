@@ -14,11 +14,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       containerClassName,
       error,
       showPasswordToggle = false,
-      size: _size,
+      size,
       ...props
     },
     ref
   ) => {
+    // Size prop is kept for API compatibility but not currently used in styling
+    void size;
     const [showPassword, setShowPassword] = useState(false);
 
     const isPasswordField = type === "password";
@@ -30,7 +32,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div>
         <label
           htmlFor={inputId}
-          className={`flex flex-col gap-1 border-b-[1px] border-gray-300 pb-2.5 relative ${
+          className={`flex flex-col gap-1 border-b border-gray-300 pb-2.5 relative ${
             containerClassName || ""
           }`}
         >
@@ -48,7 +50,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-0 bottom-2 w-7 h-7 bg-white dark:bg-gray-200 flex items-center justify-center cursor-pointer"
+              className="absolute right-0 rtl:left-0 rtl:right-auto bottom-2 w-7 h-7 bg-gray-200 flex items-center justify-center cursor-pointer"
             >
               {showPassword ? (
                 <EyeOffIcon className="size-6" />
@@ -58,7 +60,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </button>
           ) : (
             icon && (
-              <div className="absolute right-0 bottom-2 w-7 h-7 bg-white dark:bg-gray-200">
+              <div className="absolute right-0 rtl:left-0 rtl:right-auto bottom-2 w-7 h-7 bg-gray-200">
                 {icon}
               </div>
             )

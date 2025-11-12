@@ -19,9 +19,12 @@ import { AssetData, AssetDistributionResponse } from "@/types";
 import type { GetWalletHistoryResponse, GetWalletResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 const Wallet = () => {
+  const t = useTranslations();
+  const router = useRouter();
   const { data: walletData, isLoading: walletLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletBalance],
     queryFn: async () => {
@@ -42,8 +45,6 @@ const Wallet = () => {
     refetchOnWindowFocus: false,
   });
 
-  const router = useRouter();
-
   const { data: historyData, isLoading: historyLoading } = useQuery({
     queryKey: [ReactQueryKey.wallet, ReactQueryKey.walletHistory],
     queryFn: async () => {
@@ -60,14 +61,14 @@ const Wallet = () => {
 
   if (walletLoading || assetLoading || historyLoading) {
     return (
-      <PageLayout title="My Wallet" className="px-5">
+      <PageLayout title={t("wallet.title")} className="px-5">
         <WalletSkeleton />
       </PageLayout>
     );
   }
 
   return (
-    <PageLayout title="My Wallet" className="px-5">
+    <PageLayout title={t("wallet.title")} className="px-5">
       <Paper className="mt-6 p-6 py-8 shadow-lg rounded-xl bg-gray-100">
         <TotalPrice
           labelPosition="top"
@@ -81,7 +82,7 @@ const Wallet = () => {
               className="px-2"
               icon={<CpgIcon className="text-foreground" />}
             >
-              CPG
+              {t("wallet.cpg")}
             </Button>
           }
           percentageColor={
@@ -95,8 +96,8 @@ const Wallet = () => {
 
       <TitleLink
         margin={32}
-        title="Asset Distribution"
-        label="View All"
+        title={t("wallet.assetDistribution")}
+        label={t("wallet.viewAll")}
         type="link"
         address="/wallet/asset-distribution"
       >
@@ -118,10 +119,10 @@ const Wallet = () => {
 
       <TitleLink
         margin={32}
-        title="Wallet History"
+        title={t("wallet.walletHistory")}
         address="/wallet/history"
         type="link"
-        label="Show All"
+        label={t("wallet.showAll")}
       >
         {historyData?.data?.slice(0, 2).map((day, dayIndex) => (
           <TitleLink

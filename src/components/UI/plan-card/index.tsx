@@ -12,7 +12,7 @@ const PlanCard = ({
 }: planCardPropsType) => {
   const cardContent = (
     <div
-      className={`bg-white dark:bg-gray-200 max-h-20 py-5 px-6 flex justify-between rounded-xl ${
+      className={`bg-white max-h-20 py-5 px-6 flex justify-between rounded-xl ${
         onClick || link
           ? "cursor-pointer hover:opacity-90 transition-opacity"
           : ""

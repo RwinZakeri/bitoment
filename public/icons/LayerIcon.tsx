@@ -12,8 +12,8 @@ export const LayerIcon: React.FC<LayerIconProps> = ({
   width = 25,
   height = 25,
   className,
-  fill = "#15E0CC",
-  stroke = "black",
+  fill = "var(--primary-cyan-400)",
+  stroke = "currentColor",
 }) => {
   return (
     <svg

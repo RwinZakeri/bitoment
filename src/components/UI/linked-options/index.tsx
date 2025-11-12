@@ -21,7 +21,7 @@ const LinkedOptions = ({
     <div className="flex flex-col gap-3">
       <p className="text-gray-500/65 dark:text-gray-400">{label}</p>
       <div
-        className={`py-5 px-4 bg-white dark:bg-gray-200 ${
+        className={`py-5 px-4 bg-white ${
           !centerized && "rounded-[10px]"
         }`}
       >

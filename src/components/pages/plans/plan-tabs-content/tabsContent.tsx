@@ -8,6 +8,7 @@ import Rank from "@/components/UI/rank";
 import Stepper from "@/components/UI/stepper";
 import TransformButton from "@/components/UI/transform-button";
 import { useCurrency } from "@/context/currencyContext";
+import { useRouter } from "@/i18n/routing";
 import {
   assetAllocationData,
   chartData,
@@ -21,13 +22,14 @@ import DocumentIcon from "@/public/icons/DocumentIcon";
 import LineChartIcon from "@/public/icons/LineChartIcon";
 import WindowIcon from "@/public/icons/WindowIcon";
 import womenBtc from "@/public/svgs/women-btc.svg";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { palnFeatures } from "./type";
 
 const PerformanceTab = () => {
+  const t = useTranslations();
   const { currency } = useCurrency();
   const [selectedStep, setSelectedStep] = useState<number>(0);
   const [price, setPrice] = useState<string>("");
@@ -46,17 +48,21 @@ const PerformanceTab = () => {
 
   const handleInvestClick = () => {
     if (!price || parseFloat(price) <= 0) {
-      toast.error("Please enter a valid investment amount");
+      toast.error(t("invest.pleaseEnterValidAmount"));
       return;
     }
 
     const priceValue = parseFloat(price);
     toast.success(
-      `Investment Details:\nAmount: ${priceValue.toFixed(
-        2
-      )} ${currency}\nDuration: ${currentDurationLabel}\nReturn: ${currentPercentage}%\nFinal Value: ${calculatedAmount.toFixed(
-        2
-      )} ${currency}`,
+      `${t("invest.investmentDetails")}\n${t(
+        "invest.amount"
+      )}: ${priceValue.toFixed(2)} ${currency}\n${t(
+        "invest.duration"
+      )} ${currentDurationLabel}\n${t(
+        "invest.return"
+      )} ${currentPercentage}%\n${t(
+        "invest.finalValue"
+      )} ${calculatedAmount.toFixed(2)} ${currency}`,
       {
         duration: 5000,
         style: {
@@ -71,10 +77,9 @@ const PerformanceTab = () => {
 
   return (
     <div className="p-2 mt-4">
-      <div className="w-full flex bg-white dark:bg-gray-200 rounded-2xl p-4">
+      <div className="w-full flex bg-white rounded-2xl p-4">
         <p className="text-xs text-foreground">
-          Low-risk investments focus on well-established cryptocurrencies,
-          offering stable returns with lower risk.
+          {t("plans.lowRiskInvestments")}
         </p>
         <Image src={womenBtc} alt="women btc" width={100} height={100} />
       </div>
@@ -85,7 +90,7 @@ const PerformanceTab = () => {
           icon={
             <Image src="/svgs/rington.svg" alt="Send" width={24} height={24} />
           }
-          label="News"
+          label={t("plans.news")}
           clickHandler={() => ""}
         />
         <TransformButton
@@ -98,7 +103,7 @@ const PerformanceTab = () => {
               height={24}
             />
           }
-          label="Transactions"
+          label={t("plans.transactions")}
           clickHandler={() => ""}
         />
         <TransformButton
@@ -111,7 +116,7 @@ const PerformanceTab = () => {
               height={24}
             />
           }
-          label="Calculation"
+          label={t("plans.calculation")}
           clickHandler={() => ""}
         />
         <TransformButton
@@ -119,58 +124,60 @@ const PerformanceTab = () => {
           icon={
             <Image src="/svgs/plus-teal.svg" alt="Add" width={24} height={24} />
           }
-          label="Invest"
+          label={t("plans.invest")}
           clickHandler={() => ""}
         />
       </div>
       <Paper
-        className="bg-white dark:bg-gray-200 p-4 mt-2 rounded-xl"
-        label="Features"
+        className="bg-white p-4 mt-2 rounded-xl"
+        label={t("plans.featuresLabel")}
       >
         <div className="flex flex-col gap-4 ">
-          {palnFeatures.map((item) => (
+          {palnFeatures.map((item, index) => (
             <div
-              className="flex shadow-sm p-3 mt-2 rounded-xl items-center justify-between gap-2 text-sm"
-              key={item.title}
+              className="flex shadow-lg dark:shadow-cyan-400/20 p-3 mt-2 rounded-xl items-center justify-between gap-2 text-sm"
+              key={item.titleKey + index}
             >
               <Image
                 src={item.address}
-                alt={item.title}
-                width={50}
-                height={50}
-                className="border border-black/25 dark:border-white/25 rounded-lg p-2"
+                alt={t(item.titleKey)}
+                width={500}
+                height={500}
+                className="w-[50px] h-[50px] rounded-lg p-2 bg-white dark:bg-gray-100"
               />
-              <p className="text-foreground">{item.title}</p>{" "}
+              <p className="text-foreground">{t(item.titleKey)}</p>{" "}
             </div>
           ))}
         </div>
       </Paper>
       <Paper
-        icon={<LineChartIcon className="ml-2 text-foreground" />}
-        className="bg-white dark:bg-gray-200 p-2 rounded-2xl mt-4"
-        label="Fund Performance Chart"
+        icon={
+          <LineChartIcon className="ml-2 rtl:mr-2 rtl:ml-0 text-foreground dark:text-white" />
+        }
+        className="bg-white p-2 rounded-2xl mt-4"
+        label={t("plans.fundPerformanceChart")}
       >
         <LineChart data={chartData} />
       </Paper>
 
       <Paper
-        icon={<WindowIcon className="text-foreground" />}
-        className="bg-white dark:bg-gray-200 p-4 rounded-2xl mt-4"
-        label="Asset Allocation"
+        icon={<WindowIcon className="text-foreground dark:text-white" />}
+        className="bg-white p-4 rounded-2xl mt-4"
+        label={t("plans.assetAllocation")}
       >
         <div className="h-80">
           <DoughnutChart data={assetAllocationData} />
         </div>
       </Paper>
       <Paper
-        className="mt-4 bg-white dark:bg-gray-200 rounded-2xl p-4"
-        label="Capital Growth Estimate"
-        icon={<ChartFrameIcon className="text-foreground" />}
+        className="mt-4 bg-white rounded-2xl p-4"
+        label={t("plans.capitalGrowthEstimate")}
+        icon={<ChartFrameIcon className="text-foreground dark:text-white" />}
       >
         <div className="mt-4">
           <CustomeInput
-            placeholder="0.00"
-            label="Price"
+            placeholder={t("plans.pricePlaceholder")}
+            label={t("plans.price")}
             variant="secondary"
             inputType="stroke"
             type="number"
@@ -178,7 +185,7 @@ const PerformanceTab = () => {
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
-        <Paper className="mt-4" label="Investment Duration">
+        <Paper className="mt-4" label={t("plans.investmentDuration")}>
           <div className="mt-2 flex items-center justify-center w-full">
             <Stepper
               steps={steps}
@@ -188,37 +195,40 @@ const PerformanceTab = () => {
           </div>
           <div className="mt-6">
             <Rank
-              icon={<AwardIcon className="text-foreground" />}
+              icon={<AwardIcon className="text-foreground dark:text-white" />}
               percentage={currentPercentage}
               currency={currency}
-              label={`Asset Value After ${currentDurationLabel}:`}
+              label={t("plans.assetValueAfter", {
+                duration: currentDurationLabel,
+              })}
               amount={calculatedAmount}
             />
           </div>
         </Paper>
       </Paper>
       <Paper
-        label="Documentation"
-        className="bg-white dark:bg-gray-200 rounded-2xl p-4 mt-4"
-        icon={<DocumentIcon className="text-foreground" />}
+        label={t("plans.documentationLabel")}
+        className="bg-white rounded-2xl p-4 mt-4"
+        icon={<DocumentIcon className="text-foreground dark:text-white" />}
       >
         <div className="flex flex-col gap-4">
           <p className="my-6 text-gray-500 dark:text-gray-400">
-            Investments in cryptocurrencies with high market value and strong
-            history.
+            {t("plans.documentationDescription1")}
           </p>
           <p className="mb-6 text-gray-500 dark:text-gray-400">
-            More stable returns, though generally lower compared to high-risk
-            options.
+            {t("plans.documentationDescription2")}
           </p>
           <p className="mb-6 text-gray-500 dark:text-gray-400">
-            Lower interest rates but carry less risk than other
-            cryptocurrencies.
+            {t("plans.documentationDescription3")}
           </p>
         </div>
 
-        <Button size="sm" variant="outline-dark" className="w-full mx-auto">
-          <p>Learn More</p>
+        <Button
+          size="sm"
+          variant="outline-dark"
+          className="w-full border-white!"
+        >
+          <p>{t("plans.learnMore")}</p>
         </Button>
       </Paper>
 
@@ -227,7 +237,7 @@ const PerformanceTab = () => {
         size="sm"
         className="w-full mx-auto my-4"
       >
-        Invest
+        {t("plans.invest")}
       </Button>
     </div>
   );

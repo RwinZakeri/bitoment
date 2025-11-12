@@ -16,7 +16,7 @@ const VerifyInput = React.forwardRef<HTMLInputElement, VerifyInputPropsType>(
           </label>
         )}
         <div
-          className={`bg-white dark:bg-gray-200 rounded-lg w-full flex justify-between ${
+          className={`bg-white rounded-lg w-full flex justify-between ${
             inputSize === "sm" ? "p-3.5" : "px-3 py-5"
           }`}
         >

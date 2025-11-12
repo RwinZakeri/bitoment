@@ -16,7 +16,7 @@ const CryptoAssets = ({
       {label && <span className="text-base">{label}</span>}
       <div
         onClick={clickHandler}
-        className={`w-full rounded-xl cursor-pointer bg-white dark:bg-gray-200 flex justify-between items-center ${
+        className={`w-full rounded-xl cursor-pointer bg-white flex justify-between items-center ${
           size === "lg" ? "h-[60px] px-4" : "px-3 py-2"
         }`}
       >

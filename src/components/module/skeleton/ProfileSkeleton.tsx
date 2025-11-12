@@ -5,7 +5,10 @@ const ProfileSkeleton = () => {
   return (
     <SkeletonThemeWrapper>
       <div className="w-fit mx-auto flex flex-col gap-4 mt-11">
-        <Skeleton circle height={80} width={80} />
+        <div className="flex items-center justify-center">
+          {" "}
+          <Skeleton circle height={80} width={80} />
+        </div>
         <div className="flex flex-col gap-1.5 text-center">
           <Skeleton height={20} width={120} />
           <Skeleton height={16} width={150} />

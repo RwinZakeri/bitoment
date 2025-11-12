@@ -5,6 +5,7 @@ import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import Link from "@/public/svgs/link.svg";
 import UP from "@/public/svgs/up-arrow-red.svg";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { CryptoCardPropsType } from "./type";
 const CryptoCard = ({
   title,
@@ -18,6 +19,7 @@ const CryptoCard = ({
   cryptoName,
 }: CryptoCardPropsType) => {
   const { currency } = useCurrency();
+  const t = useTranslations();
   const formatPrice = (price: number | string) => {
     if (typeof price === "number") {
       return formatCurrency(price, currency);
@@ -30,7 +32,7 @@ const CryptoCard = ({
     return price;
   };
   return (
-    <div className="w-full cursor-pointer bg-white dark:bg-gray-200 flex items-center justify-between rounded-lg p-3">
+    <div className="w-full cursor-pointer bg-white flex items-center justify-between rounded-lg p-3">
       <div className="flex gap-2.5 items-center">
         {cardType === "crypto" ? (
           <div
@@ -84,13 +86,13 @@ const CryptoCard = ({
         <div>
           <div className="flex flex-col text-sm gap-1">
             <div className="flex items-center gap-1">
-              <p className="w-full ">Risk Level : </p>
+              <p className="w-full ">{t("wallet.riskLevel")} : </p>
               <div className="rounded-lg w-full text-center text-[10px] border border-border-gray py-1">
                 {riskLevel?.text}
               </div>
             </div>
             <div className="flex w-full items-center gap-1">
-              <p>Risk Level : </p>
+              <p>{t("wallet.riskLevel")} : </p>
               <div className="rounded-lg text-[10px] border border-border-gray py-1 flex items-center justify-center px-7.5">
                 <p>{riskLevel?.level}</p>
               </div>

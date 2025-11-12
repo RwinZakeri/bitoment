@@ -4,6 +4,7 @@ import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import axios from "@/config/axios.config";
 import UserNavigationBack from "@/hooks/useNavigationBack";
+import { translateErrorMessage } from "@/lib/translateErrors";
 import {
   ForgotPasswordFormData,
   forgotPasswordSchema,
@@ -13,6 +14,7 @@ import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -29,6 +31,7 @@ const ForgotPasswordEmail = ({
   setStep: Dispatch<SetStateAction<number>>;
   setResetPasswordData: Dispatch<SetStateAction<ResetPasswordData>>;
 }) => {
+  const t = useTranslations();
   const { goBack } = UserNavigationBack();
 
   const {
@@ -66,21 +69,19 @@ const ForgotPasswordEmail = ({
       return response;
     },
     onSuccess: (data, variables) => {
-      toast.success("OTP sent successfully to your email");
+      toast.success(t("auth.forgotPassword.otpSentSuccessfully"));
       sessionStorage.setItem("resetEmail", variables.email || "");
       setStep(1);
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(error?.response?.data?.message || "Failed to send OTP");
+      toast.error(error?.response?.data?.message || t("auth.forgotPassword.failedToSendOtp"));
     },
   });
   return (
     <>
       <TilteAndDescription
         className="mt-28 mb-24"
-        description="Enter the email associated with your account
-and we'll send an email with instructions to reset
-your password."
+        description={t("auth.forgotPassword.description")}
       />
 
       <form
@@ -89,10 +90,14 @@ your password."
       >
         <Input
           type="email"
-          label="Email"
-          placeholder="example@gmail.com"
+          label={t("auth.forgotPassword.email")}
+          placeholder={t("auth.forgotPassword.emailPlaceholder")}
           {...register("email")}
-          error={errors.email?.message}
+          error={
+            errors.email?.message
+              ? translateErrorMessage(errors.email.message, t)
+              : undefined
+          }
         />
 
         <Button
@@ -102,7 +107,7 @@ your password."
           disabled={isPending}
           loading={isPending}
         >
-          {isPending ? "Sending..." : "Send OTP"}
+          {isPending ? t("auth.forgotPassword.sending") : t("auth.forgotPassword.sendOtp")}
         </Button>
       </form>
 
@@ -112,7 +117,7 @@ your password."
         size="lg"
         className="text-blue-500 absolute bottom-24 left-1/2 -translate-x-1/2"
       >
-        Back to again{" "}
+        {t("auth.forgotPassword.backToAgain")}
       </Button>
     </>
   );

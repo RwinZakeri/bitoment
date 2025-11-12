@@ -120,7 +120,7 @@ export async function POST(
         hashedPassword,
         fullName,
         "USD",
-        "light",
+        "dark",
         "en"
       );
       const userId = result.lastInsertRowid as number;

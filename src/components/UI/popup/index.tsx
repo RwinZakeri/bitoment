@@ -148,7 +148,7 @@ const Popup = ({
       <div
         ref={popupRef}
         className={cn(
-          "fixed z-50 bg-white dark:bg-gray-200 rounded-lg shadow-lg border border-gray-200 dark:border-gray-300 py-2 min-w-[160px]",
+          "fixed z-50 bg-white rounded-lg shadow-lg border border-gray-200 dark:border-gray-300 py-2 min-w-[160px]",
           !popupPosition && "opacity-0 pointer-events-none",
           className
         )}

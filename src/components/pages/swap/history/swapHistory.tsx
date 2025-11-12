@@ -12,8 +12,10 @@ import TetherIcon from "@/public/icons/TetherIcon";
 import type { GetSwapHistoryResponse } from "@/types/auth";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 const SwapHistory = () => {
+  const t = useTranslations();
   const {
     data: swapHistoryData,
     isLoading,
@@ -47,7 +49,7 @@ const SwapHistory = () => {
 
   if (isLoading) {
     return (
-      <PageLayout title="Swap History">
+      <PageLayout title={t("swap.swapHistory")}>
         <HistorySkeleton />
       </PageLayout>
     );
@@ -55,15 +57,14 @@ const SwapHistory = () => {
 
   if (isError) {
     return (
-      <PageLayout title="Swap History">
+      <PageLayout title={t("swap.swapHistory")}>
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
-              Error loading swap history
+              {t("swap.errorLoadingSwapHistory")}
             </h3>
             <p className="text-gray-500">
-              Something went wrong while fetching your swap history. Please try
-              again later.
+              {t("swap.errorLoadingSwapHistoryDescription")}
             </p>
           </div>
         </div>
@@ -72,17 +73,14 @@ const SwapHistory = () => {
   }
 
   return (
-    <PageLayout title="Swap History">
+    <PageLayout title={t("swap.swapHistory")}>
       {!swapHistoryData?.data || swapHistoryData.data.length === 0 ? (
         <div className="mt-8 flex flex-col items-center justify-center py-12">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 dark:text-foreground mb-2">
-              No swap history
+              {t("swap.noSwapHistory")}
             </h3>
-            <p className="text-gray-500">
-              You don&apos;t have any swap transactions yet. Start by making
-              your first swap.
-            </p>
+            <p className="text-gray-500">{t("swap.noSwapHistoryYet")}</p>
           </div>
         </div>
       ) : (

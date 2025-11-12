@@ -1,6 +1,7 @@
 "use client";
 import PageLayout from "@/components/layout/page/pageLayout";
 import UserNavigationBack from "@/hooks/useNavigationBack";
+import { useTranslations } from "next-intl";
 import { SetStateAction, useState } from "react";
 import ForgotPasswordEmail from "./steps/email";
 import ForgotPasswordOtp from "./steps/otp";
@@ -15,11 +16,12 @@ const stepFunc = (
   step: number,
   setStep: React.Dispatch<SetStateAction<number>>,
   resetPasswordData: ResetPasswordData,
-  setResetPasswordData: React.Dispatch<SetStateAction<ResetPasswordData>>
+  setResetPasswordData: React.Dispatch<SetStateAction<ResetPasswordData>>,
+  t: ReturnType<typeof useTranslations>
 ) => {
   const Steps = [
     {
-      title: "Forgot Password",
+      title: t("auth.forgotPassword.title"),
       component: (
         <ForgotPasswordEmail
           setStep={setStep}
@@ -28,7 +30,7 @@ const stepFunc = (
       ),
     },
     {
-      title: "Otp Code",
+      title: t("auth.otp.title"),
       component: (
         <ForgotPasswordOtp
           setStep={setStep}
@@ -38,7 +40,7 @@ const stepFunc = (
       ),
     },
     {
-      title: "Reset Password",
+      title: t("auth.resetPassword.title"),
       component: (
         <ForgotPasswordResetPassword
           resetPasswordData={resetPasswordData}
@@ -52,6 +54,7 @@ const stepFunc = (
 };
 
 const ForgotPassword = () => {
+  const t = useTranslations();
   const { goBack } = UserNavigationBack();
   const [resetPasswordData, setResetPasswordData] = useState<ResetPasswordData>(
     {
@@ -71,11 +74,11 @@ const ForgotPassword = () => {
         }
       }}
       title={
-        stepFunc(step, setStep, resetPasswordData, setResetPasswordData).title
+        stepFunc(step, setStep, resetPasswordData, setResetPasswordData, t).title
       }
     >
       {
-        stepFunc(step, setStep, resetPasswordData, setResetPasswordData)
+        stepFunc(step, setStep, resetPasswordData, setResetPasswordData, t)
           .component
       }
     </PageLayout>

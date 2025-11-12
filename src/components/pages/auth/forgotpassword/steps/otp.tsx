@@ -6,6 +6,7 @@ import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
 import MutationKey from "@/types/mutation_key";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -25,6 +26,7 @@ const ForgotPasswordOtp = ({
   setResetPasswordData: Dispatch<SetStateAction<ResetPasswordData>>;
   resetPasswordData: ResetPasswordData;
 }) => {
+  const t = useTranslations();
   const [otp, setOtp] = useState(resetPasswordData.otp || "");
   const [timer, setTimer] = useState(60);
 
@@ -57,13 +59,13 @@ const ForgotPasswordOtp = ({
       return res.data;
     },
     onSuccess: () => {
-      toast.success("OTP verified successfully");
+      toast.success(t("auth.otp.otpVerifiedSuccessfully"));
       setStep(2);
     },
     onError: (err: unknown) => {
       const errorMessage =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || "An error occurred";
+          ?.message || t("errors.generic");
       toast.error(errorMessage);
     },
   });
@@ -83,19 +85,19 @@ const ForgotPasswordOtp = ({
       return response;
     },
     onSuccess: (data, variables) => {
-      toast.success("OTP sent successfully to your email");
+      toast.success(t("auth.forgotPassword.otpSentSuccessfully"));
       sessionStorage.setItem("resetEmail", variables.email || "");
       setStep(1);
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(error?.response?.data?.message || "Failed to send OTP");
+      toast.error(error?.response?.data?.message || t("auth.forgotPassword.failedToSendOtp"));
     },
   });
 
   return (
     <>
       <p className="text-gray-600 mt-28">
-        Please enter the verification code we sent to your email :{" "}
+        {t("auth.otp.description")}{" "}
         <span className="font-semibold">
           {resetPasswordData.email.replace(
             /^(.{3})(.*)(@.*)$/,
@@ -125,7 +127,7 @@ const ForgotPasswordOtp = ({
           renderInput={(props) => <input {...props} />}
         />
         <p className="text-gray-500 text-center text-sm font-normal mt-3">
-          Not yet get ?{" "}
+          {t("auth.otp.notYetGet")}{" "}
           <Button
             size="sm"
             variant="text"
@@ -136,7 +138,7 @@ const ForgotPasswordOtp = ({
             className="text-blue-500 hover:p-0 p-0 hover:bg-none cursor-pointer font-semibold"
             disabled={timer > 0}
           >
-            Resend OTP
+            {t("auth.otp.resendOtp")}
           </Button>
         </p>
         <Button
@@ -146,14 +148,14 @@ const ForgotPasswordOtp = ({
           size="lg"
           className="w-full mt-9"
         >
-          {isPending ? "Verifing" : "Verify"}
+          {isPending ? t("auth.otp.verifying") : t("auth.otp.verify")}
         </Button>
         <p className="text-gray-500 text-center text-sm font-normal mt-6">
           <span className="text-blue-500 font-semibold">
             {String(Math.floor(timer / 60)).padStart(2, "0")}:
             {String(timer % 60).padStart(2, "0")}
           </span>{" "}
-          sec left
+          {t("auth.otp.secLeft")}
         </p>
       </div>
     </>

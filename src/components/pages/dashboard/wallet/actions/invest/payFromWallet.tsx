@@ -8,17 +8,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
+import { translateErrorMessage } from "@/lib/translateErrors";
 import { PayFromWalletFormData, PayFromWalletProps } from "./types";
 
 const PayFromWallet = ({
   amountPlaceholder,
-  amountLabel = "Investment Amount",
-  buttonText = "Add Plan",
+  amountLabel,
+  buttonText,
   stepperSteps = ["0%", "25%", "50%", "75%", "100%"],
   passedSteps = 5,
 }: PayFromWalletProps) => {
+  const t = useTranslations();
   const { currency } = useCurrency();
   const defaultPlaceholder = amountPlaceholder || `100.00 ${currency}`;
+  const defaultAmountLabel = amountLabel || t("invest.investmentAmount");
+  const defaultButtonText = buttonText || t("invest.addPlan");
   const {
     register,
     handleSubmit,
@@ -49,7 +54,7 @@ const PayFromWallet = ({
     const amount = data.amount || "0.00";
 
     toast.success(
-      `Investment Details:\nAmount: ${amount} ${currency}\nPercentage: ${selectedStepLabel}`,
+      `${t("invest.investmentDetails")}\n${t("invest.amount")}: ${amount} ${currency}\n${t("invest.percentage")}: ${selectedStepLabel}`,
       {
         duration: 5000,
         style: {
@@ -68,7 +73,7 @@ const PayFromWallet = ({
       <div>
         <CustomeInput
           placeholder={defaultPlaceholder}
-          label={amountLabel}
+          label={defaultAmountLabel}
           inputType="stroke"
           type="number"
           step="0.01"
@@ -76,11 +81,11 @@ const PayFromWallet = ({
           max="1000000"
           {...register("amount")}
           onChange={handleAmountChange}
-          error={errors.amount?.message}
+          error={errors.amount?.message ? translateErrorMessage(errors.amount.message, t) : undefined}
         />
         {watchedAmount && !errors.amount && (
           <span className="text-green-500 text-sm mt-1 block">
-            ✓ Valid amount
+            {t("invest.validAmount")}
           </span>
         )}
       </div>
@@ -98,7 +103,7 @@ const PayFromWallet = ({
         isLoading={isSubmitting}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Processing..." : buttonText}
+        {isSubmitting ? t("invest.processing") : defaultButtonText}
       </Button>
     </form>
   );

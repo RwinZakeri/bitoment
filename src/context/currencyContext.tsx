@@ -26,7 +26,7 @@ export const useCurrency = () => {
 
 const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const [currency, setCurrencyState] = useState<string>("USD");
-  const [theme, setThemeState] = useState<string>("light");
+  const [theme, setThemeState] = useState<string>("dark");
   const [language, setLanguageState] = useState<string>("en");
   const queryClient = useQueryClient();
 
@@ -43,12 +43,15 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (data?.settings) {
       setCurrencyState(data.settings.currency || "USD");
-      setThemeState(data.settings.theme || "light");
+      setThemeState(data.settings.theme || "dark");
       setLanguageState(data.settings.language || "en");
     }
   }, [data]);
 
-  const { mutate: updateSettingsMutation } = useMutation({
+  const {
+    mutate: updateSettingsMutation,
+    mutateAsync: updateSettingsMutationAsync,
+  } = useMutation({
     mutationKey: [MutationKey.updateSettings],
     mutationFn: async (settings: {
       currency?: string;
@@ -100,12 +103,7 @@ const CurrencyProvider = ({ children }: { children: ReactNode }) => {
     theme?: string;
     language?: string;
   }) => {
-    return new Promise<void>((resolve, reject) => {
-      updateSettingsMutation(settings, {
-        onSuccess: () => resolve(),
-        onError: (error) => reject(error),
-      });
-    });
+    return updateSettingsMutationAsync(settings);
   };
 
   return (

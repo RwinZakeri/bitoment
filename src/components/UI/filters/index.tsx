@@ -17,7 +17,7 @@ const Filters = ({
             className={`px-5 py-1.5 rounded-sm w-fit cursor-pointer ${
               selectedQuery === item.query
                 ? "bg-teal-light"
-                : "bg-white dark:bg-gray-200"
+                : "bg-white"
             }`}
             key={item.label}
           >

@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import LeftIcon from "@/public/icons/left-icon";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { AutoCompletePropsType } from "./type";
 
@@ -14,6 +15,7 @@ const AutoComplete = ({
   value: controlledValue,
   onChange,
 }: AutoCompletePropsType) => {
+  const t = useTranslations();
   const [isOpen, setOpen] = useState<boolean>(false);
   const [internalValue, setInternalValue] = useState<string>("");
 
@@ -48,7 +50,9 @@ const AutoComplete = ({
             <p>{label}</p>
           </label>
         )}
-        <div className={`${cn(className, "relative flex items-center")} `}>
+        <div
+          className={`${cn(className, "relative flex items-center gap-2")} `}
+        >
           {icon && (
             <div className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
               {icon}
@@ -64,14 +68,14 @@ const AutoComplete = ({
               e.stopPropagation();
               setOpen(true);
             }}
-            className="bg-white dark:bg-gray-200 rounded-xl h-[60px] px-4 w-full outline-0 relative"
+            className="bg-white rounded-xl h-[60px] px-4 w-full outline-0 relative"
             style={{ zIndex: zIndex + 1 }}
             placeholder="TRC20"
             type="text"
           />
 
           <div
-            className="absolute top-5 bg-white dark:bg-gray-200 right-4"
+            className="absolute top-5 bg-white right-4 rtl:left-4 rtl:right-auto"
             style={{ zIndex: zIndex + 3 }}
           >
             <LeftIcon className={`${isOpen ? "rotate-90" : "-rotate-90"}`} />
@@ -79,7 +83,7 @@ const AutoComplete = ({
 
           {isOpen && (
             <div
-              className="w-full flex flex-col gap-1 bg-white dark:bg-gray-200 rounded-lg py-2 px-1 absolute top-full left-0 shadow-lg border border-gray-200 dark:border-gray-300"
+              className="w-full flex flex-col gap-1 bg-white rounded-lg py-2 px-1 absolute top-full left-0 rtl:right-0 rtl:left-auto shadow-lg border border-gray-200 dark:border-gray-300"
               style={{ zIndex: zIndex + 2 }}
             >
               {!type.length ? (
@@ -100,7 +104,7 @@ const AutoComplete = ({
                   })
                 ) : (
                   <div className="rounded-sm px-1 py-1 text-gray-500">
-                    <p>No items exist</p>
+                    <p>{t("common.noItemsExist")}</p>
                   </div>
                 )
               ) : (
@@ -123,7 +127,7 @@ const AutoComplete = ({
                     ))
                   ) : (
                     <div className="rounded-sm px-1 py-1 text-gray-500">
-                      <p>No items exist</p>
+                      <p>{t("common.noItemsExist")}</p>
                     </div>
                   );
                 })()

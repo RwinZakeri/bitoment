@@ -4,6 +4,7 @@ import { FormSkeleton } from "@/components/module/skeleton";
 import Button from "@/components/UI/button";
 import CustomeInput from "@/components/UI/CustomeInput";
 import axios from "@/config/axios.config";
+import { translateErrorMessage } from "@/lib/translateErrors";
 import { deleteCookie } from "@/lib/utils";
 import { LogoutIcon } from "@/public/icons/LogoutIcon";
 import {
@@ -14,6 +15,7 @@ import MutationKey from "@/types/mutation_key";
 import ReactQueryKey from "@/types/react_query_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -21,6 +23,7 @@ import toast from "react-hot-toast";
 
 const ProfileInformation = () => {
   const router = useRouter();
+  const t = useTranslations();
 
   const {
     register,
@@ -70,51 +73,51 @@ const ProfileInformation = () => {
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Profile updated successfully");
+      toast.success(t("profile.profileUpdatedSuccessfully"));
       reset();
     },
     onError: (error) => {
-      toast.error("Failed to update profile");
+      toast.error(t("errors.failedToUpdateProfile"));
       console.error("Profile update error:", error);
     },
   });
 
   if (isLoading) {
     return (
-      <PageLayout title="Profile Information">
+      <PageLayout title={t("profile.profileInformation")}>
         <FormSkeleton fieldCount={3} showButton={true} />
       </PageLayout>
     );
   }
 
   return (
-    <PageLayout title="Profile Information">
+    <PageLayout title={t("profile.profileInformation")}>
       <form
         onSubmit={handleSubmit((data) => onSubmit(data))}
         className="gap-2 flex flex-col mt-6"
       >
         <div>
           <CustomeInput
-            label="Full Name"
+            label={t("profile.fullName")}
             placeholder="John Smith"
             className="w-full"
             {...register("fullName")}
           />
           {errors.fullName && (
             <span className="text-red-500 text-sm mt-1 block">
-              {errors.fullName.message}
+              {translateErrorMessage(errors.fullName.message || "", t)}
             </span>
           )}
           {watchedFields.fullName && !errors.fullName && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid name
+              {t("profile.validName")}
             </span>
           )}
         </div>
 
         <div>
           <CustomeInput
-            label="Email"
+            label={t("profile.email")}
             placeholder="example@gmail.com"
             className="w-full"
             type="email"
@@ -122,19 +125,19 @@ const ProfileInformation = () => {
           />
           {errors.email && (
             <span className="text-red-500 text-sm mt-1 block">
-              {errors.email.message}
+              {translateErrorMessage(errors.email.message || "", t)}
             </span>
           )}
           {watchedFields.email && !errors.email && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid email address
+              {t("profile.validEmail")}
             </span>
           )}
         </div>
 
         <div>
           <CustomeInput
-            label="Phone Number"
+            label={t("profile.phoneNumber")}
             placeholder="+1 (555) 000-0000"
             className="w-full"
             type="tel"
@@ -142,12 +145,12 @@ const ProfileInformation = () => {
           />
           {errors.phoneNumber && (
             <span className="text-red-500 text-sm mt-1 block">
-              {errors.phoneNumber.message}
+              {translateErrorMessage(errors.phoneNumber.message || "", t)}
             </span>
           )}
           {watchedFields.phoneNumber && !errors.phoneNumber && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid phone number
+              {t("profile.validPhoneNumber")}
             </span>
           )}
         </div>
@@ -160,13 +163,13 @@ const ProfileInformation = () => {
             disabled={isPending || !isValid}
             loading={isPending}
           >
-            {isPending ? "Saving..." : "Save Changes"}
+            {isPending ? t("profile.saving") : t("profile.saveChanges")}
           </Button>
         )}
 
         {isDirty && !isValid && (
           <p className="text-amber-600 text-sm text-center mt-2">
-            Please fix the validation errors above before submitting
+            {t("profile.fixValidationErrors")}
           </p>
         )}
       </form>
@@ -181,7 +184,7 @@ const ProfileInformation = () => {
           className="w-full mt-12"
           size="lg"
         >
-          Log Out
+          {t("profile.logOut")}
         </Button>
       </div>
     </PageLayout>

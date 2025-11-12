@@ -5,6 +5,7 @@ import cpgIcon from "@/public/svgs/cpgIcon.svg";
 import Link from "@/public/svgs/link.svg";
 import UP from "@/public/svgs/up-arrow-red.svg";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { RiskReportPropsType } from "./type";
 
 const RiskReportCard = ({
@@ -16,7 +17,10 @@ const RiskReportCard = ({
   riskLevel,
   assetAmount,
 }: RiskReportPropsType) => {
+  // Amount prop is kept for API compatibility but not currently used in display
+  void _amount;
   const { currency } = useCurrency();
+  const t = useTranslations();
   const formatPrice = (price: number | string) => {
     if (typeof price === "number") {
       return formatCurrency(price, currency);
@@ -29,7 +33,7 @@ const RiskReportCard = ({
     return price;
   };
   return (
-    <div className="p-3 w-full cursor-pointer bg-white dark:bg-gray-200 flex items-center justify-between rounded-lg">
+    <div className="p-3 w-full cursor-pointer bg-white flex items-center justify-between rounded-lg">
       <div className="flex items-center-safe gap-2">
         <div
           className={cn(
@@ -53,7 +57,7 @@ const RiskReportCard = ({
                 ? cpgIcon
                 : Link
             }
-            alt="transaction type"
+            alt={t("wallet.transactionType")}
             width={26}
             height={26}
           />
@@ -86,7 +90,7 @@ const RiskReportCard = ({
 
       <div className="flex items-center justify-center flex-col gap-2 text-sm">
         <div className="w-full flex items-center gap-1">
-          Risk Level :
+          {t("wallet.riskLevel")} :
           <span
             className={cn("px-3 w-[100px] text-center border rounded-sm")}
             style={{
@@ -98,11 +102,11 @@ const RiskReportCard = ({
                   : "#FFA600",
             }}
           >
-            {riskLevel < 40 ? "Low" : riskLevel > 80 ? "High" : "Moderate"}
+            {riskLevel < 40 ? t("wallet.lowRisk") : riskLevel > 80 ? t("wallet.highRisk") : t("wallet.moderateRisk")}
           </span>
         </div>
         <div className={cn("flex items-center gap-1")}>
-          <span className="">Risk Level :</span>
+          <span className="">{t("wallet.riskLevel")} :</span>
           <span
             style={{
               color:

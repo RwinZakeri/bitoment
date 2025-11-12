@@ -4,6 +4,7 @@ import Paper from "@/components/UI/paper";
 import RadarChart from "@/components/UI/radar-chart";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 const cryptoData = [
@@ -15,6 +16,7 @@ const cryptoData = [
 ];
 
 const RiskRepostSingle = ({ id }: { id: number }) => {
+  const t = useTranslations();
   const randomCrypto = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * cryptoData.length);
     return cryptoData[randomIndex];
@@ -60,10 +62,10 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
     const colors = getRiskColor();
 
     return {
-      labels: ["Risky entity", "Suspicious tnx", "Hacking event"],
+      labels: [t("wallet.riskyEntity"), t("wallet.suspiciousTnx"), t("wallet.hackingEvent")],
       datasets: [
         {
-          label: "Risk Score",
+          label: t("wallet.riskScore"),
           data: [
             Math.floor(Math.random() * 100),
             Math.floor(Math.random() * 100),
@@ -79,7 +81,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
         },
       ],
     };
-  }, [riskLevel]);
+  }, [riskLevel, t]);
 
   const chartOptions = useMemo(
     () => ({
@@ -94,7 +96,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
   );
 
   return (
-    <PageLayout title="AML Risk Score">
+    <PageLayout title={t("wallet.amlRiskScore")}>
       <Paper className="bg-white rounded-lg p-3 mt-4">
         <div className="flex items-center gap-2 border-b border-gray-200 mb-4 pb-4">
           <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
@@ -109,7 +111,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
         </div>
 
         <div className={cn("flex items-center justify-center gap-1")}>
-          <span className="">Risk Level :</span>
+          <span className="">{t("wallet.riskLevel")} :</span>
           <span
             style={{
               color:
@@ -144,7 +146,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
 
         <div className="flex items-center justify-center flex-col gap-2">
           <div className="w-full flex items-center justify-center gap-1">
-            Risk Level :
+            {t("wallet.riskLevel")} :
             <span
               className={cn("px-3 w-[100px] text-center border rounded-sm")}
               style={{
@@ -156,7 +158,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
                     : "#FFA600",
               }}
             >
-              {riskLevel < 40 ? "Low" : riskLevel > 80 ? "High" : "Moderate"}
+              {riskLevel < 40 ? t("wallet.lowRisk") : riskLevel > 80 ? t("wallet.highRisk") : t("wallet.moderateRisk")}
             </span>
           </div>
         </div>
@@ -177,8 +179,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
             ></div>
             <p className="absolute top-0 left-2 flex gap-3 ">
               {" "}
-              <span className="text-red-500 ">{darkMarketPercent}%</span> Dark
-              Market{" "}
+              <span className="text-red-500 ">{darkMarketPercent}%</span> {t("wallet.darkMarket")}{" "}
             </p>
           </div>
           <div className="relative">
@@ -196,7 +197,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
             ></div>
             <p className="absolute top-0 left-2 flex gap-3 ">
               {" "}
-              <span className="text-red-500 ">{mixerPercent}%</span> Mixer{" "}
+              <span className="text-red-500 ">{mixerPercent}%</span> {t("wallet.mixer")}{" "}
             </p>
           </div>
           <div className="relative">
@@ -216,7 +217,7 @@ const RiskRepostSingle = ({ id }: { id: number }) => {
               {" "}
               <span className="text-red-500 ">
                 {gamblingPercent}%
-              </span> Gambling{" "}
+              </span> {t("wallet.gambling")}{" "}
             </p>
           </div>
         </div>

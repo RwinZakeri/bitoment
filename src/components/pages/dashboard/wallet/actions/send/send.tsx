@@ -8,6 +8,7 @@ import Button from "@/components/UI/button";
 import CryptoAssets from "@/components/UI/crypto-assets";
 import CustomeInput from "@/components/UI/CustomeInput";
 import Modal from "@/components/UI/modal";
+import { translateErrorMessage } from "@/lib/translateErrors";
 import BtcIcon from "@/public/icons/BtcIcon";
 import CorrosIcon from "@/public/icons/CorrosIcon";
 import QrIcon from "@/public/icons/QrIcon";
@@ -17,11 +18,13 @@ import {
   sendCryptoSchema,
 } from "@/schema/wallet/invest/investSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Send = () => {
+  const t = useTranslations();
   const {
     register,
     handleSubmit,
@@ -122,7 +125,7 @@ const Send = () => {
     trigger("blockchainNetwork");
   };
 
-  const onSubmit = async (_data: SendCryptoFormData) => {
+  const onSubmit = async () => {
     try {
       setIsSuccessModalOpen(true);
     } catch (error) {
@@ -154,7 +157,7 @@ const Send = () => {
   };
 
   return (
-    <PageLayout title="Send">
+    <PageLayout title={t("wallet.send")}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="mt-4 flex flex-col gap-4"
@@ -174,17 +177,17 @@ const Send = () => {
                 <BtcIcon className="text-foreground" />
               )
             }
-            label="Select a coin"
+            label={t("wallet.selectCoin")}
             title={watchedCrypto?.shortName || "BTC"}
           />
           {errors.selectedCrypto && (
             <span className="text-red-500 text-sm mt-1 block">
-              {errors.selectedCrypto.message}
+              {translateErrorMessage(errors.selectedCrypto.message || "", t)}
             </span>
           )}
           {watchedCrypto && !errors.selectedCrypto && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid cryptocurrency selected
+              {t("wallet.validCryptocurrencySelected")}
             </span>
           )}
         </div>
@@ -193,7 +196,7 @@ const Send = () => {
           <AutoComplete
             onClick={handleNetworkSelect}
             list={blockchainNetworks}
-            label="Blockchain Network"
+            label={t("wallet.blockchainNetwork")}
             value={watchedNetwork}
             onChange={(value) => {
               setValue("blockchainNetwork", value, { shouldValidate: true });
@@ -202,12 +205,12 @@ const Send = () => {
           />
           {errors.blockchainNetwork && (
             <span className="text-red-500 text-sm mt-1 block">
-              {errors.blockchainNetwork.message}
+              {translateErrorMessage(errors.blockchainNetwork.message || "", t)}
             </span>
           )}
           {watchedNetwork && !errors.blockchainNetwork && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid network selected
+              {t("wallet.validNetworkSelected")}
             </span>
           )}
         </div>
@@ -220,8 +223,8 @@ const Send = () => {
                 className="text-foreground"
               />
             }
-            placeholder="13agdGAFDe...3SmkjUYR"
-            label="To"
+            placeholder={t("wallet.toPlaceholder")}
+            label={t("wallet.to")}
             inputType="stroke"
             type="text"
             step="0.01"
@@ -232,11 +235,15 @@ const Send = () => {
                 await trigger("toAddress");
               },
             })}
-            error={errors.toAddress?.message}
+            error={
+              errors.toAddress?.message
+                ? translateErrorMessage(errors.toAddress.message, t)
+                : undefined
+            }
           />
           {watchedAddress && !errors.toAddress && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid address
+              {t("wallet.validAddress")}
             </span>
           )}
         </div>
@@ -249,19 +256,23 @@ const Send = () => {
                 className="text-foreground"
               />
             }
-            placeholder="amount"
-            label="Amount"
+            placeholder={t("wallet.amountPlaceholder")}
+            label={t("wallet.amount")}
             inputType="stroke"
             {...register("amount", {
               onChange: async () => {
                 await trigger("amount");
               },
             })}
-            error={errors.amount?.message}
+            error={
+              errors.amount?.message
+                ? translateErrorMessage(errors.amount.message, t)
+                : undefined
+            }
           />
           {watchedAmount && !errors.amount && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid amount
+              {t("wallet.validAmount")}
             </span>
           )}
         </div>
@@ -270,7 +281,7 @@ const Send = () => {
           disabled
           placeholder={feeDisplay || "0"}
           value={feeDisplay}
-          label="Fee"
+          label={t("wallet.fee")}
           inputType="stroke"
         />
 
@@ -281,20 +292,22 @@ const Send = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Processing..." : "Confirm"}
+          {isSubmitting ? t("wallet.processing") : t("wallet.confirmButton")}
         </Button>
 
         <Modal isOpen={isSuccessModalOpen} onClose={handleCloseSuccessModal}>
           <div className="flex flex-col items-center text-center space-y-4 p-6">
             <SuccessTickIcon className="w-16 h-16 text-green-500" />
-            <h2 className="text-2xl font-semibold">Send Successfully</h2>
+            <h2 className="text-2xl font-semibold">
+              {t("wallet.sendSuccessfully")}
+            </h2>
             <Button
               variant="secondary"
               size="lg"
               onClick={handleCloseSuccessModal}
               className="mt-4 w-full"
             >
-              Back
+              {t("common.back")}
             </Button>
           </div>
         </Modal>

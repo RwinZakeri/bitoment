@@ -8,7 +8,7 @@ const TilteAndDescription = ({
 }: TilteAndDescriptionProps) => {
   return (
     <div className={cn("w-full flex flex-col gap-4", className)}>
-      <p className="text-3xl max-w-80 font-semibold text-slate-800">{title}</p>
+      <p className="text-3xl max-w-80 font-semibold text-foreground">{title}</p>
       <p className="text-gray-500 text-sm font-medium">{description}</p>
     </div>
   );

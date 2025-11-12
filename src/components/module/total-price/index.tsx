@@ -1,6 +1,7 @@
 import { useCurrency } from "@/context/currencyContext";
 import { cn } from "@/lib/utils";
 import PositiveFlashIcon from "@/public/icons/PositiveFlashIcon";
+import { useTranslations } from "next-intl";
 import { totalPriceType } from "./type";
 
 const TotalPrice = ({
@@ -15,12 +16,15 @@ const TotalPrice = ({
   iconRotation,
 }: totalPriceType) => {
   const { currency } = useCurrency();
+  const t = useTranslations();
 
   return (
     <div className="flex justify-between w-full">
       <div className="flex flex-col gap-2">
         {labelPosition !== "bottom" && (
-          <p className="text-gray-500 dark:text-gray-400">Total balance</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            {t("wallet.totalBalance")}
+          </p>
         )}
         <div className={cn(className, "flex gap-3")}>
           <p>
@@ -31,7 +35,9 @@ const TotalPrice = ({
         </div>
         <div className="flex items-center gap-1 mt-1">
           {labelPosition === "bottom" && (
-            <p className="text-gray-500 dark:text-gray-400">Total balance</p>
+            <p className="text-gray-500 dark:text-gray-400">
+              {t("wallet.totalBalance")}
+            </p>
           )}
 
           {amount && (

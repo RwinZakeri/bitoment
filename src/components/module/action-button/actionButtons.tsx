@@ -4,10 +4,12 @@ import PlusActionIcon from "@/public/icons/PlusActionIcon";
 import ReceiveActionIcon from "@/public/icons/ReceiveActionIcon";
 import SendActionIcon from "@/public/icons/SendActionIcon";
 import SwapActionIcon from "@/public/icons/SwapActionIcon";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 const ActionButtons = () => {
   const router = useRouter();
+  const t = useTranslations();
 
   return (
     <div className="flex mt-7 justify-between items-center">
@@ -15,7 +17,7 @@ const ActionButtons = () => {
         icon={
           <SendActionIcon className="text-foreground" width={24} height={24} />
         }
-        label="Send"
+        label={t("wallet.send")}
         clickHandler={() => router.push("/wallet/send")}
       />
       <TransformButton
@@ -26,21 +28,21 @@ const ActionButtons = () => {
             height={24}
           />
         }
-        label="Receive"
+        label={t("wallet.receive")}
         clickHandler={() => router.push("/wallet/receive")}
       />
       <TransformButton
         icon={
           <SwapActionIcon className="text-foreground" width={24} height={24} />
         }
-        label="Swap"
+        label={t("wallet.swap")}
         clickHandler={() => router.push("/swap")}
       />
       <TransformButton
         icon={
           <PlusActionIcon className="text-foreground" width={24} height={24} />
         }
-        label="Invest"
+        label={t("wallet.invest")}
         clickHandler={() => router.push("/wallet/invest")}
       />
     </div>

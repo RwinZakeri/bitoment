@@ -219,8 +219,8 @@ export async function POST(
     } else {
       isNewUser = true;
       const insertUser = db.prepare(`
-        INSERT INTO users (email, name, password, oauth_provider, oauth_id, created_at)
-        VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        INSERT INTO users (email, name, password, oauth_provider, oauth_id, currency, theme, language, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       `);
 
       const result = await insertUser.run(
@@ -228,7 +228,10 @@ export async function POST(
         googleUser.name,
         null,
         "google",
-        googleUser.id
+        googleUser.id,
+        "USD",
+        "dark",
+        "en"
       );
       userId = result.lastInsertRowid as number;
 

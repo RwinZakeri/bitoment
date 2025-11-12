@@ -10,5 +10,13 @@ export interface CurrencyContextType {
     currency?: string;
     theme?: string;
     language?: string;
-  }) => Promise<void>;
+  }) => Promise<{
+    success: boolean;
+    message: string;
+    settings: {
+      currency: string;
+      theme: string;
+      language: string;
+    };
+  }>;
 }

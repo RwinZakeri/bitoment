@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       success: true,
       settings: {
         currency: user.currency || "USD",
-        theme: user.theme || "light",
+        theme: user.theme || "dark",
         language: user.language || "en",
       },
     });
@@ -121,7 +121,7 @@ export async function PUT(request: NextRequest) {
     const updatedCurrency =
       currency !== undefined ? currency : currentUser.currency || "USD";
     const updatedTheme =
-      theme !== undefined ? theme : currentUser.theme || "light";
+      theme !== undefined ? theme : currentUser.theme || "dark";
     const updatedLanguage =
       language !== undefined ? language : currentUser.language || "en";
 

@@ -1,7 +1,10 @@
-import ConfigProvider from "@/provider/provider";
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
-import { Toaster } from "react-hot-toast";
+import { routing } from "@/i18n/routing";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -31,43 +34,71 @@ export const viewport: Viewport = {
   themeColor: "#00e4cc",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
+  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
+    notFound();
+  }
+
+  const messages = await getMessages();
+  
+  const rtlLocales = ["ar", "he", "fa", "ur"];
+  const isRTL = rtlLocales.includes(locale);
+
   return (
-    <html lang="en">
+    <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // Check if user has a saved theme preference
+                  const savedTheme = localStorage.getItem('theme');
+                  const root = document.documentElement;
+                  
+                  // Set dark mode as default if no saved preference
+                  if (!savedTheme || savedTheme === 'dark') {
+                    root.classList.add('dark');
+                    root.setAttribute('data-theme', 'dark');
+                  } else if (savedTheme === 'light') {
+                    root.classList.add('light');
+                    root.setAttribute('data-theme', 'light');
+                  } else if (savedTheme === 'system') {
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (prefersDark) {
+                      root.classList.add('dark');
+                      root.setAttribute('data-theme', 'dark');
+                    } else {
+                      root.classList.add('light');
+                      root.setAttribute('data-theme', 'light');
+                    }
+                  } else {
+                    // Default to dark mode
+                    root.classList.add('dark');
+                    root.setAttribute('data-theme', 'dark');
+                  }
+                } catch (e) {
+                  // Fallback to dark mode if localStorage is not available
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${poppins.className} relative max-w-[520px] w-full mx-auto`}
       >
-        <main className="bg-gray-200 dark:bg-gray-100 min-h-screen transition-colors duration-200">
-          <ConfigProvider>{children}</ConfigProvider>
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: "var(--gray-200)",
-                color: "var(--foreground)",
-              },
-              success: {
-                duration: 3000,
-                iconTheme: {
-                  primary: "var(--primary-cyan-400)",
-                  secondary: "var(--foreground)",
-                },
-              },
-              error: {
-                duration: 5000,
-                iconTheme: {
-                  primary: "var(--red-500)",
-                  secondary: "var(--foreground)",
-                },
-              },
-            }}
-          />
-        </main>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

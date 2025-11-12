@@ -3,12 +3,14 @@ import TilteAndDescription from "@/components/module/TilteAndDescription/TilteAn
 import Button from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import UserNavigationBack from "@/hooks/useNavigationBack";
+import { translateErrorMessage } from "@/lib/translateErrors";
 import { resetPassword, resetPasswordSchema } from "@/schema/auth/authSchema";
 import { SendOTPRequest, SendOTPResponse } from "@/types/auth";
 import MutationKey from "@/types/mutation_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -26,6 +28,7 @@ const ForgotPasswordResetPassword = ({
   setStep: Dispatch<SetStateAction<number>>;
   resetPasswordData: ResetPasswordData;
 }) => {
+  const t = useTranslations();
   const { goBack } = UserNavigationBack();
 
   const {
@@ -56,21 +59,19 @@ const ForgotPasswordResetPassword = ({
       return response;
     },
     onSuccess: (data) => {
-      toast.success("OTP sent successfully to your email");
+      toast.success(t("auth.resetPassword.passwordResetSuccessfully"));
       sessionStorage.setItem("resetEmail", data.data.message || "");
       router.push("/auth/sign-in");
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      toast.error(error?.response?.data?.message || "Failed to send OTP");
+      toast.error(error?.response?.data?.message || t("auth.resetPassword.failedToResetPassword"));
     },
   });
   return (
     <>
       <TilteAndDescription
         className="mt-28 mb-24"
-        description="Enter the email associated with your account
-and we'll send an email with instructions to reset
-your password."
+        description={t("auth.resetPassword.description")}
       />
 
       <form
@@ -78,12 +79,16 @@ your password."
         className="flex flex-col gap-6"
       >
         <Input
-          label="Password"
+          label={t("auth.resetPassword.password")}
           type="password"
           placeholder="*************"
           showPasswordToggle={true}
           {...register("password")}
-          error={errors.password?.message}
+          error={
+            errors.password?.message
+              ? translateErrorMessage(errors.password.message, t)
+              : undefined
+          }
         />
         <Button
           type="submit"
@@ -92,7 +97,7 @@ your password."
           disabled={isPending}
           loading={isPending}
         >
-          {isPending ? "Sending..." : "Send OTP"}
+          {isPending ? t("auth.resetPassword.sending") : t("auth.resetPassword.sendOtp")}
         </Button>
       </form>
 
@@ -102,7 +107,7 @@ your password."
         size="lg"
         className="text-blue-500 absolute bottom-24 left-1/2 -translate-x-1/2"
       >
-        Back to again{" "}
+        {t("auth.resetPassword.backToAgain")}
       </Button>
     </>
   );

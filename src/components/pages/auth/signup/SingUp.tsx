@@ -5,7 +5,7 @@ import CardAndTitle from "@/components/module/TilteAndDescription/TilteAndDescri
 import { Button } from "@/components/UI/button";
 import Input from "@/components/UI/input";
 import useGoogleOAuth from "@/hooks/useGoogleOAuth";
-import { setCookie } from "@/lib/utils";
+import { setCookie, redirectToDashboardWithLocale } from "@/lib/utils";
 import EmailIcon from "@/public/icons/EmailIcon";
 import UserIcon from "@/public/icons/UserIcon";
 import { SignUpFormData, singUpSchema } from "@/schema/auth/authSchema";
@@ -15,13 +15,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
+import { translateErrorMessage } from "@/lib/translateErrors";
 
 const SignUp = () => {
   const router = useRouter();
+  const t = useTranslations();
   const {
     register,
     handleSubmit,
@@ -44,15 +47,15 @@ const SignUp = () => {
 
       return response;
     },
-    onSuccess: (data) => {
-      toast.success("Account created successfully");
+    onSuccess: async (data) => {
+      toast.success(t("auth.signUp.accountCreatedSuccessfully"));
       setCookie("token", data.data.token || "");
-      router.push("/dashboard");
+      await redirectToDashboardWithLocale(router);
     },
     onError: (error: unknown) => {
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || "An error occurred";
+          ?.data?.message || t("errors.generic");
       toast.error(errorMessage);
     },
   });
@@ -68,25 +71,23 @@ const SignUp = () => {
       redirectUri: typeof window !== "undefined" ? window.location.origin : "",
     },
     {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         const message = data.isNewUser
-          ? "Account created successfully with Google"
-          : "Signed in successfully with Google";
+          ? t("auth.signUp.accountCreatedWithGoogle")
+          : t("auth.signUp.signedInWithGoogle");
         toast.success(data.message || message);
         setCookie("token", data.token || "");
-        router.push("/dashboard");
+        await redirectToDashboardWithLocale(router);
       },
       onError: (error) => {
-        toast.error(error || "Google sign-up failed");
+        toast.error(error || t("auth.signUp.googleSignUpFailed"));
       },
     }
   );
 
   const handleGoogleSignUp = async () => {
     if (!googleClientId) {
-      toast.error(
-        "Google OAuth is not configured. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID"
-      );
+      toast.error(t("auth.signUp.googleOAuthNotConfigured"));
       return;
     }
     await signInWithGoogle();
@@ -133,12 +134,11 @@ const SignUp = () => {
         className="mt-20"
         title={
           <div className="flex flex-col ">
-            <span>Create</span>
-            <span>your account</span>
+            <span>{t("auth.signUp.title")}</span>
+            <span>{t("auth.signUp.yourAccount")}</span>
           </div>
         }
-        description="cryptocurrency wallet mobile apps available for
-        managing and storing your digital assets."
+        description={t("auth.signUp.description")}
       />
 
       <form
@@ -147,35 +147,35 @@ const SignUp = () => {
       >
         <Input
           type="text"
-          label="Full Name"
-          placeholder="Hasan Mahmud"
+          label={t("auth.signUp.fullName")}
+          placeholder={t("auth.signUp.fullNamePlaceholder")}
           icon={<UserIcon className=" size-6" />}
           {...register("fullName")}
-          error={errors.fullName?.message}
+          error={errors.fullName?.message ? translateErrorMessage(errors.fullName.message, t) : undefined}
         />
         <Input
           type="email"
-          label="Email"
-          placeholder="Enter your email"
+          label={t("auth.signUp.email")}
+          placeholder={t("auth.signUp.enterEmail")}
           icon={<EmailIcon className=" size-6" />}
           {...register("email")}
-          error={errors.email?.message}
+          error={errors.email?.message ? translateErrorMessage(errors.email.message, t) : undefined}
         />
         <Input
-          label="Password"
+          label={t("auth.signUp.password")}
           type="password"
           placeholder="*************"
           showPasswordToggle={true}
           {...register("password")}
-          error={errors.password?.message}
+          error={errors.password?.message ? translateErrorMessage(errors.password.message, t) : undefined}
         />
         <Input
-          label="Confirm Password"
+          label={t("auth.signUp.confirmPassword")}
           type="password"
           placeholder="*************"
           showPasswordToggle={true}
           {...register("passwordConfirmed")}
-          error={errors.passwordConfirmed?.message}
+          error={errors.passwordConfirmed?.message ? translateErrorMessage(errors.passwordConfirmed.message, t) : undefined}
         />
         <div className="mt-8 flex flex-col gap-4">
           <Button
@@ -186,7 +186,7 @@ const SignUp = () => {
             disabled={isPending}
             loading={isPending}
           >
-            {isPending ? "Creating account..." : "Sign up"}
+            {isPending ? t("auth.signUp.creatingAccount") : t("auth.signUp.signUpButton")}
           </Button>
         </div>
       </form>
@@ -198,9 +198,9 @@ const SignUp = () => {
         />
 
         <p className="text-gray-500 text-center text-sm font-normal">
-          You have an account ?{" "}
+          {t("auth.signUp.youHaveAccount")}{" "}
           <Link href={"/auth/sign-in"} className="text-blue-500 font-semibold">
-            Login
+            {t("auth.signUp.login")}
           </Link>
         </p>
       </div>

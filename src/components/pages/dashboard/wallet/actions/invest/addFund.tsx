@@ -9,9 +9,11 @@ import MutationKey from "@/types/mutation_key";
 import ReactQueryKey from "@/types/react_query_key";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
+import { translateErrorMessage } from "@/lib/translateErrors";
 import {
   AddFundFormData,
   AddFundProps,
@@ -22,14 +24,17 @@ import {
 
 const AddFund = ({
   showCardForm = true,
-  buttonText = "Pay Now",
+  buttonText,
   amountPlaceholder,
-  amountLabel = "Investment Amount",
+  amountLabel,
   onSuccess,
   onError,
 }: AddFundProps) => {
+  const t = useTranslations();
   const { currency } = useCurrency();
   const defaultPlaceholder = amountPlaceholder || `100.00 ${currency}`;
+  const defaultAmountLabel = amountLabel || t("invest.investmentAmount");
+  const defaultButtonText = buttonText || t("invest.payNow");
   const queryClient = useQueryClient();
 
   const {
@@ -76,11 +81,11 @@ const AddFund = ({
           ],
         });
 
-        toast.success(data.message || "Funds added successfully!");
+        toast.success(data.message || t("invest.fundsAddedSuccessfully"));
         onSuccess?.(data.wallet);
         reset();
       } else {
-        throw new Error(data.message || "Failed to add funds");
+        throw new Error(data.message || t("invest.failedToAddFunds"));
       }
     },
     onError: (error: unknown) => {
@@ -88,7 +93,7 @@ const AddFund = ({
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message ||
         (error as { message?: string })?.message ||
-        "Failed to add funds";
+        t("invest.failedToAddFunds");
       toast.error(errorMessage);
       onError?.(errorMessage);
     },
@@ -137,57 +142,57 @@ const AddFund = ({
               href={"/wallet/add-card"}
               className="text-cyan-500 text-sm hover:text-cyan-600"
             >
-              + Add New Card
+              {t("invest.addNewCard")}
             </Link>
             <CustomeInput
               className="p-0 m-0"
-              placeholder="XXXX-XXXX-XXXX-XXXX"
+              placeholder={t("invest.cardNumberPlaceholder")}
               inputType="stroke"
               {...register("cardNumber")}
               onChange={handleCardNumberChange}
-              error={errors.cardNumber?.message}
+              error={errors.cardNumber?.message ? translateErrorMessage(errors.cardNumber.message, t) : undefined}
               maxLength={19}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <CustomeInput
-              placeholder="MM/YY"
-              label="Expiration Date"
+              placeholder={t("invest.expirationDatePlaceholder")}
+              label={t("invest.expirationDate")}
               inputType="stroke"
               {...register("expiryDate")}
               onChange={handleExpiryDateChange}
-              error={errors.expiryDate?.message}
+              error={errors.expiryDate?.message ? translateErrorMessage(errors.expiryDate.message, t) : undefined}
               maxLength={5}
             />
             <CustomeInput
-              placeholder="123"
-              label="CVV"
+              placeholder={t("invest.cvvPlaceholder")}
+              label={t("invest.cvv")}
               inputType="stroke"
               {...register("cvv")}
               onChange={(e) => handleInputChange("cvv", e.target.value)}
-              error={errors.cvv?.message}
+              error={errors.cvv?.message ? translateErrorMessage(errors.cvv.message, t) : undefined}
               maxLength={4}
               type="password"
             />
           </div>
 
           <CustomeInput
-            label="Cardholder Name"
-            placeholder="Full Name"
+            label={t("invest.cardholderName")}
+            placeholder={t("invest.cardholderNamePlaceholder")}
             inputType="stroke"
             {...register("cardholderName")}
             onChange={(e) =>
               handleInputChange("cardholderName", e.target.value)
             }
-            error={errors.cardholderName?.message}
+            error={errors.cardholderName?.message ? translateErrorMessage(errors.cardholderName.message, t) : undefined}
           />
         </>
       )}
 
       <CustomeInput
         placeholder={defaultPlaceholder}
-        label={amountLabel}
+        label={defaultAmountLabel}
         inputType="stroke"
         type="number"
         step="0.01"
@@ -195,7 +200,7 @@ const AddFund = ({
         max="1000000"
         {...register("amount")}
         onChange={(e) => handleInputChange("amount", e.target.value)}
-        error={errors.amount?.message}
+        error={errors.amount?.message ? translateErrorMessage(errors.amount.message, t) : undefined}
       />
 
       <Button
@@ -206,12 +211,12 @@ const AddFund = ({
         disabled={isSubmitting || addFundMutation.isPending}
       >
         {isSubmitting || addFundMutation.isPending
-          ? "Processing..."
-          : buttonText}
+          ? t("invest.processing")
+          : defaultButtonText}
       </Button>
 
       <div className="text-xs text-gray-500 text-center">
-        🔒 Your payment information is encrypted and secure
+        {t("invest.paymentInfoEncrypted")}
       </div>
     </form>
   );

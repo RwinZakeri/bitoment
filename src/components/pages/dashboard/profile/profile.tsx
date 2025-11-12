@@ -1,5 +1,5 @@
 "use client";
-import { profileItems } from "@/app/(with-layout)/profile/type";
+import { useProfileItems } from "@/app/[locale]/(with-layout)/profile/type";
 import PageLayout from "@/components/layout/page/pageLayout";
 import { ProfileSkeleton } from "@/components/module/skeleton";
 import LinkedCard from "@/components/UI/link-card";
@@ -9,8 +9,11 @@ import { ProfileItem } from "@/types/global";
 import ReactQueryKey from "@/types/react_query_key";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const Profile = () => {
+  const t = useTranslations();
+  const profileItems = useProfileItems();
   const { data: profileData, isLoading } = useQuery({
     queryKey: [ReactQueryKey.profile],
     queryFn: async () => {
@@ -21,14 +24,14 @@ const Profile = () => {
 
   if (isLoading) {
     return (
-      <PageLayout backHidden title="Profile">
+      <PageLayout backHidden title={t("profile.title")}>
         <ProfileSkeleton />
       </PageLayout>
     );
   }
 
   return (
-    <PageLayout backHidden title="Profile">
+    <PageLayout backHidden title={t("profile.title")}>
       <div className="w-fit mx-auto flex flex-col gap-4 mt-11">
         <Image
           src={ProfileImage}
@@ -39,10 +42,10 @@ const Profile = () => {
         />
         <div className="flex flex-col gap-1.5 text-center ">
           <p className="text-base font-semibold text-foreground/70">
-            {profileData?.user?.name || "User"}
+            {profileData?.user?.name || t("profile.user")}
           </p>
           <p className="text-gray-400-alt">
-            {profileData?.user?.email || "user@example.com"}
+            {profileData?.user?.email || t("profile.userExample")}
           </p>
         </div>
       </div>

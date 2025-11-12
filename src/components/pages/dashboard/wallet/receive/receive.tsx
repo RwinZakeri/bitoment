@@ -18,8 +18,10 @@ import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 const Receive = () => {
+  const t = useTranslations();
   const { currency } = useCurrency();
   const {
     formState: { errors },
@@ -102,7 +104,7 @@ const Receive = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "My Wallet Address",
+          title: t("wallet.myWalletAddress"),
           text: walletAddress,
         });
       } catch (err) {
@@ -114,7 +116,7 @@ const Receive = () => {
   };
 
   return (
-    <PageLayout title="Receive">
+    <PageLayout title={t("wallet.receive")}>
       <div className="mt-6 flex flex-col gap-4">
         <div>
           <CryptoAssets
@@ -131,7 +133,7 @@ const Receive = () => {
                 <BtcIcon className="text-foreground" />
               )
             }
-            label="Select a coin"
+            label={t("wallet.selectCoinLabel")}
             title={watchedCrypto?.shortName || "BTC"}
           />
           {errors.selectedCrypto && (
@@ -141,14 +143,14 @@ const Receive = () => {
           )}
           {watchedCrypto && !errors.selectedCrypto && (
             <span className="text-green-500 text-sm mt-1 block">
-              ✓ Valid cryptocurrency selected
+              {t("wallet.validCryptocurrencySelected")}
             </span>
           )}
         </div>
         <AutoComplete
           onClick={handleNetworkSelect}
           list={blockchainNetworks}
-          label={"Blockchain Network"}
+          label={t("wallet.blockchainNetwork")}
         />
         {errors.blockchainNetwork && (
           <span className="text-red-500 text-sm mt-1 block">
@@ -158,13 +160,16 @@ const Receive = () => {
 
         <Alert>
           <p className="text-sm">
-            The minimum deposit amount on {networkInfo.networkName} in Bitoment
-            is {networkInfo.minAmount} {networkInfo.crypto}.
+            {t("wallet.minimumDeposit", {
+              network: networkInfo.networkName,
+              amount: networkInfo.minAmount,
+              crypto: networkInfo.crypto,
+            })}
           </p>
         </Alert>
 
         <div className="w-full flex items-center justify-center">
-          <div className="w-32 h-32 bg-white dark:bg-gray-200 flex items-center justify-center rounded-lg p-2">
+          <div className="w-32 h-32 bg-white flex items-center justify-center rounded-lg p-2">
             {walletAddress ? (
               <QRCodeSVG
                 value={walletAddress}
@@ -173,24 +178,27 @@ const Receive = () => {
                 includeMargin={false}
               />
             ) : (
-              <div className="text-gray-400 text-xs">Generating...</div>
+              <div className="text-gray-400 text-xs">{t("wallet.generating")}</div>
             )}
           </div>
         </div>
 
-        <div className="w-60 bg-white dark:bg-gray-200 rounded-2xl p-4 mx-auto my-4">
+        <div className="w-60 bg-white rounded-2xl p-4 mx-auto my-4">
           <p className="text-gray-500 text-center">
-            Your {watchedCrypto?.shortName || "BTC"} Address
+            {t("wallet.yourAddress", {
+              crypto: watchedCrypto?.shortName || "BTC",
+            })}
           </p>
           <p className="text-center font-semibold break-all">
-            {walletAddress || "Generating address..."}
+            {walletAddress || t("wallet.generatingAddress")}
           </p>
         </div>
 
         <p className="text-gray-500 text-center">
-          Send only {watchedCrypto?.name.toLowerCase() || "bitcoin"} (
-          {watchedCrypto?.shortName || "BTC"}) to this address. Sending any
-          other coins may lead to their irretrievable loss.
+          {t("wallet.sendOnly", {
+            crypto: watchedCrypto?.name.toLowerCase() || "bitcoin",
+            shortName: watchedCrypto?.shortName || "BTC",
+          })}
         </p>
         <div className="flex items-center gap-4">
           <Button
@@ -199,14 +207,14 @@ const Receive = () => {
             className="w-full"
             onClick={handleShare}
           >
-            Share
+            {t("common.share")}
           </Button>
           <Button
             size="lg"
             className="w-full"
             onClick={() => handleCopyAddress(walletAddress)}
           >
-            Copy
+            {t("common.copy")}
           </Button>
         </div>
       </div>
